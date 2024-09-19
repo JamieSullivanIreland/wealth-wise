@@ -1,8 +1,8 @@
 'use client';
 
 import { ReactNode, useState } from 'react';
-import Header from '../Header';
-import Sidebar from '../Sidebar';
+import Header from '../Header/Header';
+import Sidebar from '../Sidebar/Sidebar';
 
 interface IProps {
   children: ReactNode;
@@ -14,6 +14,7 @@ const Layout = ({ children }: IProps) => {
   return (
     <>
       <div className='flex'>
+        {/* <div>Sidebar</div> */}
         <Sidebar
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}

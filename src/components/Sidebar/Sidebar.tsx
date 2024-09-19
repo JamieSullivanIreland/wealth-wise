@@ -17,11 +17,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: ISidebarProps) => {
   return (
     <ClickOutside onClick={() => setSidebarOpen(false)}>
       <aside
-        className={`fixed left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:translate-x-0 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:translate-x-0 `}
       >
-        {/* <!-- SIDEBAR HEADER --> */}
         <div className='flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5'>
           <Link href='/'>
             <Image
@@ -53,10 +50,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: ISidebarProps) => {
             </svg>
           </button>
         </div>
-        {/* <!-- SIDEBAR HEADER --> */}
-
         <div className='no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear'>
-          {/* <!-- Sidebar Menu --> */}
           <nav className='mt-5 px-4 py-4 lg:mt-9 lg:px-6'>
             {MENU_GROUPS.map((group, groupIndex) => (
               <div key={groupIndex}>
@@ -77,7 +71,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: ISidebarProps) => {
               </div>
             ))}
           </nav>
-          {/* <!-- Sidebar Menu --> */}
         </div>
       </aside>
     </ClickOutside>

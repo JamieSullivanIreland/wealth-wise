@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 const User = () => {
   return (
-    <>
+    <div className='flex gap-2 items-center'>
       <span className='hidden text-right lg:block'>
         <span className='block text-sm font-medium text-black dark:text-white'>
           Thomas Anree
@@ -22,7 +22,7 @@ const User = () => {
           alt='User'
         />
       </span>
-    </>
+    </div>
   );
 };
 

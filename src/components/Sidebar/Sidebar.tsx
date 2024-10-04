@@ -3,8 +3,9 @@ import Image from 'next/image';
 
 import ClickOutside from '@/components/Common/ClickOutside';
 import useLocalStorage from '@/hooks/useLocalStorage';
-import { MENU_GROUPS } from '@/constants/menu';
+import { MENU_ITEMS } from '@/constants/menu';
 import SidebarItem from './SidebarItem';
+import { IMenuItem } from '@/types/menu';
 
 interface ISidebarProps {
   sidebarOpen: boolean;
@@ -53,25 +54,17 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: ISidebarProps) => {
           </button>
         </div>
         <div className='no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear'>
-          <nav className='mt-5 px-4 py-4 lg:mt-9 lg:px-6'>
-            {MENU_GROUPS.map((group, groupIndex) => (
-              <div key={groupIndex}>
-                <h3 className='mb-4 ml-4 text-sm font-semibold text-bodydark2'>
-                  {group.name}
-                </h3>
-
-                <ul className='mb-6 flex flex-col gap-1.5'>
-                  {group.menuItems.map((menuItem, menuIndex) => (
-                    <SidebarItem
-                      key={menuIndex}
-                      item={menuItem}
-                      pageName={pageName}
-                      setPageName={setPageName}
-                    />
-                  ))}
-                </ul>
-              </div>
-            ))}
+          <nav className='px-4 py-4 lg:px-6'>
+            <ul className='flex flex-col gap-1.5'>
+              {MENU_ITEMS.map((item: IMenuItem, i: number) => (
+                <SidebarItem
+                  key={i}
+                  item={item}
+                  pageName={pageName}
+                  setPageName={setPageName}
+                />
+              ))}
+            </ul>
           </nav>
         </div>
       </aside>

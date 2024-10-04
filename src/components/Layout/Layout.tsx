@@ -14,7 +14,6 @@ const Layout = ({ children }: IProps) => {
   return (
     <>
       <div className='flex'>
-        {/* <div>Sidebar</div> */}
         <Sidebar
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}

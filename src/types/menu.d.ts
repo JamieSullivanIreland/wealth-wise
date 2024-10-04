@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement } from 'react';
 
 declare interface IMenuChildren {
   label: string;
@@ -12,7 +12,3 @@ declare interface IMenuItem {
   children?: IMenuChildren[];
 }
 
-declare interface IMenuGroup {
-  name: string;
-  menuItems: IMenuItem[];
-}

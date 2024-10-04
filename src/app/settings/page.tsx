@@ -1,5 +1,5 @@
 import Layout from '@/components/Layout/Layout';
-import DashboardContainer from '@/components/Containers/DashboardContainer';
+import SettingsContainer from '@/components/Containers/SettingsContainer';
 
 import type { Metadata } from 'next';
 
@@ -8,11 +8,11 @@ export const metadata: Metadata = {
   description: 'This is Wealth Wise',
 };
 
-export default function Home() {
+export default function Settings() {
   return (
     <>
       <Layout>
-        <DashboardContainer />
+        <SettingsContainer />
       </Layout>
     </>
   );

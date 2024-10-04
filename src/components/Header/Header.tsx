@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import DarkModeSwitcher from './DarkModeSwitcher';
-import DropdownUser from './DropdownUser';
+import DropdownUser from './User';
 import HamburgerButton from './HamburgerButton';
 
 interface IProps {
@@ -32,9 +32,7 @@ const Header = ({ sidebarOpen, setSidebarOpen }: IProps) => {
         </div>
 
         <div className='flex items-center gap-3 2xsm:gap-7'>
-          <ul className='flex items-center gap-2 2xsm:gap-4'>
-            <DarkModeSwitcher />
-          </ul>
+          <DarkModeSwitcher />
           <DropdownUser />
         </div>
       </div>

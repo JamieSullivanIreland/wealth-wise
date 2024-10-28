@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: 'This is Wealth Wise',
 };
 
-export default async function Home() {
+export default function Home() {
   return (
     <>
       <Layout>

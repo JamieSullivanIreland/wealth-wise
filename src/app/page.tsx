@@ -1,5 +1,6 @@
 import Layout from '@/components/Layout/Layout';
 import DashboardContainer from '@/components/Containers/DashboardContainer';
+import { getTransactions } from '@/utils/api';
 
 import type { Metadata } from 'next';
 
@@ -8,11 +9,13 @@ export const metadata: Metadata = {
   description: 'This is Wealth Wise',
 };
 
-export default function Home() {
+export default async function Home() {
+  const transactions: ITransaction[] = await getTransactions();
+
   return (
     <>
       <Layout>
-        <DashboardContainer />
+        <DashboardContainer transactions={transactions} />
       </Layout>
     </>
   );

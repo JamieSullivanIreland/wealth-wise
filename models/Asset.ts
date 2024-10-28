@@ -7,8 +7,9 @@ const AssetSchema = new Schema(
       ref: 'User',
       required: true,
     },
-    category: {
-      type: String,
+    category_id: {
+      type: Schema.Types.ObjectId,
+      ref: 'Category',
       required: true,
     },
     provider_name: {

@@ -33,9 +33,9 @@ const TransactionsTable = ({ transactions }: IProps) => {
           <div className='col-span-10 flex flex-col justify-center'>
             <p className='text-sm'>
               {transaction.amount > 0 ? (
-                <div className=' text-emerald-400'>{transaction.amount}</div>
+                <span className=' text-emerald-400'>{transaction.amount}</span>
               ) : (
-                <div className=' text-rose-400'>{transaction.amount}</div>
+                <span className=' text-rose-400'>{transaction.amount}</span>
               )}
             </p>
             <p className='text-sm text-black dark:text-white'>

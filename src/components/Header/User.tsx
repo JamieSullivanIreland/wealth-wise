@@ -1,27 +1,18 @@
-import Image from 'next/image';
+import ProfileImage from './ProfileImage';
 
-const User = () => {
+interface IProps {
+  user: SessionUser;
+}
+
+const User = ({ user }: IProps) => {
+  const { name, image } = user;
+
   return (
     <div className='flex gap-2 items-center'>
-      <span className='hidden text-right lg:block'>
-        <span className='block text-sm font-medium text-black dark:text-white'>
-          Thomas Anree
-        </span>
-        <span className='block text-xs'>UX Designer</span>
+      <span className='text-sm font-medium text-black dark:text-white'>
+        {name}
       </span>
-
-      <span className='h-12 w-12 rounded-full'>
-        <Image
-          width={112}
-          height={112}
-          src={'/images/user/user-01.png'}
-          style={{
-            width: 'auto',
-            height: 'auto',
-          }}
-          alt='User'
-        />
-      </span>
+      {image && <ProfileImage imgUrl={image} />}
     </div>
   );
 };

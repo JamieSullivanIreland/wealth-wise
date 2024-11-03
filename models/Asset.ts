@@ -7,11 +7,12 @@ const AssetSchema = new Schema(
       ref: 'User',
       required: true,
     },
-    category: {
-      type: String,
+    category_id: {
+      type: Schema.Types.ObjectId,
+      ref: 'Category',
       required: true,
     },
-    provider_name: {
+    name: {
       type: String,
       required: true,
     },
@@ -20,6 +21,14 @@ const AssetSchema = new Schema(
       required: true,
     },
     value: {
+      type: Number,
+      required: true,
+    },
+    detail: {
+      type: Number,
+      required: false,
+    },
+    numShares: {
       type: Number,
       required: true,
     },

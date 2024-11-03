@@ -1,9 +1,13 @@
-import connectDB from '../../config/database';
-
 export const getTransactions = async (limit: number = 6) => {
-  await connectDB();
-  const data = await fetch(
+  const res = await fetch(
     `http://localhost:3000/api/transactions?limit=${limit}`
-  ).then((res) => res.json());
+  );
+  const data = await res.json();
   return data.transactions;
+};
+
+export const getAssets = async (limit: number = 4) => {
+  const res = await fetch(`http://localhost:3000/api/assets?limit=${limit}`);
+  const data = await res.json();
+  return data.assets;
 };

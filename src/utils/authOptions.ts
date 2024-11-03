@@ -1,4 +1,4 @@
-import NextAuth, { AuthOptions } from 'next-auth';
+import { AuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import connectDB from '../../config/database';
 import User from '../../models/User';
@@ -20,7 +20,7 @@ export const authOptions: AuthOptions = {
   callbacks: {
     async signIn({ profile }) {
       if (!profile) {
-        return;
+        return '';
       }
 
       await connectDB();
@@ -31,20 +31,11 @@ export const authOptions: AuthOptions = {
         await User.create({
           email: profile.email,
           username,
-          image: profile.picture,
+          image: profile.image,
         });
       }
 
       return true;
-    },
-    async session({ session }) {
-      if (!session || !session.user) {
-        return;
-      }
-
-      const user = await User.findOne({ email: session.user.email });
-      session.user.id = user._id.toString();
-      return session;
     },
   },
 };

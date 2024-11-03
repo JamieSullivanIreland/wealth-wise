@@ -6,6 +6,7 @@ import useLocalStorage from '@/hooks/useLocalStorage';
 import { MENU_ITEMS } from '@/constants/menu';
 import SidebarItem from './SidebarItem';
 import { IMenuItem } from '@/types/menu';
+import { signOut, useSession } from 'next-auth/react';
 
 interface ISidebarProps {
   sidebarOpen: boolean;
@@ -13,6 +14,7 @@ interface ISidebarProps {
 }
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: ISidebarProps) => {
+  const { data: session } = useSession();
   const [pageName, setPageName] = useLocalStorage('selectedMenu', 'dashboard');
 
   return (
@@ -56,14 +58,26 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: ISidebarProps) => {
         <div className='no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear'>
           <nav className='px-4 py-4 lg:px-6'>
             <ul className='flex flex-col gap-1.5'>
-              {MENU_ITEMS.map((item: IMenuItem, i: number) => (
-                <SidebarItem
-                  key={i}
-                  item={item}
-                  pageName={pageName}
-                  setPageName={setPageName}
-                />
-              ))}
+              {MENU_ITEMS.map((item: IMenuItem, i: number) => {
+                if (item.route === '/logout') {
+                  return session ? (
+                    <SidebarItem
+                      key={i}
+                      item={item}
+                      onClick={signOut}
+                    />
+                  ) : null;
+                }
+
+                return (
+                  <SidebarItem
+                    key={i}
+                    item={item}
+                    pageName={pageName}
+                    setPageName={setPageName}
+                  />
+                );
+              })}
             </ul>
           </nav>
         </div>

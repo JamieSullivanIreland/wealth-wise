@@ -10,7 +10,6 @@ import {
   getProviders,
   LiteralUnion,
   signIn,
-  signOut,
   useSession,
 } from 'next-auth/react';
 import { BuiltInProviderType } from 'next-auth/providers/index';

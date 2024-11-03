@@ -1,18 +1,20 @@
 import ProfileImage from './ProfileImage';
 
+import { Session } from 'next-auth';
+
 interface IProps {
-  user: SessionUser;
+  session: Session;
 }
 
-const User = ({ user }: IProps) => {
-  const { name, image } = user;
+const User = ({ session }: IProps) => {
+  const { user } = session;
 
   return (
     <div className='flex gap-2 items-center'>
       <span className='text-sm font-medium text-black dark:text-white'>
-        {name}
+        {user?.name}
       </span>
-      {image && <ProfileImage imgUrl={image} />}
+      {user?.image && <ProfileImage imgUrl={user.image} />}
     </div>
   );
 };

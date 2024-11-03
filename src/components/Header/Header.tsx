@@ -56,8 +56,8 @@ const Header = ({ sidebarOpen, setSidebarOpen }: IProps) => {
         <div className='hidden sm:flex w-full items-center justify-between'>
           <DarkModeSwitcher />
 
-          {session && session.user ? (
-            <User user={session.user} />
+          {session ? (
+            <User session={session} />
           ) : (
             providers &&
             Object.values(providers).map((provider) => (

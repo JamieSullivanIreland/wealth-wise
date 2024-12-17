@@ -10,8 +10,14 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const transactions: ITransaction[] = await getTransactions();
-  const assets: IAsset[] = await getAssets();
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  const transactionsData = getTransactions();
+  const assetsData = getAssets();
+
+  const [transactions, assets] = await Promise.all([
+    transactionsData,
+    assetsData,
+  ]);
 
   return (
     <>

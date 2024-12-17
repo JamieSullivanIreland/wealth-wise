@@ -10,8 +10,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const loading = false;
-
   return (
     <AuthProvider>
       <html lang='en'>
@@ -24,9 +22,7 @@ export default function RootLayout({
           />
         </head>
         <body suppressHydrationWarning={true}>
-          <div className='dark:bg-boxdark-2 dark:text-bodydark'>
-            {loading ? <div>Loading...</div> : children}
-          </div>
+          <div className='dark:bg-boxdark-2 dark:text-bodydark'>{children}</div>
         </body>
       </html>
     </AuthProvider>

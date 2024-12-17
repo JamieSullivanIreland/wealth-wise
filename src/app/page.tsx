@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
+  // Wait 1 second to access local storage theme
   await new Promise((resolve) => setTimeout(resolve, 1000));
   const transactionsData = getTransactions();
   const assetsData = getAssets();

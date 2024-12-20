@@ -1,3 +1,4 @@
+import PageHeader from '../Common/PageHeader';
 import AssetsTable from '../Tables/AssetsTable';
 import CategoryChart from '../Tables/CategoryChart';
 import NetworthTable from '../Tables/NetworthTable';
@@ -11,7 +12,10 @@ interface IProps {
 const Dashboard = ({ transactions, assets }: IProps) => {
   return (
     <>
-      <h2>Dashboard</h2>
+      <PageHeader
+        title='Dashboard'
+        btnText='Add'
+      />
       <div className='grid grid-rows-auto grid-cols-1 gap-4'>
         <div className='grid grid-cols-12'>
           <NetworthTable />

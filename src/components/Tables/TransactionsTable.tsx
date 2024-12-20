@@ -8,7 +8,7 @@ interface IProps {
 
 const TransactionsTable = ({ transactions }: IProps) => {
   return (
-    <div className='rounded-lg border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark'>
+    <div className='col-span-4 rounded-xl border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark'>
       <div className='px-4 py-6 md:px-6 xl:px-7.5'>
         <h4 className='text-xl font-semibold text-black dark:text-white'>
           Transactions

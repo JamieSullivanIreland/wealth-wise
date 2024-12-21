@@ -1,6 +1,7 @@
 import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
 
 import Icon from '../Common/Icon';
+import TableHeader from './TableHeader';
 
 interface IProps {
   transactions: ITransaction[];
@@ -10,9 +11,7 @@ const TransactionsTable = ({ transactions }: IProps) => {
   return (
     <div className='col-span-4 rounded-xl border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark'>
       <div className='px-4 py-6 md:px-6 xl:px-7.5'>
-        <h4 className='text-xl font-medium text-black dark:text-white'>
-          Transactions
-        </h4>
+      <TableHeader title="Transactions" />
       </div>
       {transactions.map((transaction: ITransaction, i: number) => (
         <div

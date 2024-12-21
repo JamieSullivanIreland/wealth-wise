@@ -1,3 +1,5 @@
+import TableHeader from './TableHeader';
+
 interface IProps {
   assets: IAsset[];
 }
@@ -17,9 +19,7 @@ const AssetsTable = ({ assets }: IProps) => {
   return (
     <div className='col-span-8 rounded-xl border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark'>
       <div className='px-4 py-6 md:px-6 xl:px-7.5'>
-        <h4 className='text-xl font-medium text-black dark:text-white'>
-          Assets
-        </h4>
+        <TableHeader title='Assets' />
       </div>
 
       <div className='grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5'>

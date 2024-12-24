@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 
 import TableHeader from './TableHeader';
 import { MONTHS } from '@/constants/date';
+import TableContainer from './TableContainer';
 
 const ApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
@@ -130,8 +131,14 @@ const NetworthTable = () => {
   };
 
   return (
-    <div className='col-span-8'>
+    <TableContainer
+      colSpan='8'
+      classes='rounded-s-xl border-r-0'
+    >
       <TableHeader title='Total Net Worth' />
+      <h4 className='text-4xl font-medium text-black dark:text-white'>
+        €160,000
+      </h4>
       <div
         id='chartOne'
         className='-ml-5'
@@ -144,7 +151,7 @@ const NetworthTable = () => {
           width={'100%'}
         />
       </div>
-    </div>
+    </TableContainer>
   );
 };
 

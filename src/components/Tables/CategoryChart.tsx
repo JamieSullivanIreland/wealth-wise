@@ -2,6 +2,7 @@
 import dynamic from 'next/dynamic';
 
 import TableHeader from './TableHeader';
+import TableContainer from './TableContainer';
 
 const ApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
@@ -30,7 +31,10 @@ const CategoryChart = () => {
   const series = [30, 40, 35, 50, 49, 80];
 
   return (
-    <div className='col-span-4'>
+    <TableContainer
+      colSpan='4'
+      classes='rounded-e-xl border-l-0'
+    >
       <TableHeader title='Categories' />
       <div
         id='chartOne'
@@ -40,11 +44,11 @@ const CategoryChart = () => {
           options={options}
           series={series}
           type='donut'
-          height={350}
+          height={200}
           width={'100%'}
         />
       </div>
-    </div>
+    </TableContainer>
   );
 };
 

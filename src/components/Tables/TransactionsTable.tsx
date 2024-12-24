@@ -11,7 +11,7 @@ const TransactionsTable = ({ transactions }: IProps) => {
   return (
     <div className='col-span-4 rounded-xl border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark'>
       <div className='px-4 py-6 md:px-6 xl:px-7.5'>
-      <TableHeader title="Transactions" />
+        <TableHeader title='Transactions' />
       </div>
       {transactions.map((transaction: ITransaction, i: number) => (
         <div

@@ -1,8 +1,6 @@
 'use client';
-
-// import { ApexOptions } from 'apexcharts';
-import React from 'react';
 import dynamic from 'next/dynamic';
+
 import TableHeader from './TableHeader';
 
 const ApexChart = dynamic(() => import('react-apexcharts'), {

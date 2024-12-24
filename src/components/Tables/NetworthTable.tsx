@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import TableHeader from './TableHeader';
 import { MONTHS } from '@/constants/date';
 import TableContainer from './TableContainer';
+import PillButton from '../Common/PillButton';
 
 const ApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
@@ -136,9 +137,27 @@ const NetworthTable = () => {
       classes='rounded-s-xl border-r-0'
     >
       <TableHeader title='Total Net Worth' />
-      <h4 className='text-4xl font-medium text-black dark:text-white'>
+      <h4 className='text-4xl font-medium text-black dark:text-white mb-6'>
         €160,000
       </h4>
+      <div className='flex gap-2'>
+        <PillButton
+          text='1 Week'
+          onClick={() => console.log('1 Week')}
+        />
+        <PillButton
+          text='1 Month'
+          onClick={() => console.log('1 Month')}
+        />
+        <PillButton
+          text='1 Year'
+          onClick={() => console.log('1 Year')}
+        />
+        <PillButton
+          text='All'
+          onClick={() => console.log('All')}
+        />
+      </div>
       <div
         id='chartOne'
         className='-ml-5'

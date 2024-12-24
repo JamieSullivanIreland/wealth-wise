@@ -1,4 +1,5 @@
 import TableHeader from './TableHeader';
+import TableContainer from './TableContainer';
 
 interface IProps {
   assets: IAsset[];
@@ -17,12 +18,13 @@ const AssetsTable = ({ assets }: IProps) => {
   };
 
   return (
-    <div className='col-span-8 rounded-xl border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark'>
-      <div className='px-4 py-6 md:px-6 xl:px-7.5'>
-        <TableHeader title='Assets' />
-      </div>
+    <TableContainer
+      colSpan='8'
+      classes='rounded-xl'
+    >
+      <TableHeader title='Assets' />
 
-      <div className='grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5'>
+      <div className='grid grid-cols-6 border-t border-stroke mt-4  py-4.5 dark:border-strokedark sm:grid-cols-8'>
         <div className='col-span-3 flex items-center'>
           <p className='font-medium'>Type</p>
         </div>
@@ -41,7 +43,7 @@ const AssetsTable = ({ assets }: IProps) => {
         const { category_id, cost, value } = asset;
         return (
           <div
-            className='grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5'
+            className='grid grid-cols-6 border-t border-stroke py-4.5 dark:border-strokedark sm:grid-cols-8'
             key={i}
           >
             <div className='col-span-3 flex items-center'>
@@ -69,7 +71,7 @@ const AssetsTable = ({ assets }: IProps) => {
           </div>
         );
       })}
-    </div>
+    </TableContainer>
   );
 };
 

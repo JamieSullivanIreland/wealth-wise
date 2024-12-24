@@ -9,7 +9,7 @@ interface Props {
 const TableContainer = ({ children, colSpan, classes = '' }: Props) => {
   return (
     <div
-      className={`col-span-${colSpan} px-4 py-6 border  border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${classes}`}
+      className={`col-span-${colSpan} px-4 py-6 border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${classes}`}
     >
       {children}
     </div>

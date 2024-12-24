@@ -19,3 +19,8 @@ declare interface IAsset {
   createdAt: string;
   updateAt: string;
 }
+
+declare interface ICategory {
+  _id: string;
+  type: string;
+}

@@ -3,12 +3,17 @@ import dynamic from 'next/dynamic';
 
 import TableHeader from './TableHeader';
 import TableContainer from './TableContainer';
+import Category from '../Common/Category';
 
 const ApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
 });
 
-const CategoryChart = () => {
+interface Props {
+  categories: ICategory[];
+}
+
+const CategoryChart = ({ categories }: Props) => {
   const options = {
     dataLabels: {
       enabled: false,
@@ -16,7 +21,7 @@ const CategoryChart = () => {
     legend: {
       show: false,
     },
-    labels: ['Accounts', 'Stocks', 'Crypto', 'Real Estate', 'Cars', 'Other'],
+    labels: categories.map((category: ICategory) => category.type),
     fill: {
       colors: [
         '#3E76E0',
@@ -36,17 +41,20 @@ const CategoryChart = () => {
       classes='rounded-e-xl border-l-0'
     >
       <TableHeader title='Categories' />
-      <div
-        id='chartOne'
-        className='-ml-5'
-      >
-        <ApexChart
-          options={options}
-          series={series}
-          type='donut'
-          height={200}
-          width={'100%'}
-        />
+      <ApexChart
+        options={options}
+        series={series}
+        type='donut'
+        height={200}
+        width={'100%'}
+      />
+      <div className='grid grid-rows-auto grid-cols-3 gap-2'>
+        {categories.map((category: ICategory, i: number) => (
+          <Category
+            key={i}
+            category={category}
+          />
+        ))}
       </div>
     </TableContainer>
   );

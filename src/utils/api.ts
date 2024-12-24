@@ -11,3 +11,9 @@ export const getAssets = async (limit: number = 4) => {
   const data = await res.json();
   return data.assets;
 };
+
+export const getCategories = async () => {
+  const res = await fetch('http://localhost:3000/api/categories');
+  const data = await res.json();
+  return data.categories;
+};

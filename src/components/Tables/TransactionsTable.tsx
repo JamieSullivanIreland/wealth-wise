@@ -10,10 +10,7 @@ interface IProps {
 
 const TransactionsTable = ({ transactions }: IProps) => {
   return (
-    <TableContainer
-      colSpan='4'
-      classes='rounded-xl'
-    >
+    <>
       <TableHeader title='Transactions' />
 
       {transactions.map((transaction: ITransaction, i: number) => {
@@ -52,7 +49,7 @@ const TransactionsTable = ({ transactions }: IProps) => {
           </div>
         );
       })}
-    </TableContainer>
+    </>
   );
 };
 

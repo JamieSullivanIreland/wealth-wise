@@ -18,10 +18,7 @@ const AssetsTable = ({ assets }: IProps) => {
   };
 
   return (
-    <TableContainer
-      colSpan='8'
-      classes='rounded-xl'
-    >
+    <>
       <TableHeader title='Assets' />
 
       <div className='grid grid-cols-6 border-t border-stroke mt-4  py-4.5 dark:border-strokedark sm:grid-cols-8'>
@@ -71,7 +68,7 @@ const AssetsTable = ({ assets }: IProps) => {
           </div>
         );
       })}
-    </TableContainer>
+    </>
   );
 };
 

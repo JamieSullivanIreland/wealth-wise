@@ -132,10 +132,7 @@ const NetworthTable = () => {
   };
 
   return (
-    <TableContainer
-      colSpan='8'
-      classes='rounded-s-xl border-r-0'
-    >
+    <>
       <TableHeader title='Total Net Worth' />
       <h4 className='text-4xl font-medium text-black dark:text-white mb-6'>
         €160,000
@@ -170,7 +167,7 @@ const NetworthTable = () => {
           width={'100%'}
         />
       </div>
-    </TableContainer>
+    </>
   );
 };
 

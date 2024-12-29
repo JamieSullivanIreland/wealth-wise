@@ -36,10 +36,7 @@ const CategoryChart = ({ categories }: Props) => {
   const series = [30, 40, 35, 50, 49, 80];
 
   return (
-    <TableContainer
-      colSpan='4'
-      classes='rounded-e-xl border-l-0'
-    >
+    <>
       <TableHeader title='Categories' />
       <ApexChart
         options={options}
@@ -56,7 +53,7 @@ const CategoryChart = ({ categories }: Props) => {
           />
         ))}
       </div>
-    </TableContainer>
+    </>
   );
 };
 

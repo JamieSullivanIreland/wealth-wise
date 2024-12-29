@@ -11,6 +11,9 @@ interface IProps {
 }
 
 const Dashboard = ({ transactions, assets, categories }: IProps) => {
+  const tableClasses =
+    'px-4 py-6 border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark';
+
   return (
     <>
       <PageHeader
@@ -19,13 +22,23 @@ const Dashboard = ({ transactions, assets, categories }: IProps) => {
       />
       <div className='grid grid-rows-auto grid-cols-1 gap-4'>
         <div className='grid grid-cols-12'>
-          <NetworthTable />
-          <CategoryChart categories={categories} />
+          <div
+            className={`col-span-8  rounded-s-xl border-r-0 ${tableClasses}`}
+          >
+            <NetworthTable />
+          </div>
+          <div className={`col-span-4 rounded-e-xl border-l-0 ${tableClasses}`}>
+            <CategoryChart categories={categories} />
+          </div>
         </div>
         {/* <div className='grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5'> */}
         <div className='grid grid-cols-12 gap-4'>
-          <AssetsTable assets={assets} />
-          <TransactionsTable transactions={transactions} />
+          <div className={`col-span-8 rounded-xl ${tableClasses}`}>
+            <AssetsTable assets={assets} />
+          </div>
+          <div className={`col-span-4 rounded-xl ${tableClasses}`}>
+            <TransactionsTable transactions={transactions} />
+          </div>
         </div>
       </div>
     </>

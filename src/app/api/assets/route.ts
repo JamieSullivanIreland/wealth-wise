@@ -4,11 +4,16 @@ import Asset from '../../../../models/Asset';
 
 export const GET = async (request: NextRequest) => {
   const limit = Number(request.nextUrl.searchParams.get('limit'));
+  let assets: IAsset[] = [];
 
   try {
     await connectDB();
 
-    const assets: IAsset[] = await Asset.find({}).sort({ _id: 1 }).limit(limit);
+    if (limit === 0) {
+      assets = await Asset.find({}).sort({ _id: 1 });
+    } else {
+      assets = await Asset.find({}).sort({ _id: 1 }).limit(limit);
+    }
 
     return new Response(JSON.stringify({ assets }), { status: 200 });
   } catch (error) {

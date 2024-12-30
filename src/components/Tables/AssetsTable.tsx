@@ -1,5 +1,4 @@
 import TableHeader from './TableHeader';
-import TableContainer from './TableContainer';
 
 interface IProps {
   assets: IAsset[];

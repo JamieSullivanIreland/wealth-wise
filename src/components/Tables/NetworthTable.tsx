@@ -3,7 +3,6 @@ import dynamic from 'next/dynamic';
 
 import TableHeader from './TableHeader';
 import { MONTHS } from '@/constants/date';
-import TableContainer from './TableContainer';
 import PillButton from '../Common/PillButton';
 
 const ApexChart = dynamic(() => import('react-apexcharts'), {
@@ -66,7 +65,11 @@ const series = [
   },
 ];
 
-const NetworthTable = () => {
+interface IProps {
+  networth: INetworth[];
+}
+
+const NetworthTable = ({ networth }: IProps) => {
   const options = {
     chart: {
       toolbar: {

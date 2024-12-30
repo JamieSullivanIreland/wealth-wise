@@ -2,7 +2,6 @@
 import dynamic from 'next/dynamic';
 
 import TableHeader from './TableHeader';
-import TableContainer from './TableContainer';
 import Category from '../Common/Category';
 
 const ApexChart = dynamic(() => import('react-apexcharts'), {

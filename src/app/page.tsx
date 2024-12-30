@@ -1,6 +1,11 @@
 import Layout from '@/components/Layout/Layout';
 import DashboardContainer from '@/components/Containers/DashboardContainer';
-import { getAssets, getCategories, getTransactions } from '@/utils/api';
+import {
+  getAssets,
+  getCategories,
+  getNetWorth,
+  getTransactions,
+} from '@/utils/api';
 
 import type { Metadata } from 'next';
 
@@ -12,16 +17,17 @@ export const metadata: Metadata = {
 export default async function Home() {
   // Wait 1 second to access local storage theme
   await new Promise((resolve) => setTimeout(resolve, 1000));
-  const transactionsData = getTransactions();
+  const transactionsData = getTransactions(5);
   const assetsData = getAssets();
   const categoriesData = getCategories();
+  const netWorthData = getNetWorth();
 
-  const [transactions, assets, categories] = await Promise.all([
+  const [transactions, assets, categories, networth] = await Promise.all([
     transactionsData,
     assetsData,
     categoriesData,
+    netWorthData,
   ]);
-
   return (
     <>
       <Layout>
@@ -29,6 +35,7 @@ export default async function Home() {
           transactions={transactions}
           assets={assets}
           categories={categories}
+          networth={networth}
         />
       </Layout>
     </>

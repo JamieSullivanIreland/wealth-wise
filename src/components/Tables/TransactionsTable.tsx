@@ -2,7 +2,6 @@ import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
 
 import Icon from '../Common/Icon';
 import TableHeader from './TableHeader';
-import TableContainer from './TableContainer';
 
 interface IProps {
   transactions: ITransaction[];

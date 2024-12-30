@@ -8,9 +8,10 @@ interface IProps {
   transactions: ITransaction[];
   assets: IAsset[];
   categories: ICategory[];
+  networth: INetworth[];
 }
 
-const Dashboard = ({ transactions, assets, categories }: IProps) => {
+const Dashboard = ({ transactions, assets, categories, networth }: IProps) => {
   const tableClasses =
     'px-4 py-6 border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark';
 
@@ -25,7 +26,7 @@ const Dashboard = ({ transactions, assets, categories }: IProps) => {
           <div
             className={`col-span-8  rounded-s-xl border-r-0 ${tableClasses}`}
           >
-            <NetworthTable />
+            <NetworthTable networth={networth} />
           </div>
           <div className={`col-span-4 rounded-e-xl border-l-0 ${tableClasses}`}>
             <CategoryChart categories={categories} />

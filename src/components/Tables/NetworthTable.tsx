@@ -2,74 +2,32 @@
 import dynamic from 'next/dynamic';
 
 import TableHeader from './TableHeader';
-import { MONTHS } from '@/constants/date';
 import PillButton from '../Common/PillButton';
 
 const ApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
 });
 
-const series = [
-  {
-    name: 'networth',
-    data: [
-      {
-        x: MONTHS[0],
-        y: 10,
-      },
-      {
-        x: MONTHS[1],
-        y: 75,
-      },
-      {
-        x: MONTHS[2],
-        y: 13,
-      },
-      {
-        x: MONTHS[3],
-        y: 69,
-      },
-      {
-        x: MONTHS[4],
-        y: 18,
-      },
-      {
-        x: MONTHS[5],
-        y: 13,
-      },
-      {
-        x: MONTHS[6],
-        y: 40,
-      },
-      {
-        x: MONTHS[7],
-        y: 50,
-      },
-      {
-        x: MONTHS[8],
-        y: 85,
-      },
-      {
-        x: MONTHS[9],
-        y: 20,
-      },
-      {
-        x: MONTHS[10],
-        y: 18,
-      },
-      {
-        x: MONTHS[11],
-        y: 13,
-      },
-    ],
-  },
-];
-
 interface IProps {
   networth: INetworth[];
 }
 
 const NetworthTable = ({ networth }: IProps) => {
+  const getMonth = (monthNum: number) =>
+    Intl.DateTimeFormat('en', { month: 'long' })
+      .format(new Date(monthNum.toString()))
+      .substring(0, 3);
+
+  const series = [
+    {
+      name: 'networth',
+      data: networth.map((value: INetworth) => ({
+        x: getMonth(value._id),
+        y: value.total,
+      })),
+    },
+  ];
+
   const options = {
     chart: {
       toolbar: {
@@ -82,7 +40,7 @@ const NetworthTable = ({ networth }: IProps) => {
     legend: {
       show: true,
     },
-    labels: MONTHS,
+    labels: networth.map((value: INetworth) => getMonth(value._id)),
     fill: {
       colors: ['#2CE48A'],
     },
@@ -106,12 +64,15 @@ const NetworthTable = ({ networth }: IProps) => {
     },
     yaxis: {
       opposite: true,
-      max: 100,
+      min: 0,
+      max: Math.max.apply(
+        null,
+        networth.map((val: INetworth) => val.total)
+      ),
       labels: {
         show: true,
         align: 'right',
-        minWidth: 50,
-        maxWidth: 160,
+        minWidth: 100,
         style: {
           // TODO Change label colour
           colors: [],
@@ -121,7 +82,10 @@ const NetworthTable = ({ networth }: IProps) => {
           cssClass: 'apexcharts-yaxis-label',
         },
         formatter: (value: number) => {
-          return `${value}k`;
+          const str = Math.ceil(value).toString();
+          return str.length >= 4
+            ? `${str.substring(0, str.length - 3)}k`
+            : '0k';
         },
       },
     },
@@ -135,7 +99,7 @@ const NetworthTable = ({ networth }: IProps) => {
   };
 
   return (
-    <>
+    <div className='p-4'>
       <TableHeader title='Total Net Worth' />
       <h4 className='text-4xl font-medium text-black dark:text-white mb-6'>
         €160,000
@@ -170,7 +134,7 @@ const NetworthTable = ({ networth }: IProps) => {
           width={'100%'}
         />
       </div>
-    </>
+    </div>
   );
 };
 

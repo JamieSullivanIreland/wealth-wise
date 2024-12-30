@@ -10,11 +10,13 @@ interface IProps {
 const TransactionsTable = ({ transactions }: IProps) => {
   return (
     <>
-      <TableHeader title='Transactions' />
-
+      <TableHeader
+        title='Transactions'
+        linkHref='/transactions'
+        linkText='View All'
+      />
       {transactions.map((transaction: ITransaction, i: number) => {
         const isPositive = transaction.amount > 0;
-
         return (
           <div
             className='grid grid-cols-12 border-t border-stroke mt-4 py-4.5 dark:border-strokedark sm:grid-cols-12'

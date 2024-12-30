@@ -1,7 +1,6 @@
 'use client';
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import Icon from './Icon';
 import Button from './Button';
 
 interface Props {
@@ -17,7 +16,7 @@ const PageHeader = ({ title, btnText }: Props) => {
       </h2>
       {btnText && (
         <Button
-          text='Add'
+          text={btnText}
           onClick={() => {
             console.log('Add');
           }}

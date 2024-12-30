@@ -18,7 +18,7 @@ export default async function Home() {
   // Wait 1 second to access local storage theme
   await new Promise((resolve) => setTimeout(resolve, 1000));
   const transactionsData = getTransactions(5);
-  const assetsData = getAssets();
+  const assetsData = getAssets(5);
   const categoriesData = getCategories();
   const netWorthData = getNetWorth();
 
@@ -28,6 +28,7 @@ export default async function Home() {
     categoriesData,
     netWorthData,
   ]);
+
   return (
     <>
       <Layout>

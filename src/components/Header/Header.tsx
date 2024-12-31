@@ -14,6 +14,7 @@ import {
 } from 'next-auth/react';
 import { BuiltInProviderType } from 'next-auth/providers/index';
 import ProfileImage from './ProfileImage';
+import Button from '../Common/Button';
 
 interface IProps {
   sidebarOpen: string | boolean | undefined;
@@ -61,13 +62,11 @@ const Header = ({ sidebarOpen, setSidebarOpen }: IProps) => {
           ) : (
             providers &&
             Object.values(providers).map((provider) => (
-              <button
+              <Button
                 key={provider.id}
+                text='Sign in'
                 onClick={() => signIn(provider.id)}
-                className='rounded-lg border border-stroke bg-gray py-4 px-8 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50'
-              >
-                Sign in
-              </button>
+              />
             ))
           )}
         </div>

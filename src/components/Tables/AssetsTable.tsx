@@ -1,3 +1,6 @@
+import Link from 'next/link';
+import TableHeader from './TableHeader';
+
 interface IProps {
   assets: IAsset[];
 }
@@ -15,14 +18,14 @@ const AssetsTable = ({ assets }: IProps) => {
   };
 
   return (
-    <div className='rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark'>
-      <div className='px-4 py-6 md:px-6 xl:px-7.5'>
-        <h4 className='text-xl font-semibold text-black dark:text-white'>
-          Assets
-        </h4>
-      </div>
-
-      <div className='grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5'>
+    <>
+      <TableHeader
+        title='Assets'
+        linkHref='/assets'
+        linkText='View All'
+      />
+      <Link href='/assets'>Table</Link>
+      <div className='grid grid-cols-6 border-t border-stroke mt-4  py-4.5 dark:border-strokedark sm:grid-cols-8'>
         <div className='col-span-3 flex items-center'>
           <p className='font-medium'>Type</p>
         </div>
@@ -41,7 +44,7 @@ const AssetsTable = ({ assets }: IProps) => {
         const { category_id, cost, value } = asset;
         return (
           <div
-            className='grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5'
+            className='grid grid-cols-6 border-t border-stroke py-4.5 dark:border-strokedark sm:grid-cols-8'
             key={i}
           >
             <div className='col-span-3 flex items-center'>
@@ -69,7 +72,7 @@ const AssetsTable = ({ assets }: IProps) => {
           </div>
         );
       })}
-    </div>
+    </>
   );
 };
 

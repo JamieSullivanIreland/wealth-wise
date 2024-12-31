@@ -32,6 +32,14 @@ const AssetSchema = new Schema(
       type: Number,
       required: true,
     },
+    createdAt: {
+      type: String,
+      required: true,
+    },
+    updatedAt: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,

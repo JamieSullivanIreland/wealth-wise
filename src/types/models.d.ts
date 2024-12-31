@@ -19,3 +19,14 @@ declare interface IAsset {
   createdAt: string;
   updateAt: string;
 }
+
+declare interface ICategory {
+  _id: string;
+  type: string;
+}
+
+declare interface INetworth {
+  _id: number;
+  total: number;
+  count: number;
+}

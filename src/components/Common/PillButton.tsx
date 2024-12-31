@@ -4,7 +4,6 @@ interface Props {
 }
 
 const PillButton = ({ text, onClick }: Props) => {
-  // lg:px-8 xl:px-10
   return (
     <button
       onClick={onClick}

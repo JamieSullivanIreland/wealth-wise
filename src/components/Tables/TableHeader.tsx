@@ -30,19 +30,6 @@ const TableHeader = ({ title, linkHref, linkText }: Props) => {
           />
         </Link>
       )}
-      {/* {btnText && (
-        <Button
-          text={btnText}
-          onClick={() => {
-            console.log('View All');
-          }}
-          btnSize='sm'
-          icon={faArrowRight}
-          iconSize='lg'
-          iconColor='#313d4a'
-          iconAlign='right'
-        />
-      )} */}
     </div>
   );
 };

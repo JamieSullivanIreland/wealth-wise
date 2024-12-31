@@ -24,8 +24,7 @@ const AssetsTable = ({ assets }: IProps) => {
         linkHref='/assets'
         linkText='View All'
       />
-      <Link href='/assets'>Table</Link>
-      <div className='grid grid-cols-6 border-t border-stroke mt-4  py-4.5 dark:border-strokedark sm:grid-cols-8'>
+      <div className='grid grid-cols-6  mt-4  py-4.5  sm:grid-cols-8 text-sm text-black dark:text-white'>
         <div className='col-span-3 flex items-center'>
           <p className='font-medium'>Type</p>
         </div>
@@ -44,30 +43,22 @@ const AssetsTable = ({ assets }: IProps) => {
         const { category_id, cost, value } = asset;
         return (
           <div
-            className='grid grid-cols-6 border-t border-stroke py-4.5 dark:border-strokedark sm:grid-cols-8'
+            className='grid grid-cols-6 py-4.5 sm:grid-cols-8 text-sm text-black dark:text-white'
             key={i}
           >
             <div className='col-span-3 flex items-center'>
               <div className='flex flex-col gap-4 sm:flex-row sm:items-center'>
-                <p className='text-sm text-black dark:text-white'>
-                  {category_id}
-                </p>
+                <p>{category_id}</p>
               </div>
             </div>
             <div className='col-span-2 hidden items-center sm:flex'>
-              <p className='text-sm text-black dark:text-white'>
-                {getPercentage(value, cost)}
-              </p>
+              <p>{getPercentage(value, cost)}</p>
             </div>
             <div className='col-span-1 flex items-center'>
-              <p className='text-sm text-black dark:text-white'>
-                {nf.format(cost)}
-              </p>
+              <p>{nf.format(cost)}</p>
             </div>
             <div className='col-span-1 flex items-center'>
-              <p className='text-sm text-black dark:text-white'>
-                {nf.format(value)}
-              </p>
+              <p>{nf.format(value)}</p>
             </div>
           </div>
         );

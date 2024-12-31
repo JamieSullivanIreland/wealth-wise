@@ -100,7 +100,9 @@ const NetworthTable = ({ networth }: IProps) => {
 
   return (
     <div className='p-4'>
-      <TableHeader title='Total Net Worth' />
+      <h3 className='text-2xl font-medium text-black dark:text-gray-3 mb-2'>
+        Total Net Worth
+      </h3>
       <h4 className='text-4xl font-medium text-black dark:text-white mb-6'>
         €160,000
       </h4>

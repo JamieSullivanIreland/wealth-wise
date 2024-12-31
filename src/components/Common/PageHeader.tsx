@@ -11,7 +11,7 @@ interface Props {
 const PageHeader = ({ title, btnText }: Props) => {
   return (
     <div className='flex justify-between items-center mb-8'>
-      <h2 className='text-3xl font-medium text-black dark:text-white'>
+      <h2 className='text-3xl font-medium text-black dark:text-gray-2'>
         {title}
       </h2>
       {btnText && (

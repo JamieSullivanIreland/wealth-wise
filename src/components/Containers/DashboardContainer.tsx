@@ -13,7 +13,7 @@ interface IProps {
 
 const Dashboard = ({ transactions, assets, categories, networth }: IProps) => {
   const tableClasses =
-    'px-4 py-6 border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark';
+    'px-4 py-6 border border-stroke bg-white shadow-default dark:border-strokedark ';
 
   return (
     <>
@@ -24,20 +24,26 @@ const Dashboard = ({ transactions, assets, categories, networth }: IProps) => {
       <div className='grid grid-rows-auto grid-cols-1 gap-4'>
         <div className='grid grid-cols-12'>
           <div
-            className={`col-span-8  rounded-s-xl border-r-0 ${tableClasses}`}
+            className={`col-span-8 rounded-s-xl border-r-0 dark:bg-dark-3 ${tableClasses}`}
           >
             <NetworthTable networth={networth} />
           </div>
-          <div className={`col-span-4 rounded-e-xl border-l-0 ${tableClasses}`}>
+          <div
+            className={`col-span-4 rounded-e-xl dark:bg-dark-1 ${tableClasses}`}
+          >
             <CategoryChart categories={categories} />
           </div>
         </div>
         {/* <div className='grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5'> */}
         <div className='grid grid-cols-12 gap-4'>
-          <div className={`col-span-8 rounded-xl ${tableClasses}`}>
+          <div
+            className={`col-span-8 rounded-xl dark:bg-dark-4 ${tableClasses}`}
+          >
             <AssetsTable assets={assets} />
           </div>
-          <div className={`col-span-4 rounded-xl ${tableClasses}`}>
+          <div
+            className={`col-span-4 rounded-xl dark:bg-dark-4 ${tableClasses}`}
+          >
             <TransactionsTable transactions={transactions} />
           </div>
         </div>

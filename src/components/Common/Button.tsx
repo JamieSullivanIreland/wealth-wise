@@ -35,7 +35,7 @@ const Button = ({
     <button
       type={type}
       onClick={onClick}
-      className={`rounded-md border  border-stroke bg-gray hover:bg-opacity-50 dark:border-strokedark dark:bg-gray dark:hover:bg-opacity-75 dark:text-black ${icon ? 'flex gap-2 justify-between items-center ' : ''} ${btnSize === 'lg' ? 'text-lg font-medium py-2 px-4' : 'text-md font-medium py-2 px-4'} `}
+      className={`rounded-md border  border-stroke bg-gray hover:bg-opacity-50 dark:border-strokedark dark:bg-gray-1 dark:hover:bg-opacity-75 dark:text-black ${icon ? 'flex gap-2 justify-between items-center ' : ''} ${btnSize === 'lg' ? 'text-lg font-medium py-2 px-4' : 'text-md font-medium py-2 px-4'} `}
     >
       {icon && iconAlign !== 'right' && (
         <Icon

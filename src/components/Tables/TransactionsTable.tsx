@@ -19,13 +19,13 @@ const TransactionsTable = ({ transactions }: IProps) => {
         const isPositive = transaction.amount > 0;
         return (
           <div
-            className='grid grid-cols-12 border-t border-stroke mt-4 py-4.5 dark:border-strokedark sm:grid-cols-12'
+            className='grid grid-cols-12 mt-4 py-4.5 sm:grid-cols-12'
             key={i}
           >
             <div className='col-span-2 flex items-center'>
               {
                 <div
-                  className={`h-8 min-w-8 rounded-md flex items-center justify-center text-xl ${isPositive ? 'bg-emerald-600 text-emerald-400' : 'bg-rose-600 text-rose-400'}`}
+                  className={`h-8 min-w-8 rounded-md flex items-center justify-center text-xl ${isPositive ? 'bg-dark-green text-light-green' : 'bg-dark-red text-light-red'}`}
                 >
                   <Icon icon={isPositive ? faArrowUp : faArrowDown} />
                 </div>
@@ -34,7 +34,7 @@ const TransactionsTable = ({ transactions }: IProps) => {
             <div className='col-span-8 flex flex-col justify-center'>
               <p className='text-sm'>
                 <span
-                  className={isPositive ? 'text-emerald-400' : 'text-rose-400'}
+                  className={isPositive ? 'text-light-green' : 'text-light-red'}
                 >
                   {transaction.amount}
                 </span>

@@ -37,19 +37,14 @@ const CategoryChart = ({ categories }: Props) => {
   const series = [30, 40, 35, 50, 49, 80];
 
   return (
-    <div className='h-full grid grid-cols-1  items-center justify-between'>
-      <h4 className='text-lg font-medium text-black dark:text-gray-2 '>
-        Categories
-      </h4>
-      <div className='flex justify-center'>
-        <ApexChart
-          options={options}
-          series={series}
-          type='donut'
-          height={250}
-          width={'100%'}
-        />
-      </div>
+    <div className='grid grid-cols-1 gap-8 items-center justify-between justify-items-center'>
+      <ApexChart
+        options={options}
+        series={series}
+        type='donut'
+        height={250}
+        width={'100%'}
+      />
       <div className='grid grid-rows-auto grid-cols-3 gap-2 justify-items-center'>
         {categories.map((category: ICategory, i: number) => (
           <Category

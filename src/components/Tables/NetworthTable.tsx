@@ -1,10 +1,4 @@
-'use client';
 import dynamic from 'next/dynamic';
-
-import TableHeader from './TableHeader';
-import PillButton from '../Common/PillButton';
-import Icon from '../Common/Icon';
-import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
 
 const ApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
@@ -105,57 +99,18 @@ const NetworthTable = ({ networth }: IProps) => {
     },
   };
 
-  const isPositive = true;
-
   return (
-    <div>
-      <div className='flex items-center justify-between'>
-        <h3 className='text-xl font-medium text-black dark:text-gray-3'>
-          Total Net Worth
-        </h3>
-        <div
-          className={`p-2 rounded-md flex items-center justify-center text-sm font-medium ${isPositive ? 'bg-dark-green text-light-green' : 'bg-dark-red text-light-red'}`}
-        >
-          <Icon
-            icon={isPositive ? faArrowUp : faArrowDown}
-            size='lg'
-          />
-          <span className='ml-4'>+543.42 (0.18%)</span>
-        </div>
-      </div>
-      <h4 className='text-5xl font-medium text-black dark:text-white mt-4 mb-6'>
-        €160,000
-      </h4>
-      <div className='flex gap-2'>
-        <PillButton
-          text='1 Week'
-          onClick={() => console.log('1 Week')}
-        />
-        <PillButton
-          text='1 Month'
-          onClick={() => console.log('1 Month')}
-        />
-        <PillButton
-          text='1 Year'
-          onClick={() => console.log('1 Year')}
-        />
-        <PillButton
-          text='All'
-          onClick={() => console.log('All')}
-        />
-      </div>
-      <div
-        id='chartOne'
-        className='-ml-5'
-      >
-        <ApexChart
-          options={options}
-          series={series}
-          type='bar'
-          height={350}
-          width={'100%'}
-        />
-      </div>
+    <div
+      id='chartOne'
+      className='-ml-5'
+    >
+      <ApexChart
+        options={options}
+        series={series}
+        type='bar'
+        height={350}
+        width={'100%'}
+      />
     </div>
   );
 };

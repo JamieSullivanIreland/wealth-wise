@@ -1,5 +1,7 @@
+'use client';
+
+import NetworthContainer from '../Containers/NetworthContainer';
 import CategoryChart from '../Tables/CategoryChart';
-import NetworthTable from '../Tables/NetworthTable';
 
 interface IProps {
   networth: INetworth[];
@@ -19,7 +21,7 @@ const DashboardTopSection = ({
         <div
           className={`col-span-8 rounded-s-xl border-r-0 dark:bg-dark-3 ${tableClasses}`}
         >
-          <NetworthTable networth={networth} />
+          <NetworthContainer networth={networth} />
         </div>
         <div
           className={`col-span-4 rounded-e-xl dark:bg-dark-1 ${tableClasses}`}
@@ -33,7 +35,7 @@ const DashboardTopSection = ({
         <div
           className={`col-span-12 rounded-xl border-r-1 dark:bg-dark-3 ${tableClasses}`}
         >
-          <NetworthTable networth={networth} />
+          <NetworthContainer networth={networth} />
         </div>
       </div>
     </>

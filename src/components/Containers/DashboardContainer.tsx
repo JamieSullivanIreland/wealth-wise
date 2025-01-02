@@ -1,10 +1,6 @@
 import PageHeader from '../Common/PageHeader';
-import DashboardBottomSection from '../Sections/DashboardBottomSection';
-import DashboardTopSection from '../Sections/DashboardTopSection';
-import AssetsTable from '../Tables/AssetsTable';
-import CategoryChart from '../Tables/CategoryChart';
-import NetworthTable from '../Tables/NetworthTable';
-import TransactionsTable from '../Tables/TransactionsTable';
+import DashboardBottom from '../Sections/DashboardBottom';
+import DashboardTop from '../Sections/DashboardTop';
 
 interface IProps {
   transactions: ITransaction[];
@@ -24,12 +20,12 @@ const Dashboard = ({ transactions, assets, categories, networth }: IProps) => {
         btnText='Add'
       />
       <div className='grid grid-rows-auto grid-cols-1 gap-8 sm:gap-4'>
-        <DashboardTopSection
+        <DashboardTop
           networth={networth}
           categories={categories}
           tableClasses={tableClasses}
         />
-        <DashboardBottomSection
+        <DashboardBottom
           transactions={transactions}
           assets={assets}
           tableClasses={tableClasses}

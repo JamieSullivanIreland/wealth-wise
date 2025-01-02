@@ -20,6 +20,14 @@ const NetworthTable = ({ networth }: IProps) => {
       .format(new Date(monthNum.toString()))
       .substring(0, 3);
 
+  const getMaxValue = (networth: INetworth[]) => {
+    const max = Math.max.apply(
+      null,
+      networth.map((val: INetworth) => val.total)
+    );
+    return (max / 100) * 20 + max;
+  };
+
   const series = [
     {
       name: 'networth',
@@ -67,10 +75,7 @@ const NetworthTable = ({ networth }: IProps) => {
     yaxis: {
       opposite: true,
       min: 0,
-      max: Math.max.apply(
-        null,
-        networth.map((val: INetworth) => val.total)
-      ),
+      max: getMaxValue(networth),
       labels: {
         show: true,
         align: 'right',

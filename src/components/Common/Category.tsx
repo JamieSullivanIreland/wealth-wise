@@ -1,12 +1,25 @@
+import { camelCase } from '@/utils/string';
+
 interface Props {
   category: ICategory;
 }
 
 const Category = ({ category }: Props) => {
+  const categoryColors: ICategoryColors = {
+    accounts: 'bg-category-blue',
+    stocks: 'bg-category-teal',
+    crypto: 'bg-category-green',
+    realEstate: 'bg-category-pink',
+    cars: 'bg-category-purple',
+    other: 'bg-category-red',
+  };
+
   return (
     <div>
       <div className='flex items-center'>
-        <div className='w-2 h-2 rounded-full bg-light-green mr-2' />
+        <div
+          className={`w-2 h-2 rounded-full mr-2 ${categoryColors[camelCase(category.type) as keyof ICategoryColors]}`}
+        />
         <h5>{category.type}</h5>
       </div>
       <div className='flex items-center'>

@@ -75,6 +75,14 @@ const config: Config = {
         'dark-2': '#1E1F20',
         'dark-3': '#1C1D1E',
         'dark-4': '#131415',
+
+        // Category Colors
+        'category-blue': '#3E76E0',
+        'category-teal': '#77CAF9',
+        'category-green': '#77CAC7',
+        'category-pink': '#B564ED',
+        'category-purple': '#5F5FDE',
+        'category-red': '#EB4B63',
       },
       fontSize: {
         'title-xxl': ['44px', '55px'],

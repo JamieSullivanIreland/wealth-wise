@@ -1,7 +1,6 @@
 'use client';
 import dynamic from 'next/dynamic';
 
-import TableHeader from './TableHeader';
 import Category from '../Common/Category';
 
 const ApexChart = dynamic(() => import('react-apexcharts'), {
@@ -13,6 +12,15 @@ interface Props {
 }
 
 const CategoryChart = ({ categories }: Props) => {
+  const categoryColors: ICategoryColors = {
+    accounts: '#3E76E0',
+    stocks: '#77CAF9',
+    crypto: '#77CAC7',
+    realEstate: '#B564ED',
+    cars: '#5F5FDE',
+    other: '#EB4B63',
+  };
+
   const options = {
     dataLabels: {
       enabled: false,
@@ -22,29 +30,27 @@ const CategoryChart = ({ categories }: Props) => {
     },
     labels: categories.map((category: ICategory) => category.type),
     fill: {
-      colors: [
-        '#3E76E0',
-        '#77CAF9',
-        '#77CAC7',
-        '#B564ED',
-        '#5F5FDE',
-        '#EB4B63',
-      ],
+      colors: Object.values(categoryColors),
     },
   };
+
   const series = [30, 40, 35, 50, 49, 80];
 
   return (
-    <>
-      <TableHeader title='Categories' />
-      <ApexChart
-        options={options}
-        series={series}
-        type='donut'
-        height={200}
-        width={'100%'}
-      />
-      <div className='grid grid-rows-auto grid-cols-3 gap-2'>
+    <div className='h-full grid grid-cols-1  items-center justify-between'>
+      <h4 className='text-lg font-medium text-black dark:text-gray-2 '>
+        Categories
+      </h4>
+      <div className='flex justify-center'>
+        <ApexChart
+          options={options}
+          series={series}
+          type='donut'
+          height={250}
+          width={'100%'}
+        />
+      </div>
+      <div className='grid grid-rows-auto grid-cols-3 gap-2 justify-items-center'>
         {categories.map((category: ICategory, i: number) => (
           <Category
             key={i}
@@ -52,7 +58,7 @@ const CategoryChart = ({ categories }: Props) => {
           />
         ))}
       </div>
-    </>
+    </div>
   );
 };
 

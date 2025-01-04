@@ -23,12 +23,10 @@ const config: Config = {
         current: 'currentColor',
         transparent: 'transparent',
         black: '#1C2434',
-        red: '#FB5454',
         'black-2': '#010101',
         body: '#64748B',
         primary: '#3E76E0',
         secondary: '#80CAEE',
-        stroke: '#E2E8F0',
         whiten: '#F1F5F9',
         whiter: '#F5F7FD',
         'form-strokedark': '#3d4d60',
@@ -36,7 +34,7 @@ const config: Config = {
         'meta-1': '#DC3545',
         'meta-2': '#EFF2F7',
         'meta-3': '#10B981',
-        'meta-4': 'red',
+        'meta-4': '#1C1D1E',
         'meta-5': '#259AE6',
         'meta-6': '#FFBA00',
         'meta-7': '#FF6766',
@@ -63,8 +61,11 @@ const config: Config = {
         // Hover Link
         'sidebar-dark': '#0F1010',
 
+        // Border
         strokedark: '#2D2D2D',
+        stroke: '#E2E8F0',
 
+        // Currency
         'light-green': '#2CE48A',
         'mid-green': '#197f4c',
         'dark-green': '#193029',

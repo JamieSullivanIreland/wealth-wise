@@ -76,7 +76,7 @@ const NetworthTable = ({ networth }: IProps) => {
         minWidth: 50,
         style: {
           // TODO Change label colour
-          colors: [],
+          colors: ['#000000'],
           fontSize: '12px',
           fontFamily: 'Helvetica, Arial, sans-serif',
           fontWeight: 400,

@@ -26,7 +26,7 @@ const config: Config = {
         red: '#FB5454',
         'black-2': '#010101',
         body: '#64748B',
-        primary: '#3C50E0',
+        primary: '#3E76E0',
         secondary: '#80CAEE',
         stroke: '#E2E8F0',
         whiten: '#F1F5F9',
@@ -66,6 +66,7 @@ const config: Config = {
         strokedark: '#2D2D2D',
 
         'light-green': '#2CE48A',
+        'mid-green': '#197f4c',
         'dark-green': '#193029',
         'light-red': '#e52020',
         'dark-red': '#301919',

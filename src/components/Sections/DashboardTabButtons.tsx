@@ -7,7 +7,7 @@ interface IProps {
 
 const DashboardTabButtons = ({ handleTabClick, tabs }: IProps) => {
   return (
-    <div className='flex sm:hidden gap-2'>
+    <div className='flex md:hidden gap-2'>
       {tabs?.map((tab: DashboardTab) => (
         <PillButton
           key={tab}

@@ -28,20 +28,19 @@ const Button = ({
   btnSize = 'lg',
   icon,
   iconSize,
-  iconColor,
   iconAlign,
 }: Props) => {
   return (
     <button
       type={type}
       onClick={onClick}
-      className={`rounded-md border  border-stroke bg-gray hover:bg-opacity-50 dark:border-strokedark dark:bg-gray-1 dark:hover:bg-opacity-75 dark:text-black ${icon ? 'flex gap-2 justify-between items-center ' : ''} ${btnSize === 'lg' ? 'text-lg font-medium py-2 px-4' : 'text-md font-medium py-2 px-4'} `}
+      className={`rounded-md border border-stroke bg-black text-white hover:bg-opacity-50 dark:border-strokedark dark:text-black dark:bg-gray-1 dark:hover:bg-opacity-75  ${icon ? 'flex gap-2 justify-between items-center ' : ''} ${btnSize === 'lg' ? 'text-lg font-medium py-2 px-4' : 'text-md font-medium py-2 px-4'} `}
+      style={{ color: '' }}
     >
       {icon && iconAlign !== 'right' && (
         <Icon
           icon={icon}
           size={iconSize}
-          color={iconColor}
         />
       )}
       {text}
@@ -49,7 +48,6 @@ const Button = ({
         <Icon
           icon={icon}
           size={iconSize}
-          color={iconColor}
         />
       )}
     </button>

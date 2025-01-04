@@ -5,3 +5,8 @@ export const camelCase = (str: string) => {
     })
     .replace(/\s+/g, '');
 };
+
+export const currencyFormat = new Intl.NumberFormat('en-GB', {
+  style: 'currency',
+  currency: 'EUR',
+});

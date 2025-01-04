@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { currencyFormat } from '@/utils/string';
 import TableHeader from './TableHeader';
 
 interface IProps {
@@ -6,11 +6,6 @@ interface IProps {
 }
 
 const AssetsTable = ({ assets }: IProps) => {
-  const nf = new Intl.NumberFormat('en-GB', {
-    style: 'currency',
-    currency: 'EUR',
-  });
-
   const getPercentage = (value: number, cost: number) => {
     const diff = value - cost;
     const percentage = (diff / cost) * 100;
@@ -55,10 +50,10 @@ const AssetsTable = ({ assets }: IProps) => {
               <p>{getPercentage(value, cost)}</p>
             </div>
             <div className='col-span-1 flex items-center'>
-              <p>{nf.format(cost)}</p>
+              <p>{currencyFormat.format(cost)}</p>
             </div>
             <div className='col-span-1 flex items-center'>
-              <p>{nf.format(value)}</p>
+              <p>{currencyFormat.format(value)}</p>
             </div>
           </div>
         );

@@ -2,6 +2,7 @@ import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
 
 import Icon from '../Common/Icon';
 import TableHeader from './TableHeader';
+import { currencyFormat } from '@/utils/string';
 
 interface IProps {
   transactions: ITransaction[];
@@ -40,7 +41,7 @@ const TransactionsTable = ({ transactions }: IProps) => {
                       : 'text-mid-red dark:text-light-red'
                   }
                 >
-                  {transaction.amount}
+                  {currencyFormat.format(transaction.amount)}
                 </span>
               </p>
               <p className='text-black dark:text-white'>

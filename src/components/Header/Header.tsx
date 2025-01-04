@@ -39,13 +39,13 @@ const Header = ({ sidebarOpen, setSidebarOpen }: IProps) => {
   return (
     <header className='sticky top-0 z-999 bg-white drop-shadow-1 dark:bg-dark-3 dark:drop-shadow-none'>
       <div className='flex flex-grow items-center shadow-2 px-4 py-4 md:px-6 2xl:px-11'>
-        <div className='flex items-center justify-between  w-full sm:hidden'>
+        <div className='flex items-center justify-between w-full sm:hidden'>
           <HamburgerButton
             sidebarOpen={sidebarOpen}
             setSidebarOpen={setSidebarOpen}
           />
           <Link
-            className='block flex-shrink-0'
+            className='text-md font-medium rounded-md bg-black text-white hover:bg-opacity-50 dark:text-black dark:bg-gray-1 dark:hover:bg-opacity-75'
             href='/'
           >
             {session?.user?.image && (

@@ -6,7 +6,7 @@ interface Props {
 
 const Category = ({ category }: Props) => {
   const categoryColors: ICategoryColors = {
-    accounts: 'bg-category-blue',
+    accounts: 'bg-primary',
     stocks: 'bg-category-teal',
     crypto: 'bg-category-green',
     realEstate: 'bg-category-pink',

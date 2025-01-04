@@ -69,6 +69,7 @@ const config: Config = {
         'mid-green': '#197f4c',
         'dark-green': '#193029',
         'light-red': '#e52020',
+        'mid-red': '#9b1515',
         'dark-red': '#301919',
 
         // Containers Dark mode
@@ -78,7 +79,6 @@ const config: Config = {
         'dark-4': '#131415',
 
         // Category Colors
-        'category-blue': '#3E76E0',
         'category-teal': '#77CAF9',
         'category-green': '#77CAC7',
         'category-pink': '#B564ED',

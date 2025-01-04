@@ -21,7 +21,7 @@ const PageHeader = ({ title, btnText }: Props) => {
             console.log('Add');
           }}
           icon={faPlus}
-          iconSize='xl'
+          iconSize='lg'
         />
       )}
     </div>

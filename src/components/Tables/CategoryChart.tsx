@@ -22,6 +22,11 @@ const CategoryChart = ({ categories }: Props) => {
   };
 
   const options = {
+    chart: {
+      toolbar: {
+        show: false,
+      },
+    },
     dataLabels: {
       enabled: false,
     },
@@ -45,7 +50,7 @@ const CategoryChart = ({ categories }: Props) => {
         height={250}
         width={'100%'}
       />
-      <div className='grid grid-rows-auto grid-cols-3 gap-2 justify-items-center'>
+      <div className='grid grid-rows-auto grid-cols-3 gap-6 justify-items-center'>
         {categories.map((category: ICategory, i: number) => (
           <Category
             key={i}

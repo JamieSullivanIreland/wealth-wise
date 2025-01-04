@@ -20,9 +20,14 @@ const DashboardTopSection = ({
   tableClasses,
 }: IProps) => {
   const [activeTab, setActiveTab] = useState<DashboardTab>('Chart');
+  const [activeFilter, setActiveFilter] = useState<NetworthFilter>('week');
 
   const handleTabClick = (tab: DashboardTab) => {
     setActiveTab(tab);
+  };
+
+  const handleFilterClick = (filter: NetworthFilter) => {
+    setActiveFilter(filter);
   };
 
   return (
@@ -33,7 +38,10 @@ const DashboardTopSection = ({
           className={`col-span-8 rounded-s-xl border-r-0 dark:bg-dark-3 ${tableClasses}`}
         >
           <NetworthSummary isPositive={true} />
-          <NetworthFilterButtons />
+          <NetworthFilterButtons
+            activeFilter={activeFilter}
+            handleClick={handleFilterClick}
+          />
           <NetworthTable networth={networth} />
         </div>
         <div

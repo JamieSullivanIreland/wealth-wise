@@ -1,8 +1,4 @@
-'use client';
 import dynamic from 'next/dynamic';
-
-import TableHeader from './TableHeader';
-import PillButton from '../Common/PillButton';
 
 const ApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
@@ -17,6 +13,14 @@ const NetworthTable = ({ networth }: IProps) => {
     Intl.DateTimeFormat('en', { month: 'long' })
       .format(new Date(monthNum.toString()))
       .substring(0, 3);
+
+  const getMaxValue = (networth: INetworth[]) => {
+    const max = Math.max.apply(
+      null,
+      networth.map((val: INetworth) => val.total)
+    );
+    return (max / 100) * 20 + max;
+  };
 
   const series = [
     {
@@ -65,17 +69,14 @@ const NetworthTable = ({ networth }: IProps) => {
     yaxis: {
       opposite: true,
       min: 0,
-      max: Math.max.apply(
-        null,
-        networth.map((val: INetworth) => val.total)
-      ),
+      max: getMaxValue(networth),
       labels: {
         show: true,
         align: 'right',
-        minWidth: 100,
+        minWidth: 50,
         style: {
           // TODO Change label colour
-          colors: [],
+          colors: ['#000000'],
           fontSize: '12px',
           fontFamily: 'Helvetica, Arial, sans-serif',
           fontWeight: 400,
@@ -99,41 +100,17 @@ const NetworthTable = ({ networth }: IProps) => {
   };
 
   return (
-    <div className='p-4'>
-      <TableHeader title='Total Net Worth' />
-      <h4 className='text-4xl font-medium text-black dark:text-white mb-6'>
-        €160,000
-      </h4>
-      <div className='flex gap-2'>
-        <PillButton
-          text='1 Week'
-          onClick={() => console.log('1 Week')}
-        />
-        <PillButton
-          text='1 Month'
-          onClick={() => console.log('1 Month')}
-        />
-        <PillButton
-          text='1 Year'
-          onClick={() => console.log('1 Year')}
-        />
-        <PillButton
-          text='All'
-          onClick={() => console.log('All')}
-        />
-      </div>
-      <div
-        id='chartOne'
-        className='-ml-5'
-      >
-        <ApexChart
-          options={options}
-          series={series}
-          type='bar'
-          height={350}
-          width={'100%'}
-        />
-      </div>
+    <div
+      id='chartOne'
+      className='-ml-5'
+    >
+      <ApexChart
+        options={options}
+        series={series}
+        type='bar'
+        height={350}
+        width={'100%'}
+      />
     </div>
   );
 };

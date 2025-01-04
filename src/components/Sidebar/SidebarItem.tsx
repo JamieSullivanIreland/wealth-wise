@@ -13,7 +13,7 @@ interface IProps {
 const SidebarItem = ({ item, pageName, setPageName, onClick }: IProps) => {
   const pathname = usePathname();
   const isItemActive = item.route === pathname;
-  const classes = `${isItemActive ? 'bg-graydark dark:bg-meta-4' : ''} group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 w-full`;
+  const classes = `${isItemActive ? 'bg-graydark dark:bg-sidebar-dark' : ''} group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-sidebar-dark w-full`;
 
   const handleSetPageName = () => {
     if (setPageName) {

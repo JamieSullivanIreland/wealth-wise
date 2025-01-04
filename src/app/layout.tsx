@@ -22,7 +22,7 @@ export default function RootLayout({
           />
         </head>
         <body suppressHydrationWarning={true}>
-          <div className='dark:bg-boxdark-2 dark:text-bodydark'>{children}</div>
+          <div className='dark:bg-dark-4 dark:text-bodydark'>{children}</div>
         </body>
       </html>
     </AuthProvider>

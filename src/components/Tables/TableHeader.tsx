@@ -14,19 +14,18 @@ interface Props {
 const TableHeader = ({ title, linkHref, linkText }: Props) => {
   return (
     <div className='flex justify-between items-center mb-8'>
-      <h4 className='text-xl font-medium text-black dark:text-white mb-2'>
+      <h4 className='text-lg font-medium text-black dark:text-gray-2 mb-2'>
         {title}
       </h4>
       {linkHref && linkText && (
         <Link
           href={linkHref}
-          className={`flex gap-2 justify-between items-center text-md font-medium py-2 px-4 rounded-md border  border-stroke bg-gray hover:bg-opacity-50 dark:border-strokedark dark:bg-gray dark:hover:bg-opacity-75 dark:text-black`}
+          className={`flex gap-2 justify-between items-center text-md font-medium py-2 px-4 rounded-md bg-black text-white hover:bg-opacity-50 dark:text-black dark:bg-gray-1 dark:hover:bg-opacity-75`}
         >
           {linkText}
           <Icon
             icon={faArrowRight}
-            size='xl'
-            color='#313d4a'
+            size='lg'
           />
         </Link>
       )}

@@ -68,7 +68,7 @@
 }
 
 .apexcharts-tooltip.apexcharts-theme-light {
-  @apply dark:!border-strokedark dark:!bg-boxdark;
+  @apply dark:!border-strokedark dark:!bg-dark-3;
 }
 
 .apexcharts-tooltip.apexcharts-theme-light .apexcharts-tooltip-title {
@@ -81,15 +81,15 @@
 }
 
 .apexcharts-xaxistooltip-bottom:after {
-  @apply !border-b-gray dark:!border-b-meta-4;
+  @apply !border-b-gray-1 dark:!border-b-meta-4;
 }
 
 .apexcharts-xaxistooltip-bottom:before {
-  @apply !border-b-gray dark:!border-b-meta-4;
+  @apply !border-b-gray-1 dark:!border-b-meta-4;
 }
 
 .apexcharts-xaxistooltip-bottom {
-  @apply !rounded !border-none !bg-gray !text-xs !font-medium !text-black dark:!text-white;
+  @apply !rounded !border-none !bg-gray-1 !text-xs !font-medium !text-black dark:!text-white;
 }
 
 .apexcharts-tooltip-series-group {
@@ -106,15 +106,15 @@
 }
 
 .flatpickr-calendar.arrowTop:before {
-  @apply dark:!border-b-boxdark;
+  @apply dark:!border-b-dark-3;
 }
 
 .flatpickr-calendar.arrowTop:after {
-  @apply dark:!border-b-boxdark;
+  @apply dark:!border-b-dark-3;
 }
 
 .flatpickr-calendar {
-  @apply !p-6 dark:!bg-boxdark dark:!text-bodydark dark:!shadow-8 2xsm:!w-auto;
+  @apply !p-6 dark:!bg-dark-3 dark:!text-bodydark dark:!shadow-8 2xsm:!w-auto;
 }
 
 .flatpickr-day {

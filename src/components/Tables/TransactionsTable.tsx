@@ -2,6 +2,7 @@ import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
 
 import Icon from '../Common/Icon';
 import TableHeader from './TableHeader';
+import { currencyFormat } from '@/utils/string';
 
 interface IProps {
   transactions: ITransaction[];
@@ -19,31 +20,35 @@ const TransactionsTable = ({ transactions }: IProps) => {
         const isPositive = transaction.amount > 0;
         return (
           <div
-            className='grid grid-cols-12 border-t border-stroke mt-4 py-4.5 dark:border-strokedark sm:grid-cols-12'
+            className='grid grid-cols-12 mt-4 py-4.5 sm:grid-cols-12'
             key={i}
           >
-            <div className='col-span-2 flex items-center'>
+            <div className='col-span-3 flex items-center'>
               {
                 <div
-                  className={`h-8 min-w-8 rounded-md flex items-center justify-center text-xl ${isPositive ? 'bg-emerald-600 text-emerald-400' : 'bg-rose-600 text-rose-400'}`}
+                  className={`h-10 min-w-10 rounded-md flex items-center justify-center text-xl border border-stroke dark:border-0 ${isPositive ? 'bg-gray-1 text-mid-green dark:bg-dark-green dark:text-light-green' : 'bg-gray-1 text-mid-red dark:bg-dark-red dark:text-light-red'}`}
                 >
                   <Icon icon={isPositive ? faArrowUp : faArrowDown} />
                 </div>
               }
             </div>
-            <div className='col-span-8 flex flex-col justify-center'>
-              <p className='text-sm'>
+            <div className='font-medium gap-1 text-sm col-span-7 flex flex-col justify-center'>
+              <p>
                 <span
-                  className={isPositive ? 'text-emerald-400' : 'text-rose-400'}
+                  className={
+                    isPositive
+                      ? 'text-mid-green dark:text-light-green'
+                      : 'text-mid-red dark:text-light-red'
+                  }
                 >
-                  {transaction.amount}
+                  {currencyFormat.format(transaction.amount)}
                 </span>
               </p>
-              <p className='text-sm text-black dark:text-white'>
+              <p className='text-black dark:text-white'>
                 Account Barclays 1234
               </p>
             </div>
-            <div className='col-span-2 flex flex-col justify-center items-end text-sm text-black dark:text-white'>
+            <div className=' gap-1 col-span-2 flex flex-col justify-center items-end text-sm text-black dark:text-white'>
               <p>3 Jan</p>
               <p>15:41</p>
             </div>

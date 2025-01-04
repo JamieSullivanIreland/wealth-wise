@@ -22,32 +22,19 @@ const config: Config = {
       colors: {
         current: 'currentColor',
         transparent: 'transparent',
-        white: '#FFFFFF',
         black: '#1C2434',
-        red: '#FB5454',
         'black-2': '#010101',
         body: '#64748B',
-        bodydark: '#AEB7C0',
-        bodydark1: '#DEE4EE',
-        bodydark2: '#8A99AF',
-        primary: '#3C50E0',
+        primary: '#3E76E0',
         secondary: '#80CAEE',
-        stroke: '#E2E8F0',
-        gray: '#EFF4FB',
-        graydark: '#333A48',
-        'gray-2': '#F7F9FC',
-        'gray-3': '#FAFAFA',
         whiten: '#F1F5F9',
         whiter: '#F5F7FD',
-        boxdark: '#24303F',
-        'boxdark-2': '#1A222C',
-        strokedark: '#2E3A47',
         'form-strokedark': '#3d4d60',
         'form-input': '#1d2a39',
         'meta-1': '#DC3545',
         'meta-2': '#EFF2F7',
         'meta-3': '#10B981',
-        'meta-4': '#313D4A',
+        'meta-4': '#1C1D1E',
         'meta-5': '#259AE6',
         'meta-6': '#FFBA00',
         'meta-7': '#FF6766',
@@ -57,6 +44,47 @@ const config: Config = {
         success: '#219653',
         danger: '#D34053',
         warning: '#FFA70B',
+
+        // Text
+        bodydark: '#AEB7C0',
+        bodydark1: '#DEE4EE',
+        bodydark2: '#8A99AF',
+
+        // Grays
+        white: '#FCFCFC',
+        'gray-1': '#EFF4FB',
+        'gray-2': '#e5e5e5',
+        'gray-3': '#a4a6a8',
+        'gray-4': '#353535',
+        graydark: '#333A48',
+
+        // Hover Link
+        'sidebar-dark': '#0F1010',
+
+        // Border
+        strokedark: '#2D2D2D',
+        stroke: '#E2E8F0',
+
+        // Currency
+        'light-green': '#2CE48A',
+        'mid-green': '#197f4c',
+        'dark-green': '#193029',
+        'light-red': '#e52020',
+        'mid-red': '#9b1515',
+        'dark-red': '#301919',
+
+        // Containers Dark mode
+        'dark-1': '#232526',
+        'dark-2': '#1E1F20',
+        'dark-3': '#1C1D1E',
+        'dark-4': '#131415',
+
+        // Category Colors
+        'category-teal': '#77CAF9',
+        'category-green': '#77CAC7',
+        'category-pink': '#B564ED',
+        'category-purple': '#5F5FDE',
+        'category-red': '#EB4B63',
       },
       fontSize: {
         'title-xxl': ['44px', '55px'],

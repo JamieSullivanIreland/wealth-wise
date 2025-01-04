@@ -18,8 +18,10 @@ export const getCategories = async () => {
   return data.categories;
 };
 
-export const getNetWorth = async () => {
-  const res = await fetch('http://localhost:3000/api/networth');
+export const getNetWorth = async (filter: NetworthFilter) => {
+  const res = await fetch(
+    `http://localhost:3000/api/networth?filter=${filter}`
+  );
   const data = await res.json();
   return data.networth;
 };

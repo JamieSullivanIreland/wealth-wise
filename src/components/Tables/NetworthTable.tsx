@@ -6,13 +6,33 @@ const ApexChart = dynamic(() => import('react-apexcharts'), {
 
 interface IProps {
   networth: INetworth[];
+  activeFilter: NetworthFilter;
 }
 
-const NetworthTable = ({ networth }: IProps) => {
-  const getMonth = (monthNum: number) =>
-    Intl.DateTimeFormat('en', { month: 'long' })
-      .format(new Date(monthNum.toString()))
-      .substring(0, 3);
+const NetworthTable = ({ networth, activeFilter }: IProps) => {
+  const getDateLabel = (networthItem: INetworth) => {
+    const { _id, timestamp } = networthItem;
+    const date = new Date(timestamp);
+
+    switch (activeFilter) {
+      case 'all':
+        return _id.toString();
+      case 'year':
+        return Intl.DateTimeFormat('en', { month: 'short' }).format(date);
+      case 'month':
+        return (
+          date.getDate() +
+          '/' +
+          (date.getMonth() + 1) +
+          '/' +
+          date.getFullYear().toString().substring(0, 2)
+        );
+      case 'week':
+        return new Intl.DateTimeFormat('en', { weekday: 'short' }).format(date);
+      default:
+        break;
+    }
+  };
 
   const getMaxValue = (networth: INetworth[]) => {
     const max = Math.max.apply(
@@ -26,7 +46,7 @@ const NetworthTable = ({ networth }: IProps) => {
     {
       name: 'networth',
       data: networth.map((value: INetworth) => ({
-        x: getMonth(value._id),
+        x: getDateLabel(value),
         y: value.total,
       })),
     },
@@ -44,7 +64,7 @@ const NetworthTable = ({ networth }: IProps) => {
     legend: {
       show: true,
     },
-    labels: networth.map((value: INetworth) => getMonth(value._id)),
+    labels: networth.map((value: INetworth) => getDateLabel(value)),
     fill: {
       colors: ['#2CE48A'],
     },

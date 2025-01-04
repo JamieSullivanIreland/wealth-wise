@@ -1,24 +1,22 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import CategoryChart from '../Tables/CategoryChart';
 import DashboardTabButtons from './DashboardTabButtons';
 import NetworthSummary from './NetworthSummary';
 import NetworthTable from '../Tables/NetworthTable';
 import NetworthFilterButtons from './NetworthFilterButtons';
+import { getNetWorth } from '@/utils/api';
 
 interface IProps {
-  networth: INetworth[];
   categories: ICategory[];
   tableClasses: string;
 }
 
-const DashboardTopSection = ({
-  networth,
-  categories,
-  tableClasses,
-}: IProps) => {
+const DashboardTopSection = ({ categories, tableClasses }: IProps) => {
+  const [networth, setNetworth] = useState<INetworth[]>([]);
+  const [isLoading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<DashboardTab>('Chart');
   const [activeFilter, setActiveFilter] = useState<NetworthFilter>('week');
 
@@ -29,6 +27,15 @@ const DashboardTopSection = ({
   const handleFilterClick = (filter: NetworthFilter) => {
     setActiveFilter(filter);
   };
+
+  useEffect(() => {
+    getNetWorth(activeFilter).then((data: INetworth[]) => {
+      setNetworth(data);
+      setLoading(false);
+    });
+  }, [activeFilter]);
+
+  if (isLoading) return <p>Loading...</p>;
 
   return (
     <>
@@ -42,7 +49,10 @@ const DashboardTopSection = ({
             activeFilter={activeFilter}
             handleClick={handleFilterClick}
           />
-          <NetworthTable networth={networth} />
+          <NetworthTable
+            networth={networth}
+            activeFilter={activeFilter}
+          />
         </div>
         <div
           className={`col-span-4 rounded-e-xl dark:bg-dark-1 ${tableClasses}`}

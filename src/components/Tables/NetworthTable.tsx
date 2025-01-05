@@ -20,15 +20,9 @@ const NetworthTable = ({ networth, activeFilter }: IProps) => {
       case 'year':
         return Intl.DateTimeFormat('en', { month: 'short' }).format(date);
       case 'month':
-        return (
-          date.getDate() +
-          '/' +
-          (date.getMonth() + 1) +
-          '/' +
-          date.getFullYear().toString().substring(0, 2)
-        );
+        return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear().toString().substring(0, 2)}`;
       case 'week':
-        return new Intl.DateTimeFormat('en', { weekday: 'short' }).format(date);
+        return `${new Intl.DateTimeFormat('en', { weekday: 'short' }).format(date)} ${date.getDate()}`;
       default:
         break;
     }

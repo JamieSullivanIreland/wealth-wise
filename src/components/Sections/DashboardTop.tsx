@@ -74,7 +74,16 @@ const DashboardTopSection = ({ categories, tableClasses }: IProps) => {
             handleTabClick={handleTabClick}
             tabs={['Chart', 'Categories']}
           />
-          {activeTab === 'Chart' && <NetworthTable networth={networth} />}
+          {activeTab === 'Chart' && (
+            <NetworthTable
+              activeFilter={activeFilter}
+              networth={networth}
+            />
+          )}
+          <NetworthFilterButtons
+            activeFilter={activeFilter}
+            handleClick={handleFilterClick}
+          />
           {activeTab === 'Categories' && (
             <CategoryChart categories={categories} />
           )}

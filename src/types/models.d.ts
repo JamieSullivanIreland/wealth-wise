@@ -26,8 +26,6 @@ declare interface ICategory {
 }
 
 declare interface INetworth {
-  _id: number;
   timestamp: string;
   total: number;
-  count: number;
 }

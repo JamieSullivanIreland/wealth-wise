@@ -18,7 +18,7 @@ const DashboardTopSection = ({ categories, tableClasses }: IProps) => {
   const [networth, setNetworth] = useState<INetworth[]>([]);
   const [isLoading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<DashboardTab>('Chart');
-  const [activeFilter, setActiveFilter] = useState<NetworthFilter>('week');
+  const [activeFilter, setActiveFilter] = useState<NetworthFilter>('all');
 
   const handleTabClick = (tab: DashboardTab) => {
     setActiveTab(tab);

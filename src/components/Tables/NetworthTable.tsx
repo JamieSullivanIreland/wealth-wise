@@ -1,3 +1,4 @@
+import { getEuropeanYear } from '@/utils/string';
 import dynamic from 'next/dynamic';
 
 const ApexChart = dynamic(() => import('react-apexcharts'), {
@@ -11,16 +12,16 @@ interface IProps {
 
 const NetworthTable = ({ networth, activeFilter }: IProps) => {
   const getDateLabel = (networthItem: INetworth) => {
-    const { _id, timestamp } = networthItem;
+    const { timestamp } = networthItem;
     const date = new Date(timestamp);
 
     switch (activeFilter) {
       case 'all':
-        return _id.toString();
+        return Intl.DateTimeFormat('en', { year: 'numeric' }).format(date);
       case 'year':
         return Intl.DateTimeFormat('en', { month: 'short' }).format(date);
       case 'month':
-        return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear().toString().substring(0, 2)}`;
+        return getEuropeanYear(date);
       case 'week':
         return `${new Intl.DateTimeFormat('en', { weekday: 'short' }).format(date)} ${date.getDate()}`;
       default:

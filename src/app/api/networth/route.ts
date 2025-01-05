@@ -158,7 +158,7 @@ export const GET = async (request: NextRequest) => {
               as: 'index',
               in: {
                 timestamp: { $arrayElemAt: ['$dates', '$$index'] },
-                value: { $arrayElemAt: ['$cumulatedValues.values', '$$index'] },
+                total: { $arrayElemAt: ['$cumulatedValues.values', '$$index'] },
               },
             },
           },
@@ -226,7 +226,9 @@ export const GET = async (request: NextRequest) => {
     //   },
     // ]);
 
-    return new Response(JSON.stringify({ networth }), { status: 200 });
+    return new Response(JSON.stringify({ networth: networth[0].results }), {
+      status: 200,
+    });
   } catch (error) {
     console.log(error);
     return new Response('Something went wrong', { status: 500 });

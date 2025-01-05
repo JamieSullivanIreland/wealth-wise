@@ -9,9 +9,6 @@ export const GET = async (request: NextRequest) => {
   let agg = 'dayOfWeek';
   let networth = [];
 
-  // Need to get the total networth before this date
-  // Return total plus the diff
-
   switch (filter) {
     case 'all':
       agg = 'year';
@@ -68,7 +65,7 @@ export const GET = async (request: NextRequest) => {
 
     // Working
     networth = await Asset.aggregate([
-      // Group results by year and get total networth for each
+      // Group results by year and get total networth for each year
       {
         $group: {
           _id: {
@@ -82,18 +79,18 @@ export const GET = async (request: NextRequest) => {
           },
         },
       },
+      // Sort by asc - earliest date
       {
         $sort: {
           timestamp: 1,
         },
       },
+      // Group and give each year a date and total
       {
         $group: {
           _id: '',
-          results: {
-            $push: {
-              timestamp: '$timestamp',
-            },
+          dates: {
+            $push: '$timestamp',
           },
           totals: {
             $push: {
@@ -102,9 +99,10 @@ export const GET = async (request: NextRequest) => {
           },
         },
       },
+      // Add the result for the cumulated value of each year
       {
         $addFields: {
-          result: {
+          cumulatedValues: {
             $reduce: {
               input: '$totals',
               initialValue: {
@@ -150,17 +148,22 @@ export const GET = async (request: NextRequest) => {
           },
         },
       },
-      // {
-      //   $project: {
-      //     _id: 0,
-      //     totalNetworth: '$result.total',
-      //     results: '$results',
-      //     values: {
-      //       $concatArrays: ['$results', '$result.values'],
-      //     },
-
-      //   },
-      // },
+      // Tidy up results
+      {
+        $project: {
+          _id: 0,
+          results: {
+            $map: {
+              input: { $range: [0, { $size: '$dates' }] },
+              as: 'index',
+              in: {
+                timestamp: { $arrayElemAt: ['$dates', '$$index'] },
+                value: { $arrayElemAt: ['$cumulatedValues.values', '$$index'] },
+              },
+            },
+          },
+        },
+      },
     ]);
 
     // This is for all filters except 'All'

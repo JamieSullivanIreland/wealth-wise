@@ -63,81 +63,227 @@ export const GET = async (request: NextRequest) => {
     //   },
     // ]).sort({ _id: 1 });
 
-    // Working
+    // Working for all
+    // networth = await Asset.aggregate([
+    //   // Group results by year and get total networth for each year
+    //   {
+    //     $group: {
+    //       _id: {
+    //         [`$${agg}`]: '$createdAt',
+    //       },
+    //       timestamp: { $first: '$createdAt' },
+    //       total: {
+    //         $sum: {
+    //           $subtract: ['$value', '$cost'],
+    //         },
+    //       },
+    //     },
+    //   },
+    //   // Sort by asc - earliest date
+    //   {
+    //     $sort: {
+    //       timestamp: 1,
+    //     },
+    //   },
+    //   // Group and give each year a date and total
+    //   {
+    //     $group: {
+    //       _id: '',
+    //       dates: {
+    //         $push: '$timestamp',
+    //       },
+    //       totals: {
+    //         $push: {
+    //           $sum: '$total',
+    //         },
+    //       },
+    //     },
+    //   },
+    //   // Add the result for the cumulated value of each year
+    //   {
+    //     $addFields: {
+    //       cumulatedValues: {
+    //         $reduce: {
+    //           input: '$totals',
+    //           initialValue: {
+    //             total: null,
+    //             values: [],
+    //           },
+    //           in: {
+    //             $cond: {
+    //               if: {
+    //                 // No total yet, first iteration
+    //                 $eq: ['$$value.total', null],
+    //               },
+    //               then: {
+    //                 // Set first total and add to array
+    //                 total: '$$this',
+    //                 values: {
+    //                   $concatArrays: ['$$value.values', ['$$this']],
+    //                 },
+    //               },
+    //               else: {
+    //                 $let: {
+    //                   vars: {
+    //                     // Add total and current value
+    //                     cumulatedTotal: {
+    //                       $add: ['$$value.total', '$$this'],
+    //                     },
+    //                   },
+    //                   in: {
+    //                     // Set new total and add to array
+    //                     total: '$$cumulatedTotal',
+    //                     values: {
+    //                       $concatArrays: [
+    //                         '$$value.values',
+    //                         ['$$cumulatedTotal'],
+    //                       ],
+    //                     },
+    //                   },
+    //                 },
+    //               },
+    //             },
+    //           },
+    //         },
+    //       },
+    //     },
+    //   },
+    //   // Tidy up results
+    //   {
+    //     $project: {
+    //       _id: 0,
+    //       results: {
+    //         $map: {
+    //           input: { $range: [0, { $size: '$dates' }] },
+    //           as: 'index',
+    //           in: {
+    //             timestamp: { $arrayElemAt: ['$dates', '$$index'] },
+    //             total: { $arrayElemAt: ['$cumulatedValues.values', '$$index'] },
+    //           },
+    //         },
+    //       },
+    //     },
+    //   },
+    // ]);
+
+    console.log('DATE');
+    console.log(date);
+
+    // This is for all filters except 'All'
     networth = await Asset.aggregate([
-      // Group results by year and get total networth for each year
       {
-        $group: {
-          _id: {
-            [`$${agg}`]: '$createdAt',
-          },
-          timestamp: { $first: '$createdAt' },
-          total: {
-            $sum: {
-              $subtract: ['$value', '$cost'],
-            },
-          },
-        },
-      },
-      // Sort by asc - earliest date
-      {
-        $sort: {
-          timestamp: 1,
-        },
-      },
-      // Group and give each year a date and total
-      {
-        $group: {
-          _id: '',
-          dates: {
-            $push: '$timestamp',
-          },
-          totals: {
-            $push: {
-              $sum: '$total',
-            },
-          },
-        },
-      },
-      // Add the result for the cumulated value of each year
-      {
-        $addFields: {
-          cumulatedValues: {
-            $reduce: {
-              input: '$totals',
-              initialValue: {
-                total: null,
-                values: [],
+        $facet: {
+          totalNetworth: [
+            {
+              $group: {
+                _id: null,
+                value: {
+                  $sum: {
+                    $subtract: ['$value', '$cost'],
+                  },
+                },
               },
-              in: {
-                $cond: {
-                  if: {
-                    // No total yet, first iteration
-                    $eq: ['$$value.total', null],
+            },
+          ],
+          prevTotalNetworth: [
+            {
+              $match: {
+                createdAt: {
+                  $lt: date,
+                },
+              },
+            },
+            {
+              $group: {
+                _id: null,
+                value: {
+                  $sum: {
+                    $subtract: ['$value', '$cost'],
                   },
-                  then: {
-                    // Set first total and add to array
-                    total: '$$this',
-                    values: {
-                      $concatArrays: ['$$value.values', ['$$this']],
+                },
+              },
+            },
+          ],
+          results: [
+            {
+              $match: {
+                createdAt: {
+                  $gt: date,
+                },
+              },
+            },
+            {
+              $group: {
+                _id: {
+                  [`$${agg}`]: '$createdAt',
+                },
+                timestamp: { $first: '$createdAt' },
+                total: {
+                  $sum: {
+                    $subtract: ['$value', '$cost'],
+                  },
+                },
+              },
+            },
+            {
+              $sort: {
+                timestamp: 1,
+              },
+            },
+            {
+              $group: {
+                _id: '',
+                dates: {
+                  $push: '$timestamp',
+                },
+                totals: {
+                  $push: {
+                    $sum: '$total',
+                  },
+                },
+              },
+            },
+            {
+              $addFields: {
+                cumulatedValues: {
+                  $reduce: {
+                    input: '$totals',
+                    initialValue: {
+                      total: null,
+                      values: [],
                     },
-                  },
-                  else: {
-                    $let: {
-                      vars: {
-                        // Add total and current value
-                        cumulatedTotal: {
-                          $add: ['$$value.total', '$$this'],
+                    in: {
+                      $cond: {
+                        if: {
+                          // No total yet, first iteration
+                          $eq: ['$$value.total', null],
                         },
-                      },
-                      in: {
-                        // Set new total and add to array
-                        total: '$$cumulatedTotal',
-                        values: {
-                          $concatArrays: [
-                            '$$value.values',
-                            ['$$cumulatedTotal'],
-                          ],
+                        then: {
+                          // Set first total and add to array
+                          total: '$$this',
+                          values: {
+                            $concatArrays: ['$$value.values', ['$$this']],
+                          },
+                        },
+                        else: {
+                          $let: {
+                            vars: {
+                              // Add total and current value
+                              cumulatedTotal: {
+                                $add: ['$$value.total', '$$this'],
+                              },
+                            },
+                            in: {
+                              // Set new total and add to array
+                              total: '$$cumulatedTotal',
+                              values: {
+                                $concatArrays: [
+                                  '$$value.values',
+                                  ['$$cumulatedTotal'],
+                                ],
+                              },
+                            },
+                          },
                         },
                       },
                     },
@@ -145,88 +291,48 @@ export const GET = async (request: NextRequest) => {
                 },
               },
             },
-          },
+          ],
         },
       },
-      // Tidy up results
+      { $unwind: '$totalNetworth' },
+      { $unwind: '$prevTotalNetworth' },
+      { $unwind: '$results' },
       {
         $project: {
           _id: 0,
+          total: '$totalNetworth.value',
+          prevTotal: '$prevTotalNetworth.value',
+          // results: '$results',
           results: {
             $map: {
-              input: { $range: [0, { $size: '$dates' }] },
+              input: { $range: [0, { $size: '$results.dates' }] },
               as: 'index',
               in: {
-                timestamp: { $arrayElemAt: ['$dates', '$$index'] },
-                total: { $arrayElemAt: ['$cumulatedValues.values', '$$index'] },
+                timestamp: { $arrayElemAt: ['$results.dates', '$$index'] },
+                total: {
+                  $arrayElemAt: ['$results.cumulatedValues.values', '$$index'],
+                },
               },
             },
           },
         },
       },
+      // $project: {
+      //   _id: 0,
+      //   results: {
+      //     $map: {
+      //       input: { $range: [0, { $size: '$dates' }] },
+      //       as: 'index',
+      //       in: {
+      //         timestamp: { $arrayElemAt: ['$dates', '$$index'] },
+      //         total: { $arrayElemAt: ['$cumulatedValues.values', '$$index'] },
+      //       },
+      //     },
+      //   },
+      // },
     ]);
 
-    // This is for all filters except 'All'
-    // networth = await Asset.aggregate([
-    //   {
-    //     $facet: {
-    //       totalNetworth: [
-    //         {
-    //           $match: {
-    //             createdAt: {
-    //               $gt: date,
-    //             },
-    //           },
-    //         },
-    //         {
-    //           $group: {
-    //             _id: null,
-    //             value: {
-    //               $sum: {
-    //                 $subtract: ['$value', '$cost'],
-    //               },
-    //             },
-    //           },
-    //         },
-    //       ],
-    //       results: [
-    //         {
-    //           $match: {
-    //             createdAt: {
-    //               $gt: date,
-    //             },
-    //           },
-    //         },
-    //         {
-    //           $group: {
-    //             _id: {
-    //               [`$${agg}`]: '$createdAt',
-    //             },
-    //             timestamp: { $first: '$createdAt' },
-    //             total: {
-    //               $sum: {
-    //                 $subtract: ['$value', '$cost'],
-    //               },
-    //             },
-    //             count: {
-    //               $sum: 1,
-    //             },
-    //           },
-    //         },
-    //       ],
-    //     },
-    //   },
-    //   { $unwind: '$totalNetworth' },
-    //   {
-    //     $project: {
-    //       _id: 0,
-    //       total: '$totalNetworth.value',
-    //       results: '$results',
-    //     },
-    //   },
-    // ]);
-
-    return new Response(JSON.stringify({ networth: networth[0].results }), {
+    return new Response(JSON.stringify({ networth: networth[0] }), {
       status: 200,
     });
   } catch (error) {

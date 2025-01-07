@@ -35,7 +35,8 @@ const AssetsTable = ({ assets }: IProps) => {
       </div>
 
       {assets.map((asset: IAsset, i: number) => {
-        const { category_id, cost, value } = asset;
+        const { category, cost, value } = asset;
+
         return (
           <div
             className='grid grid-cols-6 py-4.5 sm:grid-cols-8 text-sm text-black dark:text-white'
@@ -43,7 +44,7 @@ const AssetsTable = ({ assets }: IProps) => {
           >
             <div className='col-span-3 flex items-center'>
               <div className='flex flex-col gap-4 sm:flex-row sm:items-center'>
-                <p>{category_id}</p>
+                <p>{category}</p>
               </div>
             </div>
             <div className='col-span-2 hidden items-center sm:flex'>

@@ -33,13 +33,13 @@ const CategoryChart = ({ categories }: Props) => {
     legend: {
       show: false,
     },
-    labels: categories.map((category: ICategory) => category.type),
+    labels: categories.map((category: ICategory) => category._id),
     fill: {
       colors: Object.values(categoryColors),
     },
   };
 
-  const series = [30, 40, 35, 50, 49, 80];
+  const series = categories.map((category: ICategory) => category.count);
 
   return (
     <div className='grid grid-cols-1 gap-8 items-center justify-between justify-items-center'>

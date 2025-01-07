@@ -15,7 +15,7 @@ interface IProps {
 }
 
 const DashboardTopSection = ({ categories, tableClasses }: IProps) => {
-  const [networth, setNetworth] = useState<INetworth[]>([]);
+  const [networth, setNetworth] = useState<INetworth | null>(null);
   const [isLoading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<DashboardTab>('Chart');
   const [activeFilter, setActiveFilter] = useState<NetworthFilter>('all');
@@ -29,7 +29,7 @@ const DashboardTopSection = ({ categories, tableClasses }: IProps) => {
   };
 
   useEffect(() => {
-    getNetWorth(activeFilter).then((data: INetworth[]) => {
+    getNetWorth(activeFilter).then((data: INetworth) => {
       setNetworth(data);
       setLoading(false);
     });

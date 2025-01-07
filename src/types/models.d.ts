@@ -25,7 +25,12 @@ declare interface ICategory {
   type: string;
 }
 
-declare interface INetworth {
+declare interface INetworthResult {
   timestamp: string;
   total: number;
+}
+
+declare interface INetworth {
+  prevTotal?: number;
+  results: INetworthResult[];
 }

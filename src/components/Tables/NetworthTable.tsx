@@ -6,13 +6,13 @@ const ApexChart = dynamic(() => import('react-apexcharts'), {
 });
 
 interface IProps {
-  networth: INetworth[];
+  networth: INetworth;
   activeFilter: NetworthFilter;
 }
 
 const NetworthTable = ({ networth, activeFilter }: IProps) => {
-  const getDateLabel = (networthItem: INetworth) => {
-    const { timestamp } = networthItem;
+  const getDateLabel = (networthResullt: INetworthResult) => {
+    const { timestamp } = networthResullt;
     const date = new Date(timestamp);
 
     switch (activeFilter) {
@@ -29,20 +29,27 @@ const NetworthTable = ({ networth, activeFilter }: IProps) => {
     }
   };
 
-  const getMaxValue = (networth: INetworth[]) => {
-    const max = Math.max.apply(
-      null,
-      networth.map((val: INetworth) => val.total)
-    );
-    return (max / 100) * 20 + max;
+  const getMaxValue = (networth: INetworth) => {
+    let max = networth.results[networth.results.length - 1].total;
+    if (networth.prevTotal) {
+      max += networth.prevTotal;
+    }
+    return (max / 100) * 10 + max;
+  };
+
+  const getValue = (networth: INetworth, total: number) => {
+    if (networth.prevTotal) {
+      return networth.prevTotal + total;
+    }
+    return total;
   };
 
   const series = [
     {
       name: 'networth',
-      data: networth.map((value: INetworth) => ({
+      data: networth.results.map((value: INetworthResult) => ({
         x: getDateLabel(value),
-        y: value.total,
+        y: getValue(networth, value.total),
       })),
     },
   ];
@@ -59,7 +66,9 @@ const NetworthTable = ({ networth, activeFilter }: IProps) => {
     legend: {
       show: true,
     },
-    labels: networth.map((value: INetworth) => getDateLabel(value)),
+    labels: networth.results.map((value: INetworthResult) =>
+      getDateLabel(value)
+    ),
     fill: {
       colors: ['#2CE48A'],
     },

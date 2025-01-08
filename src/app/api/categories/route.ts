@@ -9,12 +9,23 @@ export const GET = async () => {
       {
         $group: {
           _id: '$category',
-          count: { $count: {} },
+          total: {
+            $sum: {
+              $subtract: ['$value', '$cost'],
+            },
+          },
         },
       },
       {
         $sort: {
           _id: 1,
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          name: '$_id',
+          total: '$total',
         },
       },
     ]);

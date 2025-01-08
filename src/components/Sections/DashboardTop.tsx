@@ -28,14 +28,25 @@ const DashboardTopSection = ({ categories, tableClasses }: IProps) => {
     setActiveFilter(filter);
   };
 
+  const getTotalNetworth = (networth: INetworth) => {
+    if (networth.results.length > 0) {
+      return (
+        (networth?.prevTotal || 0) +
+        networth.results[networth.results.length - 1].total
+      );
+    }
+    return 0;
+  };
+
   useEffect(() => {
-    getNetWorth(activeFilter).then((data: INetworth) => {
-      setNetworth(data);
+    getNetWorth(activeFilter).then((networth: INetworth) => {
+      setNetworth(networth);
       setLoading(false);
     });
   }, [activeFilter]);
 
   if (isLoading) return <p>Loading...</p>;
+  if (!networth) return <p>No Networth</p>;
 
   return (
     <>
@@ -60,7 +71,10 @@ const DashboardTopSection = ({ categories, tableClasses }: IProps) => {
           <h4 className='text-lg font-medium text-black dark:text-gray-2 mb-8'>
             Categories
           </h4>
-          <CategoryChart categories={categories} />
+          <CategoryChart
+            totalNetworth={getTotalNetworth(networth)}
+            categories={categories}
+          />
         </div>
       </div>
 
@@ -85,7 +99,10 @@ const DashboardTopSection = ({ categories, tableClasses }: IProps) => {
             handleClick={handleFilterClick}
           />
           {activeTab === 'Categories' && (
-            <CategoryChart categories={categories} />
+            <CategoryChart
+              totalNetworth={getTotalNetworth(networth)}
+              categories={categories}
+            />
           )}
         </div>
       </div>

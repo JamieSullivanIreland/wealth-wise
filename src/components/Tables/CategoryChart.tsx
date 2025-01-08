@@ -9,17 +9,30 @@ const ApexChart = dynamic(() => import('react-apexcharts'), {
 
 interface Props {
   categories: ICategory[];
+  totalNetworth: number;
 }
 
-const CategoryChart = ({ categories }: Props) => {
+const CategoryChart = ({ categories, totalNetworth }: Props) => {
   const categoryColors: ICategoryColors = {
     accounts: '#3E76E0',
-    stocks: '#77CAF9',
-    crypto: '#77CAC7',
-    realEstate: '#B564ED',
-    cars: '#5F5FDE',
+    cars: '#67bc8c',
+    crypto: '#77CAF9',
     other: '#EB4B63',
+    realEstate: '#B564ED',
+    stocks: '#d37d4c',
   };
+
+  const getPercentageValue = (total: number) => {
+    return (total / totalNetworth) * 100;
+  };
+
+  const getPercentageString = (total: number) => {
+    return `${getPercentageValue(total).toFixed(2)}%`;
+  };
+
+  const series = categories.map((category: ICategory) => {
+    return Number(getPercentageValue(category.total).toFixed(2));
+  });
 
   const options = {
     chart: {
@@ -33,13 +46,11 @@ const CategoryChart = ({ categories }: Props) => {
     legend: {
       show: false,
     },
-    labels: categories.map((category: ICategory) => category._id),
+    labels: categories.map((category: ICategory) => category.name),
     fill: {
       colors: Object.values(categoryColors),
     },
   };
-
-  const series = categories.map((category: ICategory) => category.count);
 
   return (
     <div className='grid grid-cols-1 gap-8 items-center justify-between justify-items-center'>
@@ -54,7 +65,8 @@ const CategoryChart = ({ categories }: Props) => {
         {categories.map((category: ICategory, i: number) => (
           <Category
             key={i}
-            category={category}
+            name={category.name}
+            total={getPercentageString(category.total)}
           />
         ))}
       </div>

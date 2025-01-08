@@ -21,8 +21,8 @@ declare interface IAsset {
 }
 
 declare interface ICategory {
-  _id: string;
-  count: number;
+  name: string;
+  total: number;
 }
 
 declare interface INetworthResult {

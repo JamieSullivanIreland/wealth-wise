@@ -81,9 +81,9 @@ const config: Config = {
 
         // Category Colors
         'category-teal': '#77CAF9',
-        'category-green': '#77CAC7',
+        'category-green': '#67bc8c',
         'category-pink': '#B564ED',
-        'category-purple': '#5F5FDE',
+        'category-orange': '#d37d4c',
         'category-red': '#EB4B63',
       },
       fontSize: {

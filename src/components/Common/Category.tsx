@@ -1,27 +1,28 @@
 import { camelCase } from '@/utils/string';
 
 interface Props {
-  category: ICategory;
+  name: string;
+  total: string;
 }
 
-const Category = ({ category }: Props) => {
+const Category = ({ name, total }: Props) => {
   const categoryColors: ICategoryColors = {
     accounts: 'bg-primary',
-    stocks: 'bg-category-teal',
-    crypto: 'bg-category-green',
-    realEstate: 'bg-category-pink',
-    cars: 'bg-category-purple',
+    cars: 'bg-category-green',
+    crypto: 'bg-category-teal',
     other: 'bg-category-red',
+    realEstate: 'bg-category-pink',
+    stocks: 'bg-category-orange',
   };
 
   return (
     <div className='grid grid-flow-col auto-cols-max gap-2'>
       <div
-        className={`w-2 h-2 rounded-full mt-2  ${categoryColors[camelCase(category._id) as keyof ICategoryColors]}`}
+        className={`w-2 h-2 rounded-full mt-2  ${categoryColors[camelCase(name) as keyof ICategoryColors]}`}
       />
       <div>
-        <h5>{category._id}</h5>
-        <div>{category.count}</div>
+        <h5>{name}</h5>
+        <div>{total}</div>
       </div>
     </div>
   );

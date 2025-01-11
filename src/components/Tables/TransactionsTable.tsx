@@ -18,6 +18,7 @@ const TransactionsTable = ({ transactions }: IProps) => {
       />
       {transactions.map((transaction: ITransaction, i: number) => {
         const isPositive = transaction.amount > 0;
+
         return (
           <div
             className='grid grid-cols-12 mt-4 py-4.5 sm:grid-cols-12'

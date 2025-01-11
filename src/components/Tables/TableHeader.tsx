@@ -14,7 +14,7 @@ interface Props {
 const TableHeader = ({ title, linkHref, linkText }: Props) => {
   return (
     <div className='flex justify-between items-center mb-8'>
-      <h4 className='text-lg font-medium text-black dark:text-gray-2 mb-2'>
+      <h4 className='text-sm xsm:text-lg font-medium text-black dark:text-gray-2 mb-2'>
         {title}
       </h4>
       {linkHref && linkText && (

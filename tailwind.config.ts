@@ -14,7 +14,7 @@ const config: Config = {
     },
     screens: {
       '2xsm': '375px',
-      xsm: '425px',
+      xsm: '550px',
       '3xl': '2000px',
       '2lg': '1200px',
       ...defaultTheme.screens,

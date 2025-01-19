@@ -93,7 +93,6 @@ export const GET = async (request: NextRequest) => {
               $group: {
                 _id: '',
                 dates: {
-                  // $push: '$timestamp',
                   $push: {
                     $dateTrunc: {
                       date: '$timestamp',
@@ -110,54 +109,54 @@ export const GET = async (request: NextRequest) => {
               },
             },
             // Use totals array to add up the cumulated value betweeen each date group
-            {
-              $addFields: {
-                cumulatedValues: {
-                  $reduce: {
-                    input: '$totals',
-                    initialValue: {
-                      total: null,
-                      values: [],
-                    },
-                    in: {
-                      $cond: {
-                        if: {
-                          // No total yet, first iteration
-                          $eq: ['$$value.total', null],
-                        },
-                        then: {
-                          // Set first total and add to array
-                          total: '$$this',
-                          values: {
-                            $concatArrays: ['$$value.values', ['$$this']],
-                          },
-                        },
-                        else: {
-                          $let: {
-                            vars: {
-                              // Add total and current value
-                              cumulatedTotal: {
-                                $add: ['$$value.total', '$$this'],
-                              },
-                            },
-                            in: {
-                              // Set new total and add to array
-                              total: '$$cumulatedTotal',
-                              values: {
-                                $concatArrays: [
-                                  '$$value.values',
-                                  ['$$cumulatedTotal'],
-                                ],
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
+            // {
+            //   $addFields: {
+            //     cumulatedValues: {
+            //       $reduce: {
+            //         input: '$totals',
+            //         initialValue: {
+            //           total: null,
+            //           values: [],
+            //         },
+            //         in: {
+            //           $cond: {
+            //             if: {
+            //               // No total yet, first iteration
+            //               $eq: ['$$value.total', null],
+            //             },
+            //             then: {
+            //               // Set first total and add to array
+            //               total: '$$this',
+            //               values: {
+            //                 $concatArrays: ['$$value.values', ['$$this']],
+            //               },
+            //             },
+            //             else: {
+            //               $let: {
+            //                 vars: {
+            //                   // Add total and current value
+            //                   cumulatedTotal: {
+            //                     $add: ['$$value.total', '$$this'],
+            //                   },
+            //                 },
+            //                 in: {
+            //                   // Set new total and add to array
+            //                   total: '$$cumulatedTotal',
+            //                   values: {
+            //                     $concatArrays: [
+            //                       '$$value.values',
+            //                       ['$$cumulatedTotal'],
+            //                     ],
+            //                   },
+            //                 },
+            //               },
+            //             },
+            //           },
+            //         },
+            //       },
+            //     },
+            //   },
+            // },
           ],
         },
       },
@@ -180,7 +179,7 @@ export const GET = async (request: NextRequest) => {
               in: {
                 timestamp: { $arrayElemAt: ['$results.dates', '$$index'] },
                 total: {
-                  $arrayElemAt: ['$results.cumulatedValues.values', '$$index'],
+                  $arrayElemAt: ['$results.totals', '$$index'],
                 },
               },
             },

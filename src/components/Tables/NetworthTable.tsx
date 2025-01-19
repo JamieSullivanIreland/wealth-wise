@@ -1,5 +1,6 @@
 import { getEuropeanYear } from '@/utils/string';
 import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
 
 const ApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
@@ -11,9 +12,17 @@ interface IProps {
 }
 
 const NetworthTable = ({ networth, activeFilter }: IProps) => {
-  const getDateLabel = (networthResullt: INetworthResult) => {
-    const { timestamp } = networthResullt;
-    const date = new Date(timestamp);
+  const [seriesData, setSeriesData] = useState<ISeries | undefined>(undefined);
+
+  useEffect(() => {
+    setSeriesData(getValues(networth));
+
+    console.log('seriesData');
+    console.log(seriesData);
+  }, [networth]);
+
+  const getDateLabel = (timestamp: string) => {
+    const date = new Date(timestamp.split('/').reverse().join('/'));
 
     switch (activeFilter) {
       case 'all':
@@ -44,13 +53,14 @@ const NetworthTable = ({ networth, activeFilter }: IProps) => {
   };
 
   const getDiffLabel = (diff: number, total: number) => {
-    const percent = (diff / total) * 100;
-    return `+${diff.toFixed(2)} %${percent.toFixed(2)}`;
+    const percent = Math.abs((diff / total) * 100);
+    return `${diff > 0 ? '+' : ''}${diff.toFixed(2)} (${percent.toFixed(2)}%)`;
   };
 
-  const getValue = (networth: INetworth, total: number) => {
+  const getValues = (networth: INetworth) => {
     const numDays = 7;
     const dateObj = {};
+    const values = [];
 
     for (let i = 0; i < numDays; i++) {
       const newDate = getDateNDaysAgo(i, new Date());
@@ -75,7 +85,6 @@ const NetworthTable = ({ networth, activeFilter }: IProps) => {
     Object.entries(dateObj)
       .sort(([a], [b]) => a.localeCompare(b))
       .forEach(([key, value]) => {
-        console.log(key);
         if (value.total === 0) {
           dateObj[key] = {
             total: prevTotal,
@@ -89,24 +98,20 @@ const NetworthTable = ({ networth, activeFilter }: IProps) => {
           };
           prevTotal = newTotal;
         }
+
+        values.push({
+          x: getDateLabel(key),
+          y: dateObj[key].total,
+        });
       });
 
-    console.log(networth);
-    console.log(dateObj);
-
-    if (networth.prevTotal) {
-      return networth.prevTotal + total;
-    }
-    return total;
+    return values;
   };
 
   const series = [
     {
       name: 'networth',
-      data: networth.results.map((value: INetworthResult) => ({
-        x: getDateLabel(value),
-        y: getValue(networth, value.total),
-      })),
+      data: seriesData,
     },
   ];
 
@@ -122,9 +127,10 @@ const NetworthTable = ({ networth, activeFilter }: IProps) => {
     legend: {
       show: true,
     },
-    labels: networth.results.map((value: INetworthResult) =>
-      getDateLabel(value)
-    ),
+    labels:
+      seriesData && seriesData.length > 0
+        ? seriesData.map((data: ISeries) => data.x)
+        : [],
     fill: {
       colors: ['#2CE48A'],
     },

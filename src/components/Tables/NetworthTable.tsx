@@ -37,7 +37,63 @@ const NetworthTable = ({ networth, activeFilter }: IProps) => {
     return (max / 100) * 10 + max;
   };
 
+  const getDateNDaysAgo = (n: number, fromDate: Date) => {
+    const date = new Date(fromDate);
+    date.setDate(date.getDate() - n);
+    return date;
+  };
+
+  const getDiffLabel = (diff: number, total: number) => {
+    const percent = (diff / total) * 100;
+    return `+${diff.toFixed(2)} %${percent.toFixed(2)}`;
+  };
+
   const getValue = (networth: INetworth, total: number) => {
+    const numDays = 7;
+    const dateObj = {};
+
+    for (let i = 0; i < numDays; i++) {
+      const newDate = getDateNDaysAgo(i, new Date());
+      dateObj[newDate.toLocaleDateString()] = {
+        total: 0,
+        prevDiff: 0,
+      };
+    }
+
+    networth.results.forEach((result: INetworthResult) => {
+      const dateKey = new Date(result.timestamp).toLocaleDateString();
+
+      if (dateObj.hasOwnProperty(dateKey)) {
+        dateObj[dateKey] = {
+          total: result.total,
+          prevDiff: 0,
+        };
+      }
+    });
+
+    let prevTotal = networth.prevTotal;
+    Object.entries(dateObj)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .forEach(([key, value]) => {
+        console.log(key);
+        if (value.total === 0) {
+          dateObj[key] = {
+            total: prevTotal,
+            prevDiff: getDiffLabel(value.total, prevTotal),
+          };
+        } else {
+          const newTotal = prevTotal + value.total;
+          dateObj[key] = {
+            total: prevTotal + value.total,
+            prevDiff: getDiffLabel(value.total, newTotal),
+          };
+          prevTotal = newTotal;
+        }
+      });
+
+    console.log(networth);
+    console.log(dateObj);
+
     if (networth.prevTotal) {
       return networth.prevTotal + total;
     }

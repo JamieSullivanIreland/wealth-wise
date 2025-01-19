@@ -93,7 +93,14 @@ export const GET = async (request: NextRequest) => {
               $group: {
                 _id: '',
                 dates: {
-                  $push: '$timestamp',
+                  // $push: '$timestamp',
+                  $push: {
+                    $dateTrunc: {
+                      date: '$timestamp',
+                      unit: 'day',
+                      binSize: 1,
+                    },
+                  },
                 },
                 totals: {
                   $push: {

@@ -29,7 +29,7 @@ const DashboardTopSection = ({ categories, tableClasses }: IProps) => {
   };
 
   const getTotalNetworth = (networth: INetworth) => {
-    if (networth.results.length > 0) {
+    if (networth?.results?.length > 0) {
       return (
         (networth?.prevTotal || 0) +
         networth.results[networth.results.length - 1].total

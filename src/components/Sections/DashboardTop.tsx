@@ -8,6 +8,7 @@ import NetworthSummary from './NetworthSummary';
 import NetworthTable from '../Tables/NetworthTable';
 import NetworthFilterButtons from './NetworthFilterButtons';
 import { getNetWorth } from '@/utils/api';
+import { getEuropeanYear } from '@/utils/string';
 
 interface IProps {
   categories: ICategory[];
@@ -16,9 +17,11 @@ interface IProps {
 
 const DashboardTopSection = ({ categories, tableClasses }: IProps) => {
   const [networth, setNetworth] = useState<INetworth | null>(null);
+  const [totalNetworth, setTotalNetworth] = useState<number>(0);
   const [isLoading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<DashboardTab>('Chart');
   const [activeFilter, setActiveFilter] = useState<NetworthFilter>('week');
+  const [seriesData, setSeriesData] = useState<ISeries | undefined>(undefined);
 
   const handleTabClick = (tab: DashboardTab) => {
     setActiveTab(tab);
@@ -28,25 +31,112 @@ const DashboardTopSection = ({ categories, tableClasses }: IProps) => {
     setActiveFilter(filter);
   };
 
-  const getTotalNetworth = (networth: INetworth) => {
-    if (networth?.results?.length > 0) {
-      return (
-        (networth?.prevTotal || 0) +
-        networth.results[networth.results.length - 1].total
-      );
+  const getTotalNetworth = () => {
+    return seriesData && seriesData?.length > 0
+      ? Number(seriesData[seriesData.length - 1].y)
+      : 0;
+  };
+  const getNumDays = () => {
+    switch (activeFilter) {
+      case 'week':
+        return 7;
+      case 'month':
+        return 7;
+      case 'year':
+        return 7;
+      case 'all':
+      default:
+        return 0;
     }
-    return 0;
+  };
+
+  const getDateLabel = (timestamp: string) => {
+    const date = new Date(timestamp.split('/').reverse().join('/'));
+
+    switch (activeFilter) {
+      case 'all':
+        return Intl.DateTimeFormat('en', { year: 'numeric' }).format(date);
+      case 'year':
+        return Intl.DateTimeFormat('en', { month: 'short' }).format(date);
+      case 'month':
+        return getEuropeanYear(date);
+      case 'week':
+        return `${new Intl.DateTimeFormat('en', { weekday: 'short' }).format(date)} ${date.getDate()}`;
+      default:
+        break;
+    }
+  };
+
+  const getDateNDaysAgo = (n: number, fromDate: Date) => {
+    const date = new Date(fromDate);
+    date.setDate(date.getDate() - n);
+    return date;
+  };
+
+  const formatSeriesData = (networthData: INetworth) => {
+    const numDays = getNumDays();
+    const dateObj = {};
+    const values = [];
+    let prevTotal = networthData.prevTotal;
+
+    for (let i = 0; i < numDays; i++) {
+      const newDate = getDateNDaysAgo(i, new Date());
+      dateObj[newDate.toLocaleDateString()] = {
+        total: 0,
+      };
+    }
+
+    networthData.results.forEach((result: INetworthResult) => {
+      const dateKey = new Date(result.timestamp).toLocaleDateString();
+
+      if (dateObj.hasOwnProperty(dateKey)) {
+        dateObj[dateKey] = {
+          total: result.total,
+        };
+      }
+    });
+
+    Object.entries(dateObj)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .forEach(([key, value]) => {
+        if (value.total === 0) {
+          dateObj[key] = {
+            total: prevTotal,
+          };
+        } else {
+          const newTotal = prevTotal + value.total;
+          dateObj[key] = {
+            total: prevTotal + value.total,
+          };
+          prevTotal = newTotal;
+        }
+
+        values.push({
+          x: getDateLabel(key),
+          y: dateObj[key].total,
+        });
+      });
+
+    return values;
   };
 
   useEffect(() => {
     getNetWorth(activeFilter).then((networth: INetworth) => {
       setNetworth(networth);
+      setSeriesData(formatSeriesData(networth));
+      setTotalNetworth(getTotalNetworth());
       setLoading(false);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeFilter]);
 
+  useEffect(() => {
+    setTotalNetworth(getTotalNetworth());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [seriesData]);
+
   if (isLoading) return <p>Loading...</p>;
-  if (!networth) return <p>No Networth</p>;
+  if (!seriesData) return <p>No Networth</p>;
 
   return (
     <>
@@ -55,14 +145,17 @@ const DashboardTopSection = ({ categories, tableClasses }: IProps) => {
         <div
           className={`col-span-8 rounded-s-xl border-r-0 dark:bg-dark-3 ${tableClasses}`}
         >
-          <NetworthSummary isPositive={true} />
+          <NetworthSummary
+            prevTotal={networth?.prevTotal}
+            totalNetworth={totalNetworth}
+          />
           <NetworthFilterButtons
             activeFilter={activeFilter}
             handleClick={handleFilterClick}
           />
           <NetworthTable
-            networth={networth}
-            activeFilter={activeFilter}
+            seriesData={seriesData}
+            totalNetworth={totalNetworth}
           />
         </div>
         <div
@@ -72,7 +165,7 @@ const DashboardTopSection = ({ categories, tableClasses }: IProps) => {
             Categories
           </h4>
           <CategoryChart
-            totalNetworth={getTotalNetworth(networth)}
+            totalNetworth={getTotalNetworth()}
             categories={categories}
           />
         </div>
@@ -83,15 +176,18 @@ const DashboardTopSection = ({ categories, tableClasses }: IProps) => {
         <div
           className={`col-span-12 rounded-xl border-r-1 dark:bg-dark-3 ${tableClasses}`}
         >
-          <NetworthSummary isPositive={true} />
+          <NetworthSummary
+            prevTotal={networth?.prevTotal}
+            totalNetworth={totalNetworth}
+          />
           <DashboardTabButtons
             handleTabClick={handleTabClick}
             tabs={['Chart', 'Categories']}
           />
           {activeTab === 'Chart' && (
             <NetworthTable
-              activeFilter={activeFilter}
-              networth={networth}
+              seriesData={seriesData}
+              totalNetworth={totalNetworth}
             />
           )}
           <NetworthFilterButtons
@@ -100,7 +196,7 @@ const DashboardTopSection = ({ categories, tableClasses }: IProps) => {
           />
           {activeTab === 'Categories' && (
             <CategoryChart
-              totalNetworth={getTotalNetworth(networth)}
+              totalNetworth={totalNetworth}
               categories={categories}
             />
           )}

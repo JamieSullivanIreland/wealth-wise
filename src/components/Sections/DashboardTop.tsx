@@ -18,7 +18,7 @@ interface IProps {
 const DashboardTopSection = ({ categories, tableClasses }: IProps) => {
   const [networth, setNetworth] = useState<INetworth | null>(null);
   const [totalNetworth, setTotalNetworth] = useState<number>(0);
-  const [isLoading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<DashboardTab>('Chart');
   const [activeFilter, setActiveFilter] = useState<NetworthFilter>('week');
   const [seriesData, setSeriesData] = useState<ISeries | undefined>(undefined);
@@ -37,13 +37,14 @@ const DashboardTopSection = ({ categories, tableClasses }: IProps) => {
       : 0;
   };
   const getNumDays = () => {
+    // TODO Fix the formatting of dates
     switch (activeFilter) {
       case 'week':
         return 7;
       case 'month':
-        return 7;
+        return 30;
       case 'year':
-        return 7;
+        return 365;
       case 'all':
       default:
         return 0;
@@ -74,6 +75,7 @@ const DashboardTopSection = ({ categories, tableClasses }: IProps) => {
   };
 
   const formatSeriesData = (networthData: INetworth) => {
+    // TODO Refactor and fix type errors
     const numDays = getNumDays();
     const dateObj = {};
     const values = [];
@@ -121,6 +123,7 @@ const DashboardTopSection = ({ categories, tableClasses }: IProps) => {
   };
 
   useEffect(() => {
+    setLoading(true);
     getNetWorth(activeFilter).then((networth: INetworth) => {
       setNetworth(networth);
       setSeriesData(formatSeriesData(networth));
@@ -135,7 +138,6 @@ const DashboardTopSection = ({ categories, tableClasses }: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [seriesData]);
 
-  if (isLoading) return <p>Loading...</p>;
   if (!seriesData) return <p>No Networth</p>;
 
   return (
@@ -143,7 +145,7 @@ const DashboardTopSection = ({ categories, tableClasses }: IProps) => {
       {/* Show above 768px */}
       <div className='hidden md:grid grid-cols-12'>
         <div
-          className={`col-span-8 rounded-s-xl border-r-0 dark:bg-dark-3 ${tableClasses}`}
+          className={`flex flex-col col-span-8 rounded-s-xl border-r-0 dark:bg-dark-3 ${tableClasses}`}
         >
           <NetworthSummary
             prevTotal={networth?.prevTotal}
@@ -154,6 +156,7 @@ const DashboardTopSection = ({ categories, tableClasses }: IProps) => {
             handleClick={handleFilterClick}
           />
           <NetworthTable
+            isLoading={isLoading}
             seriesData={seriesData}
             totalNetworth={totalNetworth}
           />

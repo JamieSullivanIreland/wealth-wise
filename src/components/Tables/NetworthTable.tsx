@@ -1,15 +1,18 @@
 import dynamic from 'next/dynamic';
+import Loader from '../Common/Loader';
 
 const ApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
 });
 
 interface IProps {
+  isLoading: boolean;
   seriesData: ISeries;
   totalNetworth: number;
 }
 
-const NetworthTable = ({ seriesData, totalNetworth }: IProps) => {
+const NetworthTable = ({ isLoading, seriesData, totalNetworth }: IProps) => {
+  // TODO Fix max value for all filters
   const maxValue = (totalNetworth / 100) * 10 + totalNetworth;
   const series = [
     {
@@ -22,6 +25,9 @@ const NetworthTable = ({ seriesData, totalNetworth }: IProps) => {
     chart: {
       toolbar: {
         show: false,
+      },
+      animations: {
+        enabled: false,
       },
     },
     dataLabels: {
@@ -50,12 +56,14 @@ const NetworthTable = ({ seriesData, totalNetworth }: IProps) => {
       },
     },
     xaxis: {
+      category: 'datetime',
       axisBorder: {
         show: false,
       },
       axisTicks: { show: false },
     },
     yaxis: {
+      category: 'numeric',
       opposite: true,
       min: 0,
       max: maxValue,
@@ -86,7 +94,9 @@ const NetworthTable = ({ seriesData, totalNetworth }: IProps) => {
     },
   };
 
-  return (
+  return isLoading ? (
+    <Loader isTransparent />
+  ) : (
     <div
       id='chartOne'
       className='-ml-5'

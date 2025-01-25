@@ -301,6 +301,31 @@ export const GET = async (request: NextRequest) => {
           as: 'existingData',
         },
       },
+      // Step 7  get previous total and add cumulated values
+      // {
+      //   $facet: {
+      //     // Get networth before filtered date
+      //     prevTotalNetworth: [
+      //       {
+      //         $match: {
+      //           createdAt: {
+      //             $lte: startDate,
+      //           },
+      //         },
+      //       },
+      //       {
+      //         $group: {
+      //           _id: null,
+      //           value: {
+      //             $sum: {
+      //               $subtract: ['$value', '$cost'],
+      //             },
+      //           },
+      //         },
+      //       },
+      //     ],
+      //   },
+      // },
       // Step 7: Map the results and ensure totals are numeric
       {
         $project: {
@@ -346,11 +371,179 @@ export const GET = async (request: NextRequest) => {
               },
             },
           },
+          // prev: {
+          //   $match: {
+          //     createdAt: {
+          //       $lt: startDate,
+          //     },
+          //   },
+          // },
         },
       },
     ];
 
-    const data = await mongoose.model('Asset').aggregate(pipeline).exec();
+    const pipeline2 = [
+      // Step 1: Filter documents for the total less than the start date
+      {
+        $facet: {
+          beforeStartDate: [
+            {
+              $match: {
+                createdAt: { $lt: startDate }, // Get totals before the start date
+              },
+            },
+            {
+              $group: {
+                _id: null,
+                totalBeforeStart: {
+                  $sum: {
+                    $subtract: [
+                      { $ifNull: ['$value', 0] },
+                      { $ifNull: ['$cost', 0] },
+                    ],
+                  },
+                },
+              },
+            },
+          ],
+          afterStartDate: [
+            {
+              $match: {
+                createdAt: { $gte: startDate, $lte: today }, // Filter within the range
+              },
+            },
+            {
+              $project: {
+                date: {
+                  $dateTrunc: {
+                    date: '$createdAt',
+                    unit: 'day',
+                    binSize: 1,
+                  },
+                },
+                total: {
+                  $subtract: [
+                    { $ifNull: ['$value', 0] },
+                    { $ifNull: ['$cost', 0] },
+                  ],
+                },
+              },
+            },
+            {
+              $group: {
+                _id: '$date',
+                total: { $sum: '$total' },
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+                date: '$_id',
+                total: 1,
+              },
+            },
+          ],
+        },
+      },
+      // Step 2: Add cumulative totals
+      {
+        $project: {
+          baseTotal: { $arrayElemAt: ['$beforeStartDate.totalBeforeStart', 0] },
+          existingData: '$afterStartDate',
+        },
+      },
+      {
+        $addFields: {
+          dateArray: {
+            $map: {
+              input: {
+                $range: [
+                  { $toInt: { $divide: [{ $toLong: startDate }, 1000] } },
+                  { $toInt: { $divide: [{ $toLong: today }, 1000] } },
+                  86400,
+                ],
+              },
+              as: 'date',
+              in: { $toDate: { $multiply: ['$$date', 1000] } },
+            },
+          },
+        },
+      },
+      {
+        $addFields: {
+          results: {
+            $map: {
+              input: '$dateArray',
+              as: 'date',
+              in: {
+                date: '$$date',
+                total: {
+                  $reduce: {
+                    input: '$existingData',
+                    initialValue: {
+                      cumulatedTotal: {
+                        $ifNull: ['$baseTotal', 0],
+                      },
+                      lastTotal: 0,
+                    },
+                    in: {
+                      $let: {
+                        vars: {
+                          currentDate: {
+                            date: '$$date',
+                          },
+                          match: {
+                            $arrayElemAt: [
+                              {
+                                $filter: {
+                                  input: '$existingData',
+                                  as: 'existing',
+                                  cond: {
+                                    $eq: ['$$existing.date', '$$date'],
+                                  },
+                                },
+                              },
+                              0,
+                            ],
+                          },
+                        },
+                        in: {
+                          cumulatedTotal: {
+                            $add: [
+                              { $ifNull: ['$baseTotal', 0] }, // Previous cumulative total
+                              { $ifNull: ['$$match.total', 0] }, // Add current day's total if exists
+                            ],
+                          },
+                          lastTotal: { $ifNull: ['$$match.total', 0] },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      // Step 4: Simplify the results output
+      {
+        $project: {
+          prevTotal: '$baseTotal',
+          results: {
+            $map: {
+              input: '$results',
+              as: 'result',
+              in: {
+                date: '$$result.date',
+                total: '$$result.total.cumulatedTotal',
+              },
+            },
+          },
+        },
+      },
+    ];
+
+    const data = await mongoose.model('Asset').aggregate(pipeline2).exec();
 
     return new Response(JSON.stringify({ data }), {
       status: 200,

@@ -1,41 +1,65 @@
 import { NextRequest } from 'next/server';
-import connectDB from '../../../../config/database';
+import mongoose from 'mongoose';
+
 import Asset from '../../../../models/Asset';
 
-export const GET = async (request: NextRequest) => {
-  const filter = request.nextUrl.searchParams.get('filter');
-  const today = new Date();
-  const date = new Date(today);
-  let agg = 'dayOfWeek';
-  let networth = [];
+type DateFilter = 'week' | 'month' | 'year' | 'all';
 
+export const GET = async (request: NextRequest) => {
+  const filter: DateFilter = request.nextUrl.searchParams.get('filter');
+  const today = new Date();
+  let startDate: Date;
+  let networth = [];
+  const date = new Date();
+  const agg = 'dayOfWeek';
+
+  // Determine the start date based on the filter
   switch (filter) {
-    case 'all':
-      agg = 'year';
-      date.setFullYear(date.getFullYear() - 100);
-      break;
-    case 'year':
-      agg = 'month';
-      date.setFullYear(date.getFullYear() - 1);
+    case 'week':
+      startDate = new Date(today);
+      startDate.setDate(today.getDate() - 7);
       break;
     case 'month':
-      const month = date.getMonth();
-      agg = 'week';
-      date.setMonth(month - 1);
-      while (date.getMonth() === month) {
-        date.setDate(date.getDate() - 1);
-      }
+      startDate = new Date(today);
+      startDate.setMonth(today.getMonth() - 1);
       break;
-    case 'week':
-      date.setDate(date.getDate() - 7);
+    case 'year':
+      startDate = new Date(today);
+      startDate.setFullYear(today.getFullYear() - 1);
+      break;
+    case 'all':
+      // TODO change to first date of the collection
+      startDate = new Date(2000, 0, 1);
       break;
     default:
-      break;
+      throw new Error(
+        "Invalid filter type. Use 'week', 'month', 'year', or 'all'."
+      );
   }
 
-  try {
-    await connectDB();
+  // Set dates to the beginning of the day
+  today.setHours(0);
+  today.setMinutes(0);
+  today.setSeconds(0);
+  today.setMilliseconds(0);
+  startDate.setHours(0);
+  startDate.setMinutes(0);
+  startDate.setSeconds(0);
+  startDate.setMilliseconds(0);
 
+  // Generate a list of all dates in the range
+  const dateArray: Date[] = [];
+  const currentDate = new Date(startDate);
+  while (currentDate <= today) {
+    dateArray.push(currentDate);
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  console.log('dateArray');
+  console.log(dateArray);
+
+  try {
+    // ORIGINAL
     networth = await Asset.aggregate([
       {
         $facet: {
@@ -109,54 +133,54 @@ export const GET = async (request: NextRequest) => {
               },
             },
             // Use totals array to add up the cumulated value betweeen each date group
-            // {
-            //   $addFields: {
-            //     cumulatedValues: {
-            //       $reduce: {
-            //         input: '$totals',
-            //         initialValue: {
-            //           total: null,
-            //           values: [],
-            //         },
-            //         in: {
-            //           $cond: {
-            //             if: {
-            //               // No total yet, first iteration
-            //               $eq: ['$$value.total', null],
-            //             },
-            //             then: {
-            //               // Set first total and add to array
-            //               total: '$$this',
-            //               values: {
-            //                 $concatArrays: ['$$value.values', ['$$this']],
-            //               },
-            //             },
-            //             else: {
-            //               $let: {
-            //                 vars: {
-            //                   // Add total and current value
-            //                   cumulatedTotal: {
-            //                     $add: ['$$value.total', '$$this'],
-            //                   },
-            //                 },
-            //                 in: {
-            //                   // Set new total and add to array
-            //                   total: '$$cumulatedTotal',
-            //                   values: {
-            //                     $concatArrays: [
-            //                       '$$value.values',
-            //                       ['$$cumulatedTotal'],
-            //                     ],
-            //                   },
-            //                 },
-            //               },
-            //             },
-            //           },
-            //         },
-            //       },
-            //     },
-            //   },
-            // },
+            {
+              $addFields: {
+                cumulatedValues: {
+                  $reduce: {
+                    input: '$totals',
+                    initialValue: {
+                      total: null,
+                      values: [],
+                    },
+                    in: {
+                      $cond: {
+                        if: {
+                          // No total yet, first iteration
+                          $eq: ['$$value.total', null],
+                        },
+                        then: {
+                          // Set first total and add to array
+                          total: '$$this',
+                          values: {
+                            $concatArrays: ['$$value.values', ['$$this']],
+                          },
+                        },
+                        else: {
+                          $let: {
+                            vars: {
+                              // Add total and current value
+                              cumulatedTotal: {
+                                $add: ['$$value.total', '$$this'],
+                              },
+                            },
+                            in: {
+                              // Set new total and add to array
+                              total: '$$cumulatedTotal',
+                              values: {
+                                $concatArrays: [
+                                  '$$value.values',
+                                  ['$$cumulatedTotal'],
+                                ],
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           ],
         },
       },
@@ -188,9 +212,153 @@ export const GET = async (request: NextRequest) => {
       },
     ]);
 
-    return new Response(JSON.stringify({ networth: networth[0] }), {
+    const pipeline = [
+      // Step 1: Filter documents based on the date range
+      {
+        $match: {
+          createdAt: { $gte: startDate, $lte: today },
+        },
+      },
+      // Step 2: Calculate total per document (subtract value - cost)
+      {
+        $project: {
+          date: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
+          total: {
+            $subtract: [{ $ifNull: ['$value', 0] }, { $ifNull: ['$cost', 0] }],
+          },
+        },
+      },
+      // Step 3: Group by date and sum the total for each day
+      {
+        $group: {
+          _id: '$date',
+          total: { $sum: '$total' },
+        },
+      },
+      // Step 4: Format grouped results for easier mapping
+      {
+        $project: {
+          _id: 0,
+          date: '$_id',
+          total: 1,
+        },
+      },
+      // Step 5: Create the date array for all possible dates in the range
+      {
+        $addFields: {
+          dateArray: {
+            $map: {
+              input: {
+                $range: [
+                  { $toInt: { $divide: [{ $toLong: startDate }, 1000] } }, // Convert startDate to seconds
+                  { $toInt: { $divide: [{ $toLong: today }, 1000] } }, // Convert today to seconds
+                  86400, // Increment by one day (in seconds)
+                ],
+              },
+              as: 'date',
+              in: { $toDate: { $multiply: ['$$date', 1000] } }, // Convert seconds back to milliseconds
+            },
+          },
+        },
+      },
+      // Step 6: Merge existing data with the date array
+      {
+        $lookup: {
+          from: 'assets', // Replace with your actual collection name if different
+          pipeline: [
+            {
+              $match: {
+                createdAt: { $gte: startDate, $lte: today },
+              },
+            },
+            {
+              $project: {
+                date: {
+                  $dateToString: { format: '%Y-%m-%d', date: '$createdAt' },
+                },
+                total: {
+                  $subtract: [
+                    { $ifNull: ['$value', 0] },
+                    { $ifNull: ['$cost', 0] },
+                  ],
+                },
+              },
+            },
+            {
+              $group: {
+                _id: '$date',
+                total: { $sum: '$total' },
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+                date: '$_id',
+                total: 1,
+              },
+            },
+          ],
+          as: 'existingData',
+        },
+      },
+      // Step 7: Map the results and ensure totals are numeric
+      {
+        $project: {
+          results: {
+            $map: {
+              input: '$dateArray',
+              as: 'date',
+              in: {
+                date: '$$date',
+                total: {
+                  $ifNull: [
+                    {
+                      $arrayElemAt: [
+                        {
+                          $map: {
+                            input: {
+                              $filter: {
+                                input: '$existingData',
+                                as: 'existing',
+                                cond: {
+                                  $eq: [
+                                    '$$existing.date',
+                                    {
+                                      $dateToString: {
+                                        format: '%Y-%m-%d',
+                                        date: '$$date',
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            },
+                            as: 'filtered',
+                            in: '$$filtered.total',
+                          },
+                        },
+                        0,
+                      ],
+                    },
+                    0, // Default to 0 if no matching total exists
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
+    ];
+
+    const data = await mongoose.model('Asset').aggregate(pipeline).exec();
+
+    return new Response(JSON.stringify({ data }), {
       status: 200,
     });
+
+    // return new Response(JSON.stringify({ networth: data[0]?.results || [] }), {
+    //   status: 200,
+    // });
   } catch (error) {
     console.log(error);
     return new Response('Something went wrong', { status: 500 });

@@ -58,7 +58,7 @@ const DashboardTopSection = ({ categories, tableClasses }: IProps) => {
       case 'all':
         return Intl.DateTimeFormat('en', { year: 'numeric' }).format(date);
       case 'year':
-        return Intl.DateTimeFormat('en', { month: 'short' }).format(date);
+        return `${Intl.DateTimeFormat('en', { month: 'short' }).format(date)} ${date.getFullYear().toString().substring(2)}`;
       case 'month':
         return getEuropeanYear(date);
       case 'week':
@@ -86,6 +86,12 @@ const DashboardTopSection = ({ categories, tableClasses }: IProps) => {
       dateObj[newDate.toLocaleDateString()] = {
         total: 0,
       };
+      if (activeFilter === 'month') {
+        i += 5;
+      }
+      if (activeFilter === 'year') {
+        i += 29;
+      }
     }
 
     networthData.results.forEach((result: INetworthResult) => {

@@ -32,25 +32,6 @@ export const GET = async (request: NextRequest) => {
       );
   }
 
-  // Todo might need to do this if formatted correctly
-  // Set dates to the beginning of the day
-  today.setHours(0);
-  today.setMinutes(0);
-  today.setSeconds(0);
-  today.setMilliseconds(0);
-  startDate.setHours(0);
-  startDate.setMinutes(0);
-  startDate.setSeconds(0);
-  startDate.setMilliseconds(0);
-
-  // Generate a list of all dates in the range
-  const dateArray: Date[] = [];
-  const currentDate = new Date(startDate);
-  while (currentDate <= today) {
-    dateArray.push(currentDate);
-    currentDate.setDate(currentDate.getDate() + 1);
-  }
-
   try {
     const pipeline = [
       // Step 1: Filter documents for the base total before start date and all totals after start date
@@ -106,10 +87,9 @@ export const GET = async (request: NextRequest) => {
             {
               $project: {
                 date: {
-                  $dateTrunc: {
+                  $dateToString: {
+                    format: '%Y-%m-%d',
                     date: '$date',
-                    unit: 'day',
-                    binSize: 1,
                   },
                 },
                 total: '$total',
@@ -148,13 +128,22 @@ export const GET = async (request: NextRequest) => {
                 ],
               },
               as: 'date',
-              in: { $toDate: { $multiply: ['$$date', 1000] } },
+              in: {
+                $dateToString: {
+                  format: '%Y-%m-%d',
+                  date: {
+                    $toDate: {
+                      $multiply: ['$$date', 1000],
+                    },
+                  },
+                },
+              },
             },
           },
         },
       },
 
-      // Step 4: Iterate date array and existing data and assign any matches with their diff total or 0
+      // Step 4: Iterate date array and existing data and assign any matches with their diff total or 0 if no match found
       {
         $addFields: {
           results: {
@@ -190,7 +179,6 @@ export const GET = async (request: NextRequest) => {
                             ],
                           },
                         },
-                        // Assign match total if found or 0
                         in: {
                           total: { $ifNull: ['$$match.total', 0] },
                         },
@@ -278,14 +266,19 @@ export const GET = async (request: NextRequest) => {
             $arrayElemAt: [
               '$cumulatedTotals.totalsArray',
               {
-                $subtract: [{ $size: '$cumulatedTotals.totalsArray' }, 1],
+                $subtract: [
+                  {
+                    $size: '$cumulatedTotals.totalsArray',
+                  },
+                  1,
+                ],
               },
             ],
           },
         },
       },
 
-      // Step 7: Simplify the results and map date and total
+      // Step 7: Simplify data and map date and total to results
       {
         $project: {
           baseTotal: '$baseNetworth',

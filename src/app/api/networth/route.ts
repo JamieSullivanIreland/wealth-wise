@@ -2,10 +2,9 @@ import { NextRequest } from 'next/server';
 
 import Asset from '../../../../models/Asset';
 
-type DateFilter = 'week' | 'month' | 'year' | 'all';
-
 export const GET = async (request: NextRequest) => {
-  const filter: DateFilter = request.nextUrl.searchParams.get('filter');
+  const filter: NetworthFilter = request.nextUrl.searchParams.get('filter');
+  const agg = 'dayOfWeek';
   const today = new Date();
   let startDate: Date;
 
@@ -33,6 +32,7 @@ export const GET = async (request: NextRequest) => {
       );
   }
 
+  // Todo might need to do this if formatted correctly
   // Set dates to the beginning of the day
   today.setHours(0);
   today.setMinutes(0);
@@ -51,194 +51,21 @@ export const GET = async (request: NextRequest) => {
     currentDate.setDate(currentDate.getDate() + 1);
   }
 
-  console.log('dateArray');
-  console.log(dateArray);
-
   try {
-    // const pipeline = [
-    //   // Step 1: Filter documents based on the date range
-    //   {
-    //     $match: {
-    //       createdAt: { $gte: startDate, $lte: today },
-    //     },
-    //   },
-    //   // Step 2: Calculate total per document (subtract value - cost)
-    //   {
-    //     $project: {
-    //       date: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
-    //       total: {
-    //         $subtract: [{ $ifNull: ['$value', 0] }, { $ifNull: ['$cost', 0] }],
-    //       },
-    //     },
-    //   },
-    //   // Step 3: Group by date and sum the total for each day
-    //   {
-    //     $group: {
-    //       _id: '$date',
-    //       total: { $sum: '$total' },
-    //     },
-    //   },
-    //   // Step 4: Format grouped results for easier mapping
-    //   {
-    //     $project: {
-    //       _id: 0,
-    //       date: '$_id',
-    //       total: 1,
-    //     },
-    //   },
-    //   // Step 5: Create the date array for all possible dates in the range
-    //   {
-    //     $addFields: {
-    //       dateArray: {
-    //         $map: {
-    //           input: {
-    //             $range: [
-    //               { $toInt: { $divide: [{ $toLong: startDate }, 1000] } }, // Convert startDate to seconds
-    //               { $toInt: { $divide: [{ $toLong: today }, 1000] } }, // Convert today to seconds
-    //               86400, // Increment by one day (in seconds)
-    //             ],
-    //           },
-    //           as: 'date',
-    //           in: { $toDate: { $multiply: ['$$date', 1000] } }, // Convert seconds back to milliseconds
-    //         },
-    //       },
-    //     },
-    //   },
-    //   // Step 6: Merge existing data with the date array
-    //   {
-    //     $lookup: {
-    //       from: 'assets', // Replace with your actual collection name if different
-    //       pipeline: [
-    //         {
-    //           $match: {
-    //             createdAt: { $gte: startDate, $lte: today },
-    //           },
-    //         },
-    //         {
-    //           $project: {
-    //             date: {
-    //               $dateToString: { format: '%Y-%m-%d', date: '$createdAt' },
-    //             },
-    //             total: {
-    //               $subtract: [
-    //                 { $ifNull: ['$value', 0] },
-    //                 { $ifNull: ['$cost', 0] },
-    //               ],
-    //             },
-    //           },
-    //         },
-    //         {
-    //           $group: {
-    //             _id: '$date',
-    //             total: { $sum: '$total' },
-    //           },
-    //         },
-    //         {
-    //           $project: {
-    //             _id: 0,
-    //             date: '$_id',
-    //             total: 1,
-    //           },
-    //         },
-    //       ],
-    //       as: 'existingData',
-    //     },
-    //   },
-    //   // Step 7  get previous total and add cumulated values
-    //   // {
-    //   //   $facet: {
-    //   //     // Get networth before filtered date
-    //   //     prevTotalNetworth: [
-    //   //       {
-    //   //         $match: {
-    //   //           createdAt: {
-    //   //             $lte: startDate,
-    //   //           },
-    //   //         },
-    //   //       },
-    //   //       {
-    //   //         $group: {
-    //   //           _id: null,
-    //   //           value: {
-    //   //             $sum: {
-    //   //               $subtract: ['$value', '$cost'],
-    //   //             },
-    //   //           },
-    //   //         },
-    //   //       },
-    //   //     ],
-    //   //   },
-    //   // },
-    //   // Step 7: Map the results and ensure totals are numeric
-    //   {
-    //     $project: {
-    //       results: {
-    //         $map: {
-    //           input: '$dateArray',
-    //           as: 'date',
-    //           in: {
-    //             date: '$$date',
-    //             total: {
-    //               $ifNull: [
-    //                 {
-    //                   $arrayElemAt: [
-    //                     {
-    //                       $map: {
-    //                         input: {
-    //                           $filter: {
-    //                             input: '$existingData',
-    //                             as: 'existing',
-    //                             cond: {
-    //                               $eq: [
-    //                                 '$$existing.date',
-    //                                 {
-    //                                   $dateToString: {
-    //                                     format: '%Y-%m-%d',
-    //                                     date: '$$date',
-    //                                   },
-    //                                 },
-    //                               ],
-    //                             },
-    //                           },
-    //                         },
-    //                         as: 'filtered',
-    //                         in: '$$filtered.total',
-    //                       },
-    //                     },
-    //                     0,
-    //                   ],
-    //                 },
-    //                 0, // Default to 0 if no matching total exists
-    //               ],
-    //             },
-    //           },
-    //         },
-    //       },
-    //       // prev: {
-    //       //   $match: {
-    //       //     createdAt: {
-    //       //       $lt: startDate,
-    //       //     },
-    //       //   },
-    //       // },
-    //     },
-    //   },
-    // ];
-
-    const pipeline2 = [
-      // Step 1: Filter documents for the total less than the start date
+    const pipeline = [
+      // Step 1: Filter documents for the base total before start date and all totals after start date
       {
         $facet: {
-          beforeStartDate: [
+          baseNetworth: [
             {
               $match: {
-                createdAt: { $lt: startDate }, // Get totals before the start date
+                createdAt: { $lt: startDate },
               },
             },
             {
               $group: {
                 _id: null,
-                totalBeforeStart: {
+                total: {
                   $sum: {
                     $subtract: [
                       { $ifNull: ['$value', 0] },
@@ -249,60 +76,74 @@ export const GET = async (request: NextRequest) => {
               },
             },
           ],
-          afterStartDate: [
+          afterStartDateTotals: [
             {
               $match: {
-                createdAt: { $gte: startDate, $lte: today }, // Filter within the range
+                createdAt: {
+                  $gte: startDate,
+                  $lte: today,
+                },
+              },
+            },
+            {
+              $group: {
+                _id: {
+                  [`$${agg}`]: '$createdAt',
+                },
+                date: {
+                  $first: '$createdAt',
+                },
+                total: {
+                  $sum: {
+                    $subtract: [
+                      { $ifNull: ['$value', 0] },
+                      { $ifNull: ['$cost', 0] },
+                    ],
+                  },
+                },
               },
             },
             {
               $project: {
                 date: {
                   $dateTrunc: {
-                    date: '$createdAt',
+                    date: '$date',
                     unit: 'day',
                     binSize: 1,
                   },
                 },
-                total: {
-                  $subtract: [
-                    { $ifNull: ['$value', 0] },
-                    { $ifNull: ['$cost', 0] },
-                  ],
-                },
-              },
-            },
-            {
-              $group: {
-                _id: '$date',
-                total: { $sum: '$total' },
-              },
-            },
-            {
-              $project: {
-                _id: 0,
-                date: '$_id',
-                total: 1,
+                total: '$total',
               },
             },
           ],
         },
       },
-      // Step 2: Add cumulative totals
+
+      // Step 2: Simplify the filtered data
       {
         $project: {
-          baseTotal: { $arrayElemAt: ['$beforeStartDate.totalBeforeStart', 0] },
-          existingData: '$afterStartDate',
+          baseNetworth: { $arrayElemAt: ['$baseNetworth.total', 0] },
+          existingData: '$afterStartDateTotals',
         },
       },
+
+      // Step 3: Create an array of dates after the start date
       {
         $addFields: {
           dateArray: {
             $map: {
               input: {
                 $range: [
-                  { $toInt: { $divide: [{ $toLong: startDate }, 1000] } },
-                  { $toInt: { $divide: [{ $toLong: today }, 1000] } },
+                  {
+                    $toInt: {
+                      $divide: [{ $toLong: startDate }, 1000],
+                    },
+                  },
+                  {
+                    $toInt: {
+                      $divide: [{ $toLong: today }, 1000],
+                    },
+                  },
                   86400,
                 ],
               },
@@ -312,6 +153,8 @@ export const GET = async (request: NextRequest) => {
           },
         },
       },
+
+      // Step 4: Iterate date array and existing data and assign any matches with their diff total or 0
       {
         $addFields: {
           results: {
@@ -320,14 +163,11 @@ export const GET = async (request: NextRequest) => {
               as: 'date',
               in: {
                 date: '$$date',
-                total: {
+                diff: {
                   $reduce: {
                     input: '$existingData',
                     initialValue: {
-                      cumulatedTotal: {
-                        $ifNull: ['$baseTotal', 0],
-                      },
-                      lastTotal: 0,
+                      total: 0,
                     },
                     in: {
                       $let: {
@@ -350,14 +190,9 @@ export const GET = async (request: NextRequest) => {
                             ],
                           },
                         },
+                        // Assign match total if found or 0
                         in: {
-                          cumulatedTotal: {
-                            $add: [
-                              { $ifNull: ['$baseTotal', 0] }, // Previous cumulative total
-                              { $ifNull: ['$$match.total', 0] }, // Add current day's total if exists
-                            ],
-                          },
-                          lastTotal: { $ifNull: ['$$match.total', 0] },
+                          total: { $ifNull: ['$$match.total', 0] },
                         },
                       },
                     },
@@ -368,6 +203,8 @@ export const GET = async (request: NextRequest) => {
           },
         },
       },
+
+      // Step 5: Iterate the results array and calculate the cumulated total for each value
       {
         $addFields: {
           cumulatedTotals: {
@@ -386,7 +223,7 @@ export const GET = async (request: NextRequest) => {
                   then: {
                     // Set first total and add to array
                     newTotal: {
-                      $add: ['$$this.total.lastTotal', '$baseTotal'],
+                      $add: ['$$this.diff.total', '$baseNetworth'],
                     },
                     totalsArray: {
                       $concatArrays: [
@@ -395,7 +232,7 @@ export const GET = async (request: NextRequest) => {
                           {
                             date: '$$this.date',
                             total: {
-                              $add: ['$$this.total.lastTotal', '$baseTotal'],
+                              $add: ['$$this.diff.total', '$baseNetworth'],
                             },
                           },
                         ],
@@ -407,7 +244,7 @@ export const GET = async (request: NextRequest) => {
                       vars: {
                         // Add total and current value
                         cumulatedTotal: {
-                          $add: ['$$value.newTotal', '$$this.total.lastTotal'],
+                          $add: ['$$value.newTotal', '$$this.diff.total'],
                         },
                       },
                       in: {
@@ -434,10 +271,25 @@ export const GET = async (request: NextRequest) => {
         },
       },
 
-      // Step 4: Simplify the results output
+      // Step 6: Add field for the new total networth
+      {
+        $addFields: {
+          newTotal: {
+            $arrayElemAt: [
+              '$cumulatedTotals.totalsArray',
+              {
+                $subtract: [{ $size: '$cumulatedTotals.totalsArray' }, 1],
+              },
+            ],
+          },
+        },
+      },
+
+      // Step 7: Simplify the results and map date and total
       {
         $project: {
-          prevTotal: '$baseTotal',
+          baseTotal: '$baseNetworth',
+          newTotal: '$newTotal.total',
           results: {
             $map: {
               input: '$cumulatedTotals.totalsArray',
@@ -452,17 +304,11 @@ export const GET = async (request: NextRequest) => {
       },
     ];
 
-    // const AssetModel = mongoose.model('Asset', AssetSchema);
+    const data = await Asset.aggregate(pipeline).exec();
 
-    const data = await Asset.aggregate(pipeline2).exec();
-
-    return new Response(JSON.stringify({ data }), {
+    return new Response(JSON.stringify({ networth: data[0] || [] }), {
       status: 200,
     });
-
-    // return new Response(JSON.stringify({ networth: data[0]?.results || [] }), {
-    //   status: 200,
-    // });
   } catch (error) {
     console.log(error);
     return new Response('Something went wrong', { status: 500 });

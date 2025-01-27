@@ -1,34 +1,23 @@
 import dynamic from 'next/dynamic';
+import Loader from '../Common/Loader';
 
 const ApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
 });
 
 interface IProps {
-  networth: INetworth[];
+  isLoading: boolean;
+  seriesData: ISeries;
+  totalNetworth: number;
 }
 
-const NetworthTable = ({ networth }: IProps) => {
-  const getMonth = (monthNum: number) =>
-    Intl.DateTimeFormat('en', { month: 'long' })
-      .format(new Date(monthNum.toString()))
-      .substring(0, 3);
-
-  const getMaxValue = (networth: INetworth[]) => {
-    const max = Math.max.apply(
-      null,
-      networth.map((val: INetworth) => val.total)
-    );
-    return (max / 100) * 20 + max;
-  };
-
+const NetworthTable = ({ isLoading, seriesData, totalNetworth }: IProps) => {
+  // TODO Fix max value for all filters
+  const maxValue = (totalNetworth / 100) * 10 + totalNetworth;
   const series = [
     {
       name: 'networth',
-      data: networth.map((value: INetworth) => ({
-        x: getMonth(value._id),
-        y: value.total,
-      })),
+      data: seriesData,
     },
   ];
 
@@ -37,6 +26,9 @@ const NetworthTable = ({ networth }: IProps) => {
       toolbar: {
         show: false,
       },
+      animations: {
+        enabled: false,
+      },
     },
     dataLabels: {
       enabled: false,
@@ -44,7 +36,10 @@ const NetworthTable = ({ networth }: IProps) => {
     legend: {
       show: true,
     },
-    labels: networth.map((value: INetworth) => getMonth(value._id)),
+    labels:
+      seriesData && seriesData.length > 0
+        ? seriesData.map((data: ISeries) => data.x)
+        : [],
     fill: {
       colors: ['#2CE48A'],
     },
@@ -61,22 +56,22 @@ const NetworthTable = ({ networth }: IProps) => {
       },
     },
     xaxis: {
+      category: 'datetime',
       axisBorder: {
         show: false,
       },
       axisTicks: { show: false },
     },
     yaxis: {
+      category: 'numeric',
       opposite: true,
       min: 0,
-      max: getMaxValue(networth),
+      max: maxValue,
       labels: {
         show: true,
         align: 'right',
         minWidth: 50,
         style: {
-          // TODO Change label colour
-          colors: ['#000000'],
           fontSize: '12px',
           fontFamily: 'Helvetica, Arial, sans-serif',
           fontWeight: 400,
@@ -99,7 +94,9 @@ const NetworthTable = ({ networth }: IProps) => {
     },
   };
 
-  return (
+  return isLoading ? (
+    <Loader isTransparent />
+  ) : (
     <div
       id='chartOne'
       className='-ml-5'

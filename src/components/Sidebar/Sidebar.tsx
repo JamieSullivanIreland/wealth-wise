@@ -20,11 +20,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: ISidebarProps) => {
   return (
     <ClickOutside onClick={() => setSidebarOpen(false)}>
       <aside
-        className={`fixed left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-dark-3  lg:translate-x-0 ${
+        className={`fixed left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-dark-3  2lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className='flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5'>
+        <div className='flex items-center justify-between gap-2 px-6 py-5.5 2lg:py-6.5'>
           <Link href='/'>
             <Image
               width={176}
@@ -38,7 +38,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: ISidebarProps) => {
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             aria-controls='sidebar'
-            className='block lg:hidden'
+            className='block 2lg:hidden'
           >
             <svg
               className='fill-current'
@@ -56,7 +56,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: ISidebarProps) => {
           </button>
         </div>
         <div className='no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear'>
-          <nav className='px-4 py-4 lg:px-6'>
+          <nav className='px-4 py-4 2lg:px-6'>
             <ul className='flex flex-col gap-1.5'>
               {MENU_ITEMS.map((item: IMenuItem, i: number) => {
                 if (item.route === '/logout') {

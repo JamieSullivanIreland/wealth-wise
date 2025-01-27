@@ -1,11 +1,6 @@
 import Layout from '@/components/Layout/Layout';
 import DashboardContainer from '@/components/Containers/DashboardContainer';
-import {
-  getAssets,
-  getCategories,
-  getNetWorth,
-  getTransactions,
-} from '@/utils/api';
+import { getAssets, getCategories, getTransactions } from '@/utils/api';
 
 import type { Metadata } from 'next';
 
@@ -20,13 +15,11 @@ export default async function Home() {
   const transactionsData = getTransactions(5);
   const assetsData = getAssets(5);
   const categoriesData = getCategories();
-  const netWorthData = getNetWorth();
 
-  const [transactions, assets, categories, networth] = await Promise.all([
+  const [transactions, assets, categories] = await Promise.all([
     transactionsData,
     assetsData,
     categoriesData,
-    netWorthData,
   ]);
 
   return (
@@ -36,7 +29,6 @@ export default async function Home() {
           transactions={transactions}
           assets={assets}
           categories={categories}
-          networth={networth}
         />
       </Layout>
     </>

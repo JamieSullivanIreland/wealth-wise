@@ -15,7 +15,7 @@ const DashboardBottomSection = ({
   return (
     <>
       {/* Show above 1024px */}
-      <div className='hidden lg:grid grid-cols-12 gap-4'>
+      <div className='hidden 2lg:grid grid-cols-12 gap-4'>
         <div className={`col-span-8 rounded-xl dark:bg-dark-4 ${tableClasses}`}>
           <AssetsTable assets={assets} />
         </div>
@@ -25,14 +25,14 @@ const DashboardBottomSection = ({
       </div>
 
       {/* Show below 1024px */}
-      <div className='grid grid-cols-12 gap-4 lg:hidden'>
+      <div className='grid grid-cols-12 gap-4 2lg:hidden'>
         <div
           className={`col-span-12 rounded-xl dark:bg-dark-4 ${tableClasses}`}
         >
           <AssetsTable assets={assets} />
         </div>
       </div>
-      <div className='grid grid-cols-12 gap-4 lg:hidden'>
+      <div className='grid grid-cols-12 gap-4 2lg:hidden'>
         <div
           className={`col-span-12 rounded-xl dark:bg-dark-4 ${tableClasses}`}
         >

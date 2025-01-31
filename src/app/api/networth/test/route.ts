@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 
-import Asset from '../../../../../models/Asset';
+import Asset from '@/models/Asset';
 
 type DateFilter = 'week' | 'month' | 'year' | 'all';
 

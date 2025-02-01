@@ -254,7 +254,7 @@ export const GET = async () => {
         },
       },
 
-      // Step 6: Add field for the new total networth
+      // Step 6: Add fields for the new and diff totals
       {
         $addFields: {
           newTotal: {
@@ -272,19 +272,43 @@ export const GET = async () => {
           },
         },
       },
+      {
+        $addFields: {
+          diffTotal: {
+            $round: [
+              {
+                $subtract: ['$newTotal.total', '$baseNetworth'],
+              },
+              2,
+            ],
+          },
+        },
+      },
 
-      // // Step 7: Simplify data and map date and total to results
+      // Step 7: Simplify data and map date and total to results
       {
         $project: {
-          baseTotal: '$baseNetworth',
-          newTotal: '$newTotal.total',
+          diffTotal: '$diffTotal',
+          diffPercentage: {
+            $round: [
+              {
+                $multiply: [
+                  {
+                    $divide: ['$diffTotal', '$baseNetworth'],
+                  },
+                  100,
+                ],
+              },
+              2,
+            ],
+          },
           results: {
             $map: {
               input: '$cumulatedTotals.totalsArray',
               as: 'result',
               in: {
                 date: '$$result.date',
-                total: '$$result.total',
+                total: { $round: ['$$result.total', 2] },
               },
             },
           },

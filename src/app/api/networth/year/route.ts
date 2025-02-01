@@ -2,18 +2,18 @@ import Asset from '@/models/Asset';
 
 export const GET = async () => {
   const today = new Date();
-  const fourWeeksAgo = new Date(today);
-  fourWeeksAgo.setUTCDate(fourWeeksAgo.getUTCDate() - 28);
+  const startDate = new Date(today);
+  startDate.setFullYear(today.getFullYear() - 1);
 
   try {
     const pipeline = [
-      // Step 1: Filter documents for the base total before sta rt date and all totals after start date
+      // Step 1: Filter documents for the base total before start date and all totals after start date
       {
         $facet: {
           baseNetworth: [
             {
               $match: {
-                createdAt: { $lt: fourWeeksAgo },
+                createdAt: { $lt: startDate },
               },
             },
             {
@@ -34,7 +34,7 @@ export const GET = async () => {
             {
               $match: {
                 createdAt: {
-                  $gte: fourWeeksAgo,
+                  $gte: startDate,
                   $lte: today,
                 },
               },
@@ -42,7 +42,7 @@ export const GET = async () => {
             {
               $group: {
                 _id: {
-                  $week: '$createdAt',
+                  $month: '$createdAt',
                 },
                 date: {
                   $last: '$createdAt',
@@ -70,7 +70,7 @@ export const GET = async () => {
                     date: {
                       $dateTrunc: {
                         date: '$date',
-                        unit: 'week',
+                        unit: 'month',
                         binSize: 1,
                         startOfWeek: 'Sun',
                       },
@@ -100,22 +100,20 @@ export const GET = async () => {
               $map: {
                 input: {
                   $range: [
-                    0, // Start at 0 (current week)
-                    5, // Generate 5 weeks
-                    1, // Step: 1 week per iteration
+                    0, // Start index
+                    12, // 12 months back
+                    1, // Step by 1 (each iteration is a month)
                   ],
                 },
-                as: 'weekOffset',
+                as: 'monthOffset',
                 in: {
                   $dateToString: {
                     format: '%Y-%m-%d',
                     date: {
                       $dateSubtract: {
-                        startDate: {
-                          $dateTrunc: { date: today, unit: 'week' },
-                        },
-                        unit: 'week',
-                        amount: '$$weekOffset',
+                        startDate: today,
+                        unit: 'month',
+                        amount: '$$monthOffset',
                       },
                     },
                   },

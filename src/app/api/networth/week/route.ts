@@ -1,36 +1,9 @@
-import { NextRequest } from 'next/server';
+import Asset from '@/models/Asset';
 
-import Asset from '../../../../models/Asset';
-
-export const GET = async (request: NextRequest) => {
-  const filter: NetworthFilter = request.nextUrl.searchParams.get('filter');
-  const agg = 'dayOfWeek';
+export const GET = async () => {
   const today = new Date();
-  let startDate: Date;
-
-  // Determine the start date based on the filter
-  switch (filter) {
-    case 'week':
-      startDate = new Date(today);
-      startDate.setDate(today.getDate() - 7);
-      break;
-    case 'month':
-      startDate = new Date(today);
-      startDate.setMonth(today.getMonth() - 1);
-      break;
-    case 'year':
-      startDate = new Date(today);
-      startDate.setFullYear(today.getFullYear() - 1);
-      break;
-    case 'all':
-      // TODO change to first date of the collection
-      startDate = new Date(2000, 0, 1);
-      break;
-    default:
-      throw new Error(
-        "Invalid filter type. Use 'week', 'month', 'year', or 'all'."
-      );
-  }
+  const startDate = new Date(today);
+  startDate.setDate(today.getDate() - 7);
 
   try {
     const pipeline = [
@@ -69,7 +42,7 @@ export const GET = async (request: NextRequest) => {
             {
               $group: {
                 _id: {
-                  [`$${agg}`]: '$createdAt',
+                  $dayOfWeek: '$createdAt',
                 },
                 date: {
                   $first: '$createdAt',
@@ -116,12 +89,34 @@ export const GET = async (request: NextRequest) => {
                 $range: [
                   {
                     $toInt: {
-                      $divide: [{ $toLong: startDate }, 1000],
+                      $divide: [
+                        {
+                          $toLong: {
+                            $dateSubtract: {
+                              startDate: today,
+                              unit: 'day',
+                              amount: 6,
+                            },
+                          },
+                        },
+                        1000,
+                      ],
                     },
                   },
                   {
                     $toInt: {
-                      $divide: [{ $toLong: today }, 1000],
+                      $divide: [
+                        {
+                          $toLong: {
+                            $dateAdd: {
+                              startDate: today,
+                              unit: 'day',
+                              amount: 1,
+                            },
+                          },
+                        },
+                        1000,
+                      ],
                     },
                   },
                   86400,
@@ -278,7 +273,7 @@ export const GET = async (request: NextRequest) => {
         },
       },
 
-      // Step 7: Simplify data and map date and total to results
+      // // Step 7: Simplify data and map date and total to results
       {
         $project: {
           baseTotal: '$baseNetworth',

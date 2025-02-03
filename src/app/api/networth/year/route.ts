@@ -1,3 +1,4 @@
+import { generateCumulatedNetworth } from '@/app/helpers/networth';
 import Asset from '@/models/Asset';
 
 export const GET = async () => {
@@ -100,9 +101,9 @@ export const GET = async () => {
               $map: {
                 input: {
                   $range: [
-                    0, // Start index
-                    12, // 12 months back
-                    1, // Step by 1 (each iteration is a month)
+                    0, // Start index (current month)
+                    12, // Go back 12 months
+                    1, // Step by 1 month
                   ],
                 },
                 as: 'monthOffset',
@@ -110,10 +111,15 @@ export const GET = async () => {
                   $dateToString: {
                     format: '%Y-%m-%d',
                     date: {
-                      $dateSubtract: {
-                        startDate: today,
+                      $dateTrunc: {
+                        date: {
+                          $dateSubtract: {
+                            startDate: today,
+                            unit: 'month',
+                            amount: '$$monthOffset',
+                          },
+                        },
                         unit: 'month',
-                        amount: '$$monthOffset',
                       },
                     },
                   },
@@ -124,182 +130,7 @@ export const GET = async () => {
         },
       },
 
-      // Step 4: Iterate date array and existing data and assign any matches with their diff total or 0 if no match found
-      {
-        $addFields: {
-          results: {
-            $map: {
-              input: '$dateArray',
-              as: 'date',
-              in: {
-                date: '$$date',
-                diff: {
-                  $reduce: {
-                    input: '$existingData',
-                    initialValue: {
-                      total: 0,
-                    },
-                    in: {
-                      $let: {
-                        vars: {
-                          currentDate: {
-                            date: '$$date',
-                          },
-                          match: {
-                            $arrayElemAt: [
-                              {
-                                $filter: {
-                                  input: '$existingData',
-                                  as: 'existing',
-                                  cond: {
-                                    $eq: ['$$existing.date', '$$date'],
-                                  },
-                                },
-                              },
-                              0,
-                            ],
-                          },
-                        },
-                        in: {
-                          total: { $ifNull: ['$$match.total', 0] },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-
-      // Step 5: Iterate the results array and calculate the cumulated total for each value
-      {
-        $addFields: {
-          cumulatedTotals: {
-            $reduce: {
-              input: '$results',
-              initialValue: {
-                newTotal: null,
-                totalsArray: [],
-              },
-              in: {
-                $cond: {
-                  if: {
-                    // No total yet, first iteration
-                    $eq: ['$$value.newTotal', null],
-                  },
-                  then: {
-                    // Set first total and add to array
-                    newTotal: {
-                      $add: ['$$this.diff.total', '$baseNetworth'],
-                    },
-                    totalsArray: {
-                      $concatArrays: [
-                        '$$value.totalsArray',
-                        [
-                          {
-                            date: '$$this.date',
-                            total: {
-                              $add: ['$$this.diff.total', '$baseNetworth'],
-                            },
-                          },
-                        ],
-                      ],
-                    },
-                  },
-                  else: {
-                    $let: {
-                      vars: {
-                        // Add total and current value
-                        cumulatedTotal: {
-                          $add: ['$$value.newTotal', '$$this.diff.total'],
-                        },
-                      },
-                      in: {
-                        // Set new total and add to array
-                        newTotal: '$$cumulatedTotal',
-                        totalsArray: {
-                          $concatArrays: [
-                            '$$value.totalsArray',
-                            [
-                              {
-                                date: '$$this.date',
-                                total: '$$cumulatedTotal',
-                              },
-                            ],
-                          ],
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-
-      // Step 6: Add fields for the new and diff totals
-      {
-        $addFields: {
-          newTotal: {
-            $arrayElemAt: [
-              '$cumulatedTotals.totalsArray',
-              {
-                $subtract: [
-                  {
-                    $size: '$cumulatedTotals.totalsArray',
-                  },
-                  1,
-                ],
-              },
-            ],
-          },
-        },
-      },
-      {
-        $addFields: {
-          diffTotal: {
-            $round: [
-              {
-                $subtract: ['$newTotal.total', '$baseNetworth'],
-              },
-              2,
-            ],
-          },
-        },
-      },
-
-      // Step 7: Simplify data and map date and total to results
-      {
-        $project: {
-          diffTotal: '$diffTotal',
-          diffPercentage: {
-            $round: [
-              {
-                $multiply: [
-                  {
-                    $divide: ['$diffTotal', '$baseNetworth'],
-                  },
-                  100,
-                ],
-              },
-              2,
-            ],
-          },
-          results: {
-            $map: {
-              input: '$cumulatedTotals.totalsArray',
-              as: 'result',
-              in: {
-                date: '$$result.date',
-                total: { $round: ['$$result.total', 2] },
-              },
-            },
-          },
-        },
-      },
+      ...generateCumulatedNetworth('dateArray', 'existingData', 'baseNetworth'),
     ];
 
     const data = await Asset.aggregate(pipeline).exec();

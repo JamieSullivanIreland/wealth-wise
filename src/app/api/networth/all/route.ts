@@ -3,50 +3,19 @@ import Asset from '@/models/Asset';
 
 export const GET = async () => {
   const today = new Date();
-  const startDate = new Date(today);
-  startDate.setDate(today.getDate() - 7);
-
   try {
     const pipeline = [
       // Step 1: Filter documents for the base total before start date and all totals after start date
       {
         $facet: {
-          baseNetworth: [
-            {
-              $match: {
-                createdAt: { $lt: startDate },
-              },
-            },
-            {
-              $group: {
-                _id: null,
-                total: {
-                  $sum: {
-                    $subtract: [
-                      { $ifNull: ['$value', 0] },
-                      { $ifNull: ['$cost', 0] },
-                    ],
-                  },
-                },
-              },
-            },
-          ],
           afterStartDateTotals: [
-            {
-              $match: {
-                createdAt: {
-                  $gte: startDate,
-                  $lte: today,
-                },
-              },
-            },
             {
               $group: {
                 _id: {
-                  $dayOfWeek: '$createdAt',
+                  $year: '$createdAt',
                 },
                 date: {
-                  $first: '$createdAt',
+                  $last: '$createdAt',
                 },
                 total: {
                   $sum: {
@@ -56,6 +25,11 @@ export const GET = async () => {
                     ],
                   },
                 },
+              },
+            },
+            {
+              $sort: {
+                date: 1,
               },
             },
             {
@@ -63,7 +37,14 @@ export const GET = async () => {
                 date: {
                   $dateToString: {
                     format: '%Y-%m-%d',
-                    date: '$date',
+                    date: {
+                      $dateTrunc: {
+                        date: '$date',
+                        unit: 'year',
+                        binSize: 1,
+                        startOfWeek: 'Sun',
+                      },
+                    },
                   },
                 },
                 total: '$total',
@@ -76,8 +57,17 @@ export const GET = async () => {
       // Step 2: Simplify the filtered data
       {
         $project: {
-          baseNetworth: { $arrayElemAt: ['$baseNetworth.total', 0] },
+          baseNetworth: { $add: [0, 0] },
           existingData: '$afterStartDateTotals',
+        },
+      },
+
+      // Step 3: Create an array of dates after the start date
+      {
+        $addFields: {
+          firstResult: {
+            $arrayElemAt: ['$existingData', 0],
+          },
         },
       },
 
@@ -88,48 +78,36 @@ export const GET = async () => {
             $map: {
               input: {
                 $range: [
+                  0,
                   {
-                    $toInt: {
-                      $divide: [
-                        {
-                          $toLong: {
-                            $dateSubtract: {
-                              startDate: today,
-                              unit: 'day',
-                              amount: 6,
-                            },
-                          },
+                    $add: [
+                      {
+                        $dateDiff: {
+                          startDate: { $toDate: '$firstResult.date' },
+                          endDate: today,
+                          unit: 'year',
                         },
-                        1000,
-                      ],
-                    },
+                      },
+                      1, // Ensure the current year is included
+                    ],
                   },
-                  {
-                    $toInt: {
-                      $divide: [
-                        {
-                          $toLong: {
-                            $dateAdd: {
-                              startDate: today,
-                              unit: 'day',
-                              amount: 1,
-                            },
-                          },
-                        },
-                        1000,
-                      ],
-                    },
-                  },
-                  86400,
+                  1,
                 ],
               },
-              as: 'date',
+              as: 'yearOffset',
               in: {
                 $dateToString: {
                   format: '%Y-%m-%d',
                   date: {
-                    $toDate: {
-                      $multiply: ['$$date', 1000],
+                    $dateTrunc: {
+                      date: {
+                        $dateAdd: {
+                          startDate: { $toDate: '$firstResult.date' },
+                          unit: 'year',
+                          amount: '$$yearOffset',
+                        },
+                      },
+                      unit: 'year',
                     },
                   },
                 },

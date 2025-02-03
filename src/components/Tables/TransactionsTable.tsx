@@ -66,14 +66,14 @@ const TransactionsTable = ({ transactions }: IProps) => {
                 {currencyFormat.format(transaction.amount)}
               </span>
               <span className='flex xsm:hidden col-span-3 2lg:flex'>
-                {asset_id.name}
+                {asset_id?.name}
               </span>
             </div>
             <div className='hidden col-span-3 justify-center items-center xsm:flex 2lg:hidden'>
-              {asset_id.name}
+              {asset_id?.name}
             </div>
             <div className='hidden col-span-3 justify-center items-center xsm:flex 2lg:hidden'>
-              {asset_id.category}
+              {asset_id?.category}
             </div>
             <div className='hidden gap-1 col-span-3 justify-end items-center xsm:flex 2lg:hidden'>
               {getEuropeanYear(date)}

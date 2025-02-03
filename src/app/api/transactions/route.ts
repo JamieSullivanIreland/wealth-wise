@@ -22,7 +22,9 @@ export const GET = async (request: NextRequest) => {
         .exec();
     }
 
-    return new Response(JSON.stringify({ transactions }), { status: 200 });
+    return new Response(JSON.stringify({ transactions }), {
+      status: 200,
+    });
   } catch (error) {
     return new Response('Something went wrong', { status: 500 });
   }

@@ -118,10 +118,7 @@ const NetworthTable = ({
   return isLoading ? (
     <Loader isTransparent />
   ) : (
-    <div
-      id='chartOne'
-      className='-ml-5'
-    >
+    <div id='chartOne'>
       <ApexChart
         options={options}
         series={series}

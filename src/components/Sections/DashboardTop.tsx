@@ -57,12 +57,14 @@ const DashboardTopSection = ({ categories, tableClasses }: IProps) => {
             activeFilter={activeFilter}
             handleClick={handleFilterClick}
           />
-          <NetworthTable
-            isLoading={isLoading}
-            data={networth.results}
-            totalNetworth={totalNetworth}
-            activeFilter={activeFilter}
-          />
+          <div className='min-h-[365px]'>
+            <NetworthTable
+              isLoading={isLoading}
+              data={networth.results}
+              totalNetworth={totalNetworth}
+              activeFilter={activeFilter}
+            />
+          </div>
         </div>
         <div
           className={`col-span-4 rounded-e-xl dark:bg-dark-1 ${tableClasses}`}
@@ -80,7 +82,7 @@ const DashboardTopSection = ({ categories, tableClasses }: IProps) => {
       {/* Show below 768px */}
       <div className='grid grid-cols-12 md:hidden'>
         <div
-          className={`col-span-12 rounded-xl border-r-1 dark:bg-dark-3 ${tableClasses}`}
+          className={`flex flex-col col-span-12 rounded-xl border-r-1 dark:bg-dark-3 ${tableClasses}`}
         >
           <NetworthSummary
             diffPercentage={networth.diffPercentage}
@@ -92,12 +94,14 @@ const DashboardTopSection = ({ categories, tableClasses }: IProps) => {
             tabs={['Chart', 'Categories']}
           />
           {activeTab === 'Chart' && (
-            <NetworthTable
-              isLoading={isLoading}
-              data={networth.results}
-              totalNetworth={totalNetworth}
-              activeFilter={activeFilter}
-            />
+            <div className='min-h-[365px]'>
+              <NetworthTable
+                isLoading={isLoading}
+                data={networth.results}
+                totalNetworth={totalNetworth}
+                activeFilter={activeFilter}
+              />
+            </div>
           )}
           <NetworthFilterButtons
             activeFilter={activeFilter}

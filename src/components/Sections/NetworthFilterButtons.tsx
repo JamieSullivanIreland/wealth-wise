@@ -7,7 +7,7 @@ interface IProps {
 
 const NetworthFilterButtons = ({ activeFilter, handleClick }: IProps) => {
   return (
-    <div className='hidden sm:flex gap-2'>
+    <div className='flex gap-2'>
       <PillButton
         text='1 Week'
         isActive={activeFilter === 'week'}

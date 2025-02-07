@@ -5,6 +5,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import Icon from '../Common/Icon';
+import { currencyFormat } from '@/utils/string';
 
 interface IProps {
   diffPercentage?: number;
@@ -40,12 +41,12 @@ const NetworthSummary = ({
             icon={getIcon(diffTotal)}
             size='lg'
           />
-          <span className='ml-4'>{diffTotal}</span>
+          <span className='ml-4'>{currencyFormat.format(diffTotal)}</span>
           {diffPercentage && <span className='ml-4'>({diffPercentage}%)</span>}
         </div>
       </div>
       <h4 className='text-5xl font-medium text-black dark:text-white mt-4 mb-6'>
-        €{totalNetworth}
+        {currencyFormat.format(totalNetworth)}
       </h4>
     </>
   );

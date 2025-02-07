@@ -154,3 +154,14 @@ export const generateCumulatedNetworth = (
     },
   },
 ];
+
+export const formatCategories = () => [
+  { $sort: { _id: 1 as 1 | -1 } },
+  {
+    $project: {
+      _id: 0,
+      name: '$_id',
+      total: '$total',
+    },
+  },
+];

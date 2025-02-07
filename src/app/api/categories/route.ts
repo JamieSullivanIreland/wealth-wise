@@ -1,37 +1,84 @@
+import type { NextRequest } from 'next/server';
+import type { PipelineStage } from 'mongoose';
+
 import connectDB from '../../../../config/database';
 import Asset from '../../../../models/Asset';
+import { formatCategories } from '@/app/helpers/routeHelper';
 
-export const GET = async () => {
+export const GET = async (request: NextRequest) => {
+  const filter: DateFilter = request.nextUrl.searchParams.get('filter');
+  const today = new Date();
+  let startDate: Date;
+
+  // Determine the start date based on the filter
+  switch (filter) {
+    case 'week':
+      startDate = new Date(today);
+      startDate.setDate(today.getDate() - 7);
+      break;
+    case 'month':
+      startDate = new Date(today);
+      startDate.setUTCDate(today.getUTCDate() - 28);
+      break;
+    case 'year':
+      startDate = new Date(today);
+      startDate.setFullYear(today.getFullYear() - 1);
+      break;
+    case 'all':
+      startDate = new Date(2000, 0, 1);
+      break;
+    default:
+      throw new Error(
+        "Invalid filter type. Use 'week', 'month', 'year', or 'all'."
+      );
+  }
+
   try {
     await connectDB();
 
-    const categories: IAsset[] = await Asset.aggregate([
-      {
-        $group: {
-          _id: '$category',
-          total: {
-            $sum: {
-              $subtract: ['$value', '$cost'],
+    const pipeline: PipelineStage[] =
+      filter === 'all'
+        ? [
+            {
+              $group: {
+                _id: '$category',
+                total: {
+                  $sum: {
+                    $subtract: ['$value', '$cost'],
+                  },
+                },
+              },
             },
-          },
-        },
-      },
-      {
-        $sort: {
-          _id: 1,
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          name: '$_id',
-          total: '$total',
-        },
-      },
-    ]);
+            ...formatCategories(),
+          ]
+        : [
+            {
+              $match: {
+                createdAt: {
+                  $gt: startDate,
+                },
+              },
+            },
+            {
+              $group: {
+                _id: '$category',
+                total: {
+                  $sum: {
+                    $subtract: ['$value', '$cost'],
+                  },
+                },
+              },
+            },
+            ...formatCategories(),
+          ];
 
-    return new Response(JSON.stringify({ categories }), { status: 200 });
+    const categories = await Asset.aggregate(pipeline).exec();
+
+    return new Response(JSON.stringify({ categories }), {
+      status: 200,
+    });
   } catch (error) {
+    console.log(error);
     return new Response('Something went wrong', { status: 500 });
   }
 };

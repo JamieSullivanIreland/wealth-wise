@@ -1,10 +1,12 @@
-import { generateCumulatedNetworth } from '@/app/helpers/networth';
+import type { PipelineStage } from 'mongoose';
+
+import { generateCumulatedNetworth } from '@/app/helpers/routeHelper';
 import Asset from '@/models/Asset';
 
 export const GET = async () => {
   const today = new Date();
   try {
-    const pipeline = [
+    const pipeline: PipelineStage[] = [
       // Step 1: Filter documents for the base total before start date and all totals after start date
       {
         $facet: {
@@ -29,7 +31,7 @@ export const GET = async () => {
             },
             {
               $sort: {
-                date: 1,
+                date: 1 as 1 | -1,
               },
             },
             {

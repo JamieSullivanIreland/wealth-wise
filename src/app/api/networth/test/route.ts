@@ -2,8 +2,6 @@ import { NextRequest } from 'next/server';
 
 import Asset from '@/models/Asset';
 
-type DateFilter = 'week' | 'month' | 'year' | 'all';
-
 export const GET = async (request: NextRequest) => {
   const filter: DateFilter = request.nextUrl.searchParams.get('filter');
   const today = new Date();

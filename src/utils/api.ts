@@ -19,9 +19,7 @@ export const getCategories = async () => {
 };
 
 export const getNetWorth = async (filter: NetworthFilter) => {
-  const res = await fetch(
-    `http://localhost:3000/api/networth?filter=${filter}`
-  );
+  const res = await fetch(`http://localhost:3000/api/networth/${filter}`);
   const data = await res.json();
   return data.networth;
 };

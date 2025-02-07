@@ -1,5 +1,7 @@
 import dynamic from 'next/dynamic';
+
 import Loader from '../Common/Loader';
+import { getEuropeanYear } from '@/utils/string';
 
 const ApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
@@ -7,27 +9,49 @@ const ApexChart = dynamic(() => import('react-apexcharts'), {
 
 interface IProps {
   isLoading: boolean;
-  seriesData: ISeries;
+  data: INetworthResult[];
   totalNetworth: number;
+  activeFilter: NetworthFilter;
 }
 
-const NetworthTable = ({ isLoading, seriesData, totalNetworth }: IProps) => {
+const NetworthTable = ({
+  isLoading,
+  data,
+  totalNetworth,
+  activeFilter,
+}: IProps) => {
   // TODO Fix max value for all filters
   const maxValue = (totalNetworth / 100) * 10 + totalNetworth;
   const series = [
     {
       name: 'networth',
-      data: seriesData,
+      data: data.map((item: INetworthResult) => item.total),
     },
   ];
+
+  const getDateLabel = (date: string) => {
+    const formattedDate = new Date(date.split('/').reverse().join('/'));
+
+    switch (activeFilter) {
+      case 'all':
+        return Intl.DateTimeFormat('en', { year: 'numeric' }).format(
+          formattedDate
+        );
+      case 'year':
+        return `${Intl.DateTimeFormat('en', { month: 'short' }).format(formattedDate)} ${formattedDate.getFullYear().toString().substring(2)}`;
+      case 'month':
+        return getEuropeanYear(formattedDate);
+      case 'week':
+        return `${new Intl.DateTimeFormat('en', { weekday: 'short' }).format(formattedDate)} ${formattedDate.getDate()}`;
+      default:
+        break;
+    }
+  };
 
   const options = {
     chart: {
       toolbar: {
         show: false,
-      },
-      animations: {
-        enabled: false,
       },
     },
     dataLabels: {
@@ -36,10 +60,7 @@ const NetworthTable = ({ isLoading, seriesData, totalNetworth }: IProps) => {
     legend: {
       show: true,
     },
-    labels:
-      seriesData && seriesData.length > 0
-        ? seriesData.map((data: ISeries) => data.x)
-        : [],
+    labels: data.map((item: INetworthResult) => getDateLabel(item.date)),
     fill: {
       colors: ['#2CE48A'],
     },

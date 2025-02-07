@@ -26,11 +26,12 @@ declare interface ICategory {
 }
 
 declare interface INetworthResult {
-  timestamp: string;
+  date: string;
   total: number;
 }
 
 declare interface INetworth {
-  prevTotal?: number;
+  diffPercentage?: number;
+  diffTotal: number;
   results: INetworthResult[];
 }

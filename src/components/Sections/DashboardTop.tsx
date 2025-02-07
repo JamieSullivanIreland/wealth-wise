@@ -7,35 +7,56 @@ import DashboardTabButtons from './DashboardTabButtons';
 import NetworthSummary from './NetworthSummary';
 import NetworthTable from '../Tables/NetworthTable';
 import NetworthFilterButtons from './NetworthFilterButtons';
-import { getNetWorth } from '@/utils/api';
+import { getCategories, getNetWorth } from '@/utils/api';
 
 interface IProps {
-  categories: ICategory[];
   tableClasses: string;
 }
 
-const DashboardTopSection = ({ categories, tableClasses }: IProps) => {
+const DashboardTopSection = ({ tableClasses }: IProps) => {
   const [networth, setNetworth] = useState<INetworth | null>(null);
+  const [categories, setCategories] = useState<ICategory[]>([]);
   const [totalNetworth, setTotalNetworth] = useState<number>(0);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<DashboardTab>('Chart');
-  const [activeFilter, setActiveFilter] = useState<NetworthFilter>('week');
+  const [activeFilter, setActiveFilter] = useState<DateFilter>('week');
 
   const handleTabClick = (tab: DashboardTab) => {
     setActiveTab(tab);
   };
 
-  const handleFilterClick = (filter: NetworthFilter) => {
+  const handleFilterClick = (filter: DateFilter) => {
     setActiveFilter(filter);
   };
 
   useEffect(() => {
     setLoading(true);
-    getNetWorth(activeFilter).then((networth: INetworth) => {
-      setNetworth(networth);
-      setTotalNetworth(networth.results[networth.results.length - 1].total);
-      setLoading(false);
-    });
+
+    const fetchData = async () => {
+      const networthData = getNetWorth(activeFilter);
+      const categoriesData = getCategories(activeFilter);
+      const [networth, categories] = await Promise.all([
+        networthData,
+        categoriesData,
+      ]);
+      return { networth, categories };
+    };
+
+    fetchData()
+      .then((data) => {
+        const { networth, categories } = data;
+        const total =
+          networth.results.length > 0
+            ? networth.results[networth.results.length - 1].total
+            : 0;
+        setNetworth(networth);
+        setTotalNetworth(total);
+        setCategories(categories);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeFilter]);
 

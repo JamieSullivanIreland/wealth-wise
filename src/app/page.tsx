@@ -14,12 +14,10 @@ export default async function Home() {
   await new Promise((resolve) => setTimeout(resolve, 1000));
   const transactionsData = getTransactions(5);
   const assetsData = getAssets(5);
-  const categoriesData = getCategories();
 
-  const [transactions, assets, categories] = await Promise.all([
+  const [transactions, assets] = await Promise.all([
     transactionsData,
     assetsData,
-    categoriesData,
   ]);
 
   return (
@@ -28,7 +26,6 @@ export default async function Home() {
         <DashboardContainer
           transactions={transactions}
           assets={assets}
-          categories={categories}
         />
       </Layout>
     </>

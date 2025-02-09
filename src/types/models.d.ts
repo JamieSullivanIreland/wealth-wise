@@ -1,7 +1,7 @@
 declare interface ITransaction {
   _id: string;
   user_id: string;
-  asset_id: string;
+  asset_id: IAsset;
   amount: number;
   createdAt: string;
   updateAt: string;
@@ -10,7 +10,7 @@ declare interface ITransaction {
 declare interface IAsset {
   _id: string;
   user_id: string;
-  category_id: string;
+  category: string;
   name: string;
   cost: number;
   value: number;
@@ -21,12 +21,17 @@ declare interface IAsset {
 }
 
 declare interface ICategory {
-  _id: string;
-  type: string;
+  name: string;
+  total: number;
+}
+
+declare interface INetworthResult {
+  date: string;
+  total: number;
 }
 
 declare interface INetworth {
-  _id: number;
-  total: number;
-  count: number;
+  diffPercentage?: number;
+  diffTotal: number;
+  results: INetworthResult[];
 }

@@ -1,15 +1,14 @@
 import { Schema, model, models } from 'mongoose';
 
-const AssetSchema = new Schema(
+export const AssetSchema = new Schema(
   {
     user_id: {
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
     },
-    category_id: {
-      type: Schema.Types.ObjectId,
-      ref: 'Category',
+    category: {
+      type: String,
       required: true,
     },
     name: {

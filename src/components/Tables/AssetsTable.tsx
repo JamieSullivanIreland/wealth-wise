@@ -6,12 +6,6 @@ interface IProps {
 }
 
 const AssetsTable = ({ assets }: IProps) => {
-  const getPercentage = (value: number, cost: number) => {
-    const diff = value - cost;
-    const percentage = (diff / cost) * 100;
-    return `${percentage.toFixed(0)}%`;
-  };
-
   return (
     <>
       <TableHeader
@@ -19,41 +13,38 @@ const AssetsTable = ({ assets }: IProps) => {
         linkHref='/assets'
         linkText='View All'
       />
-      <div className='grid grid-cols-6  mt-4  py-4.5  sm:grid-cols-8 text-sm text-black dark:text-white'>
-        <div className='col-span-3 flex items-center'>
-          <p className='font-medium'>Type</p>
+      <div className='grid grid-cols-12 mt-4 py-4.5 text-xs font-medium text-black dark:text-white xsm:text-sm'>
+        <div className='col-span-3 flex sm:col-span-4 items-center'>Name</div>
+        <div className='col-span-3 flex justify-center items-center sm:col-span-4'>
+          Category
         </div>
-        <div className='col-span-2 hidden items-center sm:flex'>
-          <p className='font-medium'>Change</p>
+        <div className='col-span-3 flex justify-center items-center sm:justify-end sm:col-span-2'>
+          Cost
         </div>
-        <div className='col-span-1 flex items-center'>
-          <p className='font-medium'>Cost</p>
-        </div>
-        <div className='col-span-1 flex items-center'>
-          <p className='font-medium'>Value</p>
+        <div className='col-span-3 flex justify-end items-center sm:col-span-2'>
+          Value
         </div>
       </div>
 
       {assets.map((asset: IAsset, i: number) => {
-        const { category_id, cost, value } = asset;
+        const { name, category, cost, value } = asset;
+
         return (
           <div
-            className='grid grid-cols-6 py-4.5 sm:grid-cols-8 text-sm text-black dark:text-white'
+            className='grid grid-cols-12 py-4.5 text-xs text-black dark:text-white xsm:text-sm'
             key={i}
           >
-            <div className='col-span-3 flex items-center'>
-              <div className='flex flex-col gap-4 sm:flex-row sm:items-center'>
-                <p>{category_id}</p>
-              </div>
+            <div className='col-span-3 flex flex-wrap items-center sm:col-span-4'>
+              {name}
             </div>
-            <div className='col-span-2 hidden items-center sm:flex'>
-              <p>{getPercentage(value, cost)}</p>
+            <div className='col-span-3 flex flex-wrap justify-center items-center sm:col-span-4'>
+              {category}
             </div>
-            <div className='col-span-1 flex items-center'>
-              <p>{currencyFormat.format(cost)}</p>
+            <div className='col-span-3 flex flex-wrap justify-center items-center sm:justify-end sm:col-span-2'>
+              {currencyFormat.format(cost)}
             </div>
-            <div className='col-span-1 flex items-center'>
-              <p>{currencyFormat.format(value)}</p>
+            <div className='col-span-3 flex flex-wrap justify-end items-center sm:col-span-2'>
+              {currencyFormat.format(value)}
             </div>
           </div>
         );

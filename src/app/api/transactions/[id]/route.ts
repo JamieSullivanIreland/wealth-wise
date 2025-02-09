@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
-import connectDB from '../../../../../config/database';
-import Transaction from '../../../../../models/Transaction';
+import connectDB from '@/config/database';
+import Transaction from '@/models/Transaction';
 
 export const GET = async (
   req: NextRequest,

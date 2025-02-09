@@ -1,36 +1,55 @@
 import dynamic from 'next/dynamic';
 
+import Loader from '../Common/Loader';
+import {
+  currencyFormat,
+  getEuropeanYear,
+  largeCurrencyFormat,
+} from '@/utils/string';
+
 const ApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
 });
 
 interface IProps {
-  networth: INetworth[];
+  isLoading: boolean;
+  data: INetworthResult[];
+  totalNetworth: number;
+  activeFilter: DateFilter;
 }
 
-const NetworthTable = ({ networth }: IProps) => {
-  const getMonth = (monthNum: number) =>
-    Intl.DateTimeFormat('en', { month: 'long' })
-      .format(new Date(monthNum.toString()))
-      .substring(0, 3);
-
-  const getMaxValue = (networth: INetworth[]) => {
-    const max = Math.max.apply(
-      null,
-      networth.map((val: INetworth) => val.total)
-    );
-    return (max / 100) * 20 + max;
-  };
-
+const NetworthTable = ({
+  isLoading,
+  data,
+  totalNetworth,
+  activeFilter,
+}: IProps) => {
+  const maxValue = (totalNetworth / 100) * 10 + totalNetworth;
   const series = [
     {
       name: 'networth',
-      data: networth.map((value: INetworth) => ({
-        x: getMonth(value._id),
-        y: value.total,
-      })),
+      data: data.map((item: INetworthResult) => item.total),
     },
   ];
+
+  const getDateLabel = (date: string) => {
+    const formattedDate = new Date(date.split('/').reverse().join('/'));
+
+    switch (activeFilter) {
+      case 'all':
+        return Intl.DateTimeFormat('en', { year: 'numeric' }).format(
+          formattedDate
+        );
+      case 'year':
+        return `${Intl.DateTimeFormat('en', { month: 'short' }).format(formattedDate)} ${formattedDate.getFullYear().toString().substring(2)}`;
+      case 'month':
+        return getEuropeanYear(formattedDate);
+      case 'week':
+        return `${new Intl.DateTimeFormat('en', { weekday: 'short' }).format(formattedDate)} ${formattedDate.getDate()}`;
+      default:
+        break;
+    }
+  };
 
   const options = {
     chart: {
@@ -44,7 +63,7 @@ const NetworthTable = ({ networth }: IProps) => {
     legend: {
       show: true,
     },
-    labels: networth.map((value: INetworth) => getMonth(value._id)),
+    labels: data.map((item: INetworthResult) => getDateLabel(item.date)),
     fill: {
       colors: ['#2CE48A'],
     },
@@ -61,33 +80,28 @@ const NetworthTable = ({ networth }: IProps) => {
       },
     },
     xaxis: {
+      category: 'datetime',
       axisBorder: {
         show: false,
       },
       axisTicks: { show: false },
     },
     yaxis: {
+      category: 'numeric',
       opposite: true,
       min: 0,
-      max: getMaxValue(networth),
+      max: maxValue,
       labels: {
         show: true,
         align: 'right',
-        minWidth: 50,
+        minWidth: 100,
         style: {
-          // TODO Change label colour
-          colors: ['#000000'],
           fontSize: '12px',
           fontFamily: 'Helvetica, Arial, sans-serif',
           fontWeight: 400,
           cssClass: 'apexcharts-yaxis-label',
         },
-        formatter: (value: number) => {
-          const str = Math.ceil(value).toString();
-          return str.length >= 4
-            ? `${str.substring(0, str.length - 3)}k`
-            : '0k';
-        },
+        formatter: (value: number) => largeCurrencyFormat.format(value),
       },
     },
     states: {
@@ -99,11 +113,10 @@ const NetworthTable = ({ networth }: IProps) => {
     },
   };
 
-  return (
-    <div
-      id='chartOne'
-      className='-ml-5'
-    >
+  return isLoading ? (
+    <Loader isTransparent />
+  ) : (
+    <div id='chartOne'>
       <ApexChart
         options={options}
         series={series}

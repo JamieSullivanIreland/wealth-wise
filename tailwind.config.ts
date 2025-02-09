@@ -14,8 +14,9 @@ const config: Config = {
     },
     screens: {
       '2xsm': '375px',
-      xsm: '425px',
+      xsm: '550px',
       '3xl': '2000px',
+      '2lg': '1200px',
       ...defaultTheme.screens,
     },
     extend: {
@@ -81,9 +82,9 @@ const config: Config = {
 
         // Category Colors
         'category-teal': '#77CAF9',
-        'category-green': '#77CAC7',
+        'category-green': '#67bc8c',
         'category-pink': '#B564ED',
-        'category-purple': '#5F5FDE',
+        'category-orange': '#d37d4c',
         'category-red': '#EB4B63',
       },
       fontSize: {

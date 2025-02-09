@@ -14,7 +14,8 @@ export const GET = async (request: NextRequest) => {
   switch (filter) {
     case 'week':
       startDate = new Date(today);
-      startDate.setDate(today.getDate() - 7);
+      startDate.setDate(today.getDate() - 6);
+      startDate.setUTCHours(0, 0, 0, 0);
       break;
     case 'month':
       startDate = new Date(today);
@@ -56,7 +57,8 @@ export const GET = async (request: NextRequest) => {
             {
               $match: {
                 createdAt: {
-                  $gt: startDate,
+                  $gte: startDate,
+                  $lte: today,
                 },
               },
             },

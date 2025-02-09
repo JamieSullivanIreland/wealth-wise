@@ -94,7 +94,7 @@ const DashboardTopSection = ({ tableClasses }: IProps) => {
             Categories
           </h4>
           <CategoryChart
-            totalNetworth={totalNetworth}
+            totalNetworth={networth.diffTotal}
             categories={categories}
           />
         </div>
@@ -130,7 +130,7 @@ const DashboardTopSection = ({ tableClasses }: IProps) => {
           />
           {activeTab === 'Categories' && (
             <CategoryChart
-              totalNetworth={totalNetworth}
+              totalNetworth={networth.diffTotal}
               categories={categories}
             />
           )}

@@ -67,6 +67,7 @@ const CategoryChart = ({ categories, totalNetworth }: Props) => {
             key={i}
             name={category.name}
             total={getPercentageString(category.total)}
+            colourKey={Object.keys(categoryColors)[i]}
           />
         ))}
       </div>

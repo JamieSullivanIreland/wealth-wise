@@ -3,9 +3,10 @@ import { camelCase } from '@/utils/string';
 interface Props {
   name: string;
   total: string;
+  colourKey: string;
 }
 
-const Category = ({ name, total }: Props) => {
+const Category = ({ name, total, colourKey }: Props) => {
   const categoryColors: ICategoryColors = {
     accounts: 'bg-primary',
     cars: 'bg-category-green',
@@ -18,7 +19,7 @@ const Category = ({ name, total }: Props) => {
   return (
     <div className='grid grid-flow-col auto-cols-max gap-2'>
       <div
-        className={`w-2 h-2 rounded-full mt-2  ${categoryColors[camelCase(name) as keyof ICategoryColors]}`}
+        className={`w-2 h-2 rounded-full mt-2  ${categoryColors[camelCase(colourKey) as keyof ICategoryColors]}`}
       />
       <div>
         <h5>{name}</h5>

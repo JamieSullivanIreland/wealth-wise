@@ -12,6 +12,10 @@ export const currencyFormat = new Intl.NumberFormat('en-GB', {
   currency: 'EUR',
 });
 
+export const largeCurrencyFormat = new Intl.NumberFormat('en', {
+  notation: 'compact',
+});
+
 export const getEuropeanYear = (date: Date) => {
   if (!date) return;
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear().toString().substring(2)}`;

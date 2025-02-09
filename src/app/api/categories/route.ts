@@ -37,7 +37,6 @@ export const GET = async (request: NextRequest) => {
   try {
     await connectDB();
 
-    // TODO Get the sum total of all results
     const pipeline: PipelineStage[] =
       filter === 'all'
         ? [

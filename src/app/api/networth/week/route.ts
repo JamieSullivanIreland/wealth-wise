@@ -6,7 +6,8 @@ import Asset from '@/models/Asset';
 export const GET = async () => {
   const today = new Date();
   const startDate = new Date(today);
-  startDate.setDate(today.getDate() - 7);
+  startDate.setDate(today.getDate() - 6);
+  startDate.setUTCHours(0, 0, 0, 0);
 
   try {
     const pipeline: PipelineStage[] = [

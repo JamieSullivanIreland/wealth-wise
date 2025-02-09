@@ -1,7 +1,11 @@
 import dynamic from 'next/dynamic';
 
 import Loader from '../Common/Loader';
-import { getEuropeanYear } from '@/utils/string';
+import {
+  currencyFormat,
+  getEuropeanYear,
+  largeCurrencyFormat,
+} from '@/utils/string';
 
 const ApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
@@ -20,7 +24,6 @@ const NetworthTable = ({
   totalNetworth,
   activeFilter,
 }: IProps) => {
-  // TODO Fix max value for all filters
   const maxValue = (totalNetworth / 100) * 10 + totalNetworth;
   const series = [
     {
@@ -91,19 +94,14 @@ const NetworthTable = ({
       labels: {
         show: true,
         align: 'right',
-        minWidth: 50,
+        minWidth: 100,
         style: {
           fontSize: '12px',
           fontFamily: 'Helvetica, Arial, sans-serif',
           fontWeight: 400,
           cssClass: 'apexcharts-yaxis-label',
         },
-        formatter: (value: number) => {
-          const str = Math.ceil(value).toString();
-          return str.length >= 4
-            ? `${str.substring(0, str.length - 3)}k`
-            : '0k';
-        },
+        formatter: (value: number) => largeCurrencyFormat.format(value),
       },
     },
     states: {

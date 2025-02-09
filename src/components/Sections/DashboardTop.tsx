@@ -6,7 +6,7 @@ import CategoryChart from '../Tables/CategoryChart';
 import DashboardTabButtons from './DashboardTabButtons';
 import NetworthSummary from './NetworthSummary';
 import NetworthTable from '../Tables/NetworthTable';
-import NetworthFilterButtons from './NetworthFilterButtons';
+import DateFilterButtons from './DateFilterButtons';
 import { getCategories, getNetWorth } from '@/utils/api';
 
 interface IProps {
@@ -74,7 +74,7 @@ const DashboardTopSection = ({ tableClasses }: IProps) => {
             diffTotal={networth.diffTotal}
             totalNetworth={totalNetworth}
           />
-          <NetworthFilterButtons
+          <DateFilterButtons
             activeFilter={activeFilter}
             handleClick={handleFilterClick}
           />
@@ -124,7 +124,7 @@ const DashboardTopSection = ({ tableClasses }: IProps) => {
               />
             </div>
           )}
-          <NetworthFilterButtons
+          <DateFilterButtons
             activeFilter={activeFilter}
             handleClick={handleFilterClick}
           />

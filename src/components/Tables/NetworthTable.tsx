@@ -11,7 +11,7 @@ interface IProps {
   isLoading: boolean;
   data: INetworthResult[];
   totalNetworth: number;
-  activeFilter: NetworthFilter;
+  activeFilter: DateFilter;
 }
 
 const NetworthTable = ({

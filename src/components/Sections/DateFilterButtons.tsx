@@ -1,8 +1,8 @@
 import PillButton from '../Common/PillButton';
 
 interface IProps {
-  activeFilter: NetworthFilter;
-  handleClick: (filter: NetworthFilter) => void;
+  activeFilter: DateFilter;
+  handleClick: (filter: DateFilter) => void;
 }
 
 const NetworthFilterButtons = ({ activeFilter, handleClick }: IProps) => {

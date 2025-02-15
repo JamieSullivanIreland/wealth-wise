@@ -1,4 +1,4 @@
-declare interface ICategoryColors {
+declare interface ICategories {
   accounts: string;
   stocks: string;
   crypto: string;

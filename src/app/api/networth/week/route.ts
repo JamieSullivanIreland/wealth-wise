@@ -1,6 +1,9 @@
 import type { PipelineStage } from 'mongoose';
 
-import { generateCumulatedNetworth } from '@/app/helpers/routeHelper';
+import {
+  formatCategories,
+  generateCumulatedNetworth,
+} from '@/app/helpers/routeHelper';
 import Asset from '@/models/Asset';
 
 export const GET = async () => {
@@ -33,6 +36,27 @@ export const GET = async () => {
                 },
               },
             },
+          ],
+          categories: [
+            {
+              $match: {
+                createdAt: {
+                  $gte: startDate,
+                  $lte: today,
+                },
+              },
+            },
+            {
+              $group: {
+                _id: '$category',
+                total: {
+                  $sum: {
+                    $subtract: ['$value', '$cost'],
+                  },
+                },
+              },
+            },
+            ...formatCategories(),
           ],
           afterStartDateTotals: [
             {
@@ -81,6 +105,7 @@ export const GET = async () => {
         $project: {
           baseNetworth: { $arrayElemAt: ['$baseNetworth.total', 0] },
           existingData: '$afterStartDateTotals',
+          categories: '$categories',
         },
       },
 

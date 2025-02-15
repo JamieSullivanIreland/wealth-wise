@@ -7,7 +7,7 @@ import DashboardTabButtons from './DashboardTabButtons';
 import NetworthSummary from './NetworthSummary';
 import NetworthTable from '../Tables/NetworthTable';
 import DateFilterButtons from './DateFilterButtons';
-import { getCategories, getNetWorth } from '@/utils/api';
+import { getNetWorth } from '@/utils/api';
 
 interface IProps {
   tableClasses: string;
@@ -32,31 +32,21 @@ const DashboardTopSection = ({ tableClasses }: IProps) => {
   useEffect(() => {
     setLoading(true);
 
-    const fetchData = async () => {
-      const networthData = getNetWorth(activeFilter);
-      const categoriesData = getCategories(activeFilter);
-      const [networth, categories] = await Promise.all([
-        networthData,
-        categoriesData,
-      ]);
-      return { networth, categories };
-    };
+    const fetchData = async () => await getNetWorth(activeFilter);
 
     fetchData()
-      .then((data) => {
-        const { networth, categories } = data;
+      .then((networth) => {
         const total =
           networth.results.length > 0
             ? networth.results[networth.results.length - 1].total
             : 0;
         setNetworth(networth);
         setTotalNetworth(total);
-        setCategories(categories);
+        setCategories(networth.categories);
       })
       .finally(() => {
         setLoading(false);
       });
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeFilter]);
 

@@ -1,6 +1,9 @@
 import type { PipelineStage } from 'mongoose';
 
-import { generateCumulatedNetworth } from '@/app/helpers/routeHelper';
+import {
+  formatCategories,
+  generateCumulatedNetworth,
+} from '@/app/helpers/routeHelper';
 import Asset from '@/models/Asset';
 
 export const GET = async () => {
@@ -10,6 +13,19 @@ export const GET = async () => {
       // Step 1: Filter documents for the base total before start date and all totals after start date
       {
         $facet: {
+          categories: [
+            {
+              $group: {
+                _id: '$category',
+                total: {
+                  $sum: {
+                    $subtract: ['$value', '$cost'],
+                  },
+                },
+              },
+            },
+            ...formatCategories(),
+          ],
           afterStartDateTotals: [
             {
               $group: {
@@ -61,6 +77,7 @@ export const GET = async () => {
         $project: {
           baseNetworth: { $add: [0, 0] },
           existingData: '$afterStartDateTotals',
+          categories: '$categories',
         },
       },
 

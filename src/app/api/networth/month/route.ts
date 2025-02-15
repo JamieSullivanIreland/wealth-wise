@@ -1,12 +1,15 @@
 import type { PipelineStage } from 'mongoose';
 
-import { generateCumulatedNetworth } from '@/app/helpers/routeHelper';
+import {
+  formatCategories,
+  generateCumulatedNetworth,
+} from '@/app/helpers/routeHelper';
 import Asset from '@/models/Asset';
 
 export const GET = async () => {
   const today = new Date();
-  const fourWeeksAgo = new Date(today);
-  fourWeeksAgo.setUTCDate(fourWeeksAgo.getUTCDate() - 28);
+  const startDate = new Date(today);
+  startDate.setUTCDate(startDate.getUTCDate() - 28);
 
   try {
     const pipeline: PipelineStage[] = [
@@ -16,7 +19,7 @@ export const GET = async () => {
           baseNetworth: [
             {
               $match: {
-                createdAt: { $lt: fourWeeksAgo },
+                createdAt: { $lt: startDate },
               },
             },
             {
@@ -33,11 +36,32 @@ export const GET = async () => {
               },
             },
           ],
+          categories: [
+            {
+              $match: {
+                createdAt: {
+                  $gte: startDate,
+                  $lte: today,
+                },
+              },
+            },
+            {
+              $group: {
+                _id: '$category',
+                total: {
+                  $sum: {
+                    $subtract: ['$value', '$cost'],
+                  },
+                },
+              },
+            },
+            ...formatCategories(),
+          ],
           afterStartDateTotals: [
             {
               $match: {
                 createdAt: {
-                  $gte: fourWeeksAgo,
+                  $gte: startDate,
                   $lte: today,
                 },
               },
@@ -92,6 +116,7 @@ export const GET = async () => {
         $project: {
           baseNetworth: { $arrayElemAt: ['$baseNetworth.total', 0] },
           existingData: '$afterStartDateTotals',
+          categories: '$categories',
         },
       },
 

@@ -1,11 +1,7 @@
 import dynamic from 'next/dynamic';
 
 import Loader from '../Common/Loader';
-import {
-  currencyFormat,
-  getEuropeanYear,
-  largeCurrencyFormat,
-} from '@/utils/string';
+import { getEuropeanYear, largeCurrencyFormat } from '@/utils/string';
 
 const ApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,

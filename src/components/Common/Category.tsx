@@ -19,7 +19,7 @@ const Category = ({ name, total, colourKey }: Props) => {
   return (
     <div className='grid grid-flow-col auto-cols-max gap-2'>
       <div
-        className={`w-2 h-2 rounded-full mt-2  ${categoryColors[camelCase(colourKey) as keyof ICategoryColors]}`}
+        className={`w-2 h-2 rounded-full mt-2 ${categoryColors[camelCase(colourKey) as keyof ICategoryColors]}`}
       />
       <div>
         <h5>{name}</h5>

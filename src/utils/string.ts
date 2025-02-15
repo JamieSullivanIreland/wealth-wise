@@ -1,4 +1,4 @@
-export const camelCase = (str: string) => {
+export const toCamelCase = (str: string) => {
   if (!str) return;
   return str
     .replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {

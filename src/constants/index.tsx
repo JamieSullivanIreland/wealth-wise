@@ -62,3 +62,12 @@ export const MENU_ITEMS: IMenuItem[] = [
     route: '/logout',
   },
 ];
+
+export const CATEGORIES = {
+  accounts: 'Accounts',
+  cars: 'Cars',
+  crypto: 'Crypto',
+  other: 'Other',
+  realEstate: 'Real Estate',
+  stocks: 'Stocks',
+};

@@ -1,7 +1,9 @@
 'use client';
 import dynamic from 'next/dynamic';
 
-import Category from '../Common/Category';
+import CategoryInfo from '../Common/CategoryInfo';
+import { CATEGORIES } from '@/constants';
+import { toCamelCase } from '@/utils/string';
 
 const ApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
@@ -13,7 +15,7 @@ interface Props {
 }
 
 const CategoryChart = ({ categories, totalNetworth }: Props) => {
-  const categoryColors: ICategoryColors = {
+  const categoryColors: ICategories = {
     accounts: '#3E76E0',
     cars: '#67bc8c',
     crypto: '#77CAF9',
@@ -48,7 +50,10 @@ const CategoryChart = ({ categories, totalNetworth }: Props) => {
     },
     labels: categories.map((category: ICategory) => category.name),
     fill: {
-      colors: Object.values(categoryColors),
+      colors: categories.map((category: ICategory) => {
+        const key = toCamelCase(category.name) as keyof ICategories;
+        return categoryColors[key];
+      }),
     },
   };
 
@@ -62,14 +67,25 @@ const CategoryChart = ({ categories, totalNetworth }: Props) => {
         width={'100%'}
       />
       <div className='grid grid-rows-auto grid-cols-3 gap-6 justify-items-center'>
-        {categories.map((category: ICategory, i: number) => (
-          <Category
-            key={i}
-            name={category.name}
-            total={getPercentageString(category.total)}
-            colourKey={Object.keys(categoryColors)[i]}
-          />
-        ))}
+        {Object.values(CATEGORIES).map((v: string, i: number) => {
+          const foundCategory = categories.find(
+            (c: ICategory) => c.name === v
+          );
+          const category: ICategory = foundCategory
+            ? foundCategory
+            : {
+                name: CATEGORIES[v as keyof ICategories],
+                total: 0,
+              };
+          return (
+            <CategoryInfo
+              key={i}
+              name={category.name}
+              total={getPercentageString(category.total)}
+              colourKey={Object.keys(categoryColors)[i]}
+            />
+          );
+        })}
       </div>
     </div>
   );

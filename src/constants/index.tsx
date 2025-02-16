@@ -1,7 +1,5 @@
 import {
   faArrowRightFromBracket,
-  faChartPie,
-  faTable,
   faBorderAll,
   faExchange,
   faMoneyBill1Wave,
@@ -40,26 +38,6 @@ export const MENU_ITEMS: IMenuItem[] = [
     ),
     label: 'Transactions',
     route: '/transactions',
-  },
-  {
-    icon: (
-      <Icon
-        icon={faChartPie}
-        size='lg'
-      />
-    ),
-    label: 'Chart',
-    route: '/chart',
-  },
-  {
-    icon: (
-      <Icon
-        icon={faTable}
-        size='lg'
-      />
-    ),
-    label: 'Tables',
-    route: '/tables',
   },
   {
     icon: (

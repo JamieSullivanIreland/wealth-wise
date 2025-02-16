@@ -1,19 +1,28 @@
-import Layout from '@/components/Layout/Layout';
-import TablesContainer from '@/components/Containers/TablesContainer';
-
 import type { Metadata } from 'next';
+
+import Layout from '@/components/Layout/Layout';
+import AssetsTable from '@/components/Tables/AssetsTable';
+import { getAssets } from '@/utils/api';
+import TablesContainer from '@/components/Containers/TablesContainer';
 
 export const metadata: Metadata = {
   title: 'Wealth Wise',
   description: 'This is Wealth Wise',
 };
 
-export default function Assets() {
+export default async function Assets() {
+  const assets = await getAssets(10);
+
   return (
-    <>
-      <Layout>
-        <TablesContainer title='Assets Table' />
-      </Layout>
-    </>
+    <Layout>
+      <div className='hidden 2lg:grid grid-cols-12 mt-8 mx-4'>
+        <TablesContainer
+          title='Assets Table'
+          classes='col-span-12 rounded-xl dark:bg-dark-4'
+        >
+          <AssetsTable assets={assets} />
+        </TablesContainer>
+      </div>
+    </Layout>
   );
 }

@@ -1,6 +1,6 @@
 import Layout from '@/components/Layout/Layout';
 import DashboardContainer from '@/components/Containers/DashboardContainer';
-import { getAssets, getCategories, getTransactions } from '@/utils/api';
+import { getAssets, getTransactions } from '@/utils/api';
 
 import type { Metadata } from 'next';
 

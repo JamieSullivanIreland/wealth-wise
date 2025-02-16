@@ -16,11 +16,6 @@ interface IProps {
 const TransactionsTable = ({ transactions }: IProps) => {
   return (
     <>
-      <TableHeader
-        title='Transactions'
-        linkHref='/transactions'
-        linkText='View All'
-      />
       <div className='hidden xsm:grid grid-cols-12 mt-4 py-4.5 text-xs font-medium text-black dark:text-white xsm:text-sm 2lg:hidden'>
         <div className='col-start-2 col-span-2'>Amount</div>
         <div className='col-span-3 flex justify-center'>Asset</div>

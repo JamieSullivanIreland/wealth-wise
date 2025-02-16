@@ -1,5 +1,4 @@
 import { currencyFormat } from '@/utils/string';
-import TableHeader from './TableHeader';
 
 interface IProps {
   assets: IAsset[];
@@ -8,11 +7,6 @@ interface IProps {
 const AssetsTable = ({ assets }: IProps) => {
   return (
     <>
-      <TableHeader
-        title='Assets'
-        linkHref='/assets'
-        linkText='View All'
-      />
       <div className='grid grid-cols-12 mt-4 py-4.5 text-xs font-medium text-black dark:text-white xsm:text-sm'>
         <div className='col-span-3 flex sm:col-span-4 items-center'>Name</div>
         <div className='col-span-3 flex justify-center items-center sm:col-span-4'>

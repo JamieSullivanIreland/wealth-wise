@@ -14,24 +14,7 @@ declare interface IAsset {
   name: string;
   cost: number;
   value: number;
-  detail: string;
   numShares: number;
   createdAt: string;
-  updateAt: string;
-}
-
-declare interface ICategory {
-  name: string;
-  total: number;
-}
-
-declare interface INetworthResult {
-  date: string;
-  total: number;
-}
-
-declare interface INetworth {
-  diffPercentage?: number;
-  diffTotal: number;
-  results: INetworthResult[];
+  updatedAt: string;
 }

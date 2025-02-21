@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Assets() {
-  const assets = await getAssets(10);
+  const assets = await getAssets();
 
   return (
     <Layout>
@@ -20,7 +20,10 @@ export default async function Assets() {
           title='Assets Table'
           classes='col-span-12 rounded-xl dark:bg-dark-4'
         >
-          <AssetsTable assets={assets} />
+          <AssetsTable
+            assets={assets}
+            showFullData
+          />
         </TablesContainer>
       </div>
     </Layout>

@@ -4,6 +4,7 @@ import Button from '../Common/Button';
 import { faSort } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from 'react';
 import { getAssets } from '@/utils/api';
+import Paginator from './Paginator';
 
 interface IProps {
   assets: IAssetData[];
@@ -26,6 +27,10 @@ const AssetsTable = ({ assets, showFullData }: IProps) => {
       by: sortBy,
       order: orderBy,
     });
+  };
+
+  const handlePageChange = () => {
+    console.log('Change');
   };
 
   useEffect(() => {
@@ -135,6 +140,13 @@ const AssetsTable = ({ assets, showFullData }: IProps) => {
           </div>
         );
       })}
+      <Paginator
+        currentPage={1}
+        totalPages={10}
+        pageSize={10}
+        totalItems={100}
+        onPageChange={handlePageChange}
+      />
     </>
   ) : (
     <>
@@ -174,6 +186,13 @@ const AssetsTable = ({ assets, showFullData }: IProps) => {
           </div>
         );
       })}
+      <Paginator
+        currentPage={1}
+        totalPages={10}
+        pageSize={10}
+        totalItems={100}
+        onPageChange={handlePageChange}
+      />
     </>
   );
 };

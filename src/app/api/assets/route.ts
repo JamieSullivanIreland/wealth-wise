@@ -6,7 +6,8 @@ import Asset from '../../../../models/Asset';
 
 export const GET = async (request: NextRequest) => {
   const limit = Number(request.nextUrl.searchParams.get('limit'));
-  // const sort = Number(request.nextUrl.searchParams.get('limit'));
+  const sortBy = request.nextUrl.searchParams.get('sortBy') as string;
+  const order = request.nextUrl.searchParams.get('order') === 'asc' ? 1 : -1;
 
   try {
     await connectDB();
@@ -15,7 +16,7 @@ export const GET = async (request: NextRequest) => {
       {
         $limit: limit,
       },
-      { $sort: { createdAt: 1 as 1 | -1 } },
+      { $sort: { [sortBy]: order as 1 | -1 } },
       {
         $project: {
           _id: 0,

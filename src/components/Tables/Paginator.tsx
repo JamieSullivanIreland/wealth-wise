@@ -4,18 +4,16 @@ import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import Icon from '../Common/Icon';
 
 interface IProps {
-  currentPage: number;
+  totalCount: number;
   totalPages: number;
-  pageSize: number;
-  totalItems: number;
-  onPageChange: () => void;
+  currentPage: number;
+  onPageChange: (newPage: number) => void;
 }
 
 const Paginator = ({
-  currentPage,
+  totalCount,
   totalPages,
-  pageSize,
-  totalItems,
+  currentPage,
   onPageChange,
 }: IProps) => {
   const baseClasses = clsx(
@@ -79,7 +77,7 @@ const Paginator = ({
       <div className='hidden sm:flex sm:flex-1 sm:items-center sm:justify-between'>
         <div>
           <p className='text-sm text-black dark:text-white'>
-            {`Showing ${currentPage} to ${totalPages} of ${totalItems} results`}
+            {`Showing ${currentPage} to ${totalPages} of ${totalCount} results`}
           </p>
         </div>
         <div>
@@ -88,7 +86,8 @@ const Paginator = ({
             aria-label='Pagination'
           >
             <button
-              onClick={currentPage > 1 ? onPageChange : undefined}
+              disabled={currentPage === 1}
+              onClick={() => onPageChange(currentPage - 1)}
               className={`rounded-l-md ${baseClasses} ${currentPage > 1 ? `${textClasses} ${hoverClasses}` : 'text-gray-4 cursor-default'}`}
             >
               <Icon icon={faAngleLeft} />
@@ -98,7 +97,13 @@ const Paginator = ({
               return page === '...' ? (
                 <button
                   key={i}
-                  onClick={onPageChange}
+                  onClick={() =>
+                    onPageChange(
+                      i === 1
+                        ? currentPage - jumpAmount
+                        : currentPage + jumpAmount
+                    )
+                  }
                   className={`${baseClasses} ${textClasses} ${hoverClasses}`}
                 >
                   ...
@@ -106,7 +111,8 @@ const Paginator = ({
               ) : (
                 <button
                   key={i}
-                  onClick={currentPage === page ? undefined : onPageChange}
+                  disabled={currentPage === page}
+                  onClick={() => onPageChange(Number(page))}
                   className={`${currentPage === page ? 'bg-primary text-white dark:bg-white dark:text-black cursor-default' : `${textClasses} ${hoverClasses}`} ${baseClasses}`}
                 >
                   {page}
@@ -115,7 +121,8 @@ const Paginator = ({
             })}
 
             <button
-              onClick={currentPage < totalPages ? onPageChange : undefined}
+              disabled={currentPage === totalPages}
+              onClick={() => onPageChange(currentPage + 1)}
               className={`rounded-r-md ${baseClasses} ${currentPage < totalPages ? `${textClasses} ${hoverClasses}` : 'text-gray-4 cursor-default'}`}
             >
               <Icon icon={faAngleRight} />

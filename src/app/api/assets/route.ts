@@ -9,7 +9,7 @@ export const GET = async (request: NextRequest) => {
     await connectDB();
 
     // Extract query parameters
-    const limit = Number(request.nextUrl.searchParams.get('limit')) || 10;
+    const limit = Number(request.nextUrl.searchParams.get('limit')) || 5;
     const sortBy = request.nextUrl.searchParams.get('sortBy') || 'createdAt';
     const order = request.nextUrl.searchParams.get('order') === 'asc' ? 1 : -1;
     const page = Number(request.nextUrl.searchParams.get('page')) || 1;

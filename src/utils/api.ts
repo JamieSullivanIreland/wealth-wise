@@ -7,15 +7,16 @@ export const getTransactions = async (limit: number = 0) => {
 };
 
 export const getAssets = async (
-  limit: number = 10,
+  limit: number = 5,
   sortBy: string = 'updatedAt',
-  order: string = 'desc'
+  order: string = 'desc',
+  page: number = 1
 ) => {
   const res = await fetch(
-    `http://localhost:3000/api/assets?limit=${limit}&sortBy=${sortBy}&order=${order}`
+    `http://localhost:3000/api/assets?limit=${limit}&sortBy=${sortBy}&order=${order}&page=${page}`
   );
   const data = await res.json();
-  return data.assets;
+  return data;
 };
 
 export const getNetWorth = async (filter: DateFilter) => {

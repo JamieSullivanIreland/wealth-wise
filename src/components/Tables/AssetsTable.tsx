@@ -7,7 +7,7 @@ import { getAssets } from '@/utils/api';
 import Paginator from './Paginator';
 
 interface IProps {
-  assets: IAssetData[];
+  assets: IPaginatedAssets;
   showFullData?: boolean;
 }
 
@@ -16,7 +16,9 @@ const AssetsTable = ({ assets, showFullData }: IProps) => {
     by: 'updatedAt',
     order: 'desc',
   });
-  const [assetsData, setAssetsData] = useState<IAssetData[]>(assets);
+  const [page, setPage] = useState<number>(1);
+  const [paginatedAssets, setPaginatedAssets] =
+    useState<IPaginatedAssets>(assets);
 
   const handleSort = (sortBy: string) => {
     let orderBy = 'desc';
@@ -29,17 +31,17 @@ const AssetsTable = ({ assets, showFullData }: IProps) => {
     });
   };
 
-  const handlePageChange = () => {
-    console.log('Change');
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
   };
 
   useEffect(() => {
     const fetchAssets = async () => {
-      const assets = await getAssets(10, sort.by, sort.order);
-      setAssetsData(assets);
+      const assets = await getAssets(5, sort.by, sort.order, page);
+      setPaginatedAssets(assets);
     };
     fetchAssets();
-  }, [sort, sort.by, sort.order]);
+  }, [sort, sort.by, sort.order, page]);
 
   return showFullData ? (
     <>
@@ -112,7 +114,7 @@ const AssetsTable = ({ assets, showFullData }: IProps) => {
         </div>
       </div>
 
-      {assetsData.map((asset: IAssetData, i: number) => {
+      {paginatedAssets.assets.map((asset: IAssetData, i: number) => {
         const { date, name, category, numShares, cost, value } = asset;
         return (
           <div
@@ -141,10 +143,9 @@ const AssetsTable = ({ assets, showFullData }: IProps) => {
         );
       })}
       <Paginator
-        currentPage={1}
-        totalPages={10}
-        pageSize={10}
-        totalItems={100}
+        totalCount={paginatedAssets.totalCount}
+        totalPages={paginatedAssets.totalPages}
+        currentPage={paginatedAssets.currentPage}
         onPageChange={handlePageChange}
       />
     </>
@@ -163,7 +164,7 @@ const AssetsTable = ({ assets, showFullData }: IProps) => {
         </div>
       </div>
 
-      {assetsData.map((asset: IAssetData, i: number) => {
+      {paginatedAssets.assets.map((asset: IAssetData, i: number) => {
         const { name, category, cost, value } = asset;
 
         return (
@@ -187,10 +188,9 @@ const AssetsTable = ({ assets, showFullData }: IProps) => {
         );
       })}
       <Paginator
-        currentPage={1}
-        totalPages={10}
-        pageSize={10}
-        totalItems={100}
+        totalCount={paginatedAssets.totalCount}
+        totalPages={paginatedAssets.totalPages}
+        currentPage={paginatedAssets.currentPage}
         onPageChange={handlePageChange}
       />
     </>

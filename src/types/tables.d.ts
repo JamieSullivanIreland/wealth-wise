@@ -1,7 +1,12 @@
-import type { ObjectId } from 'mongoose';
+declare interface IPaginatedAssets {
+  totalCount: number;
+  totalPages: number;
+  currentPage: number;
+  assets: IAssetData[];
+}
 
 declare interface IAssetData {
-  _id: ObjectId;
+  _id: string;
   date: string;
   name: string;
   category: string;

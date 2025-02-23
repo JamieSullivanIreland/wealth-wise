@@ -1,4 +1,7 @@
+import type { ObjectId } from 'mongoose';
+
 declare interface IAssetData {
+  _id: ObjectId;
   date: string;
   name: string;
   category: string;

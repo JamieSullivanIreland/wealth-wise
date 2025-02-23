@@ -88,7 +88,8 @@ const Paginator = ({
             aria-label='Pagination'
           >
             <button
-              className={`rounded-l-md ${baseClasses} ${textClasses} ${hoverClasses}`}
+              onClick={currentPage > 1 ? onPageChange : undefined}
+              className={`rounded-l-md ${baseClasses} ${currentPage > 1 ? `${textClasses} ${hoverClasses}` : 'text-gray-4 cursor-default'}`}
             >
               <Icon icon={faAngleLeft} />
             </button>
@@ -105,8 +106,8 @@ const Paginator = ({
               ) : (
                 <button
                   key={i}
-                  onClick={onPageChange}
-                  className={`${currentPage === page ? 'bg-primary text-white dark:bg-white dark:text-black' : `${textClasses} ${hoverClasses}`} ${baseClasses}`}
+                  onClick={currentPage === page ? undefined : onPageChange}
+                  className={`${currentPage === page ? 'bg-primary text-white dark:bg-white dark:text-black cursor-default' : `${textClasses} ${hoverClasses}`} ${baseClasses}`}
                 >
                   {page}
                 </button>
@@ -114,7 +115,8 @@ const Paginator = ({
             })}
 
             <button
-              className={`rounded-r-md ${baseClasses} ${textClasses} ${hoverClasses}`}
+              onClick={currentPage < totalPages ? onPageChange : undefined}
+              className={`rounded-r-md ${baseClasses} ${currentPage < totalPages ? `${textClasses} ${hoverClasses}` : 'text-gray-4 cursor-default'}`}
             >
               <Icon icon={faAngleRight} />
             </button>

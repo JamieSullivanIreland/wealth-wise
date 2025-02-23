@@ -1,8 +1,15 @@
-declare interface IPaginatedAssets {
+declare interface IPaginatedData {
   totalCount: number;
   totalPages: number;
   currentPage: number;
+}
+
+declare interface IPaginatedAssets extends IPaginatedData {
   assets: IAssetData[];
+}
+
+declare interface IPaginatedTransactions extends IPaginatedData {
+  transactions: ITransactionData[];
 }
 
 declare interface IAssetData {
@@ -13,6 +20,14 @@ declare interface IAssetData {
   numShares: number;
   cost: number;
   value: number;
+}
+
+declare interface ITransactionData {
+  _id: string;
+  asset: IAsset;
+  amount: number;
+  date: string;
+  updatedAt: Date;
 }
 
 declare interface ISort {

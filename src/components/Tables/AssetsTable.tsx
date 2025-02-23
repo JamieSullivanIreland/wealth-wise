@@ -17,6 +17,7 @@ const AssetsTable = ({ assets, showFullData }: IProps) => {
     order: 'desc',
   });
   const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(5);
   const [paginatedAssets, setPaginatedAssets] =
     useState<IPaginatedAssets>(assets);
 
@@ -35,13 +36,22 @@ const AssetsTable = ({ assets, showFullData }: IProps) => {
     setPage(newPage);
   };
 
+  const handleLimitChange = (limit: string) => {
+    const numLimit = Number(limit);
+    if (isNaN(Number(numLimit))) {
+      return;
+    }
+    setPage(1);
+    setLimit(numLimit);
+  };
+
   useEffect(() => {
     const fetchAssets = async () => {
-      const assets = await getAssets(5, sort.by, sort.order, page);
+      const assets = await getAssets(limit, sort.by, sort.order, page);
       setPaginatedAssets(assets);
     };
     fetchAssets();
-  }, [sort, sort.by, sort.order, page]);
+  }, [sort, sort.by, sort.order, page, limit]);
 
   return showFullData ? (
     <>
@@ -146,7 +156,9 @@ const AssetsTable = ({ assets, showFullData }: IProps) => {
         totalCount={paginatedAssets.totalCount}
         totalPages={paginatedAssets.totalPages}
         currentPage={paginatedAssets.currentPage}
+        limit={limit}
         onPageChange={handlePageChange}
+        onLimitChange={handleLimitChange}
       />
     </>
   ) : (
@@ -191,7 +203,9 @@ const AssetsTable = ({ assets, showFullData }: IProps) => {
         totalCount={paginatedAssets.totalCount}
         totalPages={paginatedAssets.totalPages}
         currentPage={paginatedAssets.currentPage}
+        limit={limit}
         onPageChange={handlePageChange}
+        onLimitChange={handleLimitChange}
       />
     </>
   );

@@ -2,19 +2,24 @@ import { clsx } from 'clsx/lite';
 
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import Icon from '../Common/Icon';
+import DropdownList from '../Common/DropdownList';
 
 interface IProps {
   totalCount: number;
   totalPages: number;
   currentPage: number;
+  limit: number;
   onPageChange: (newPage: number) => void;
+  onLimitChange: (limit: string) => void;
 }
 
 const Paginator = ({
   totalCount,
   totalPages,
   currentPage,
+  limit,
   onPageChange,
+  onLimitChange,
 }: IProps) => {
   const baseClasses = clsx(
     'relative hidden items-center px-4 py-2 text-sm border border-stroke  dark:border-strokedark focus:z-20 focus:outline-offset-0 md:inline-flex'
@@ -23,7 +28,7 @@ const Paginator = ({
     'bg-white text-black dark:bg-transparent dark:text-white'
   );
   const hoverClasses = clsx(
-    'hover:bg-gray-100 dark:hover:bg-gray-50 dark:hover:text-black'
+    'hover:bg-gray-1 dark:hover:bg-white dark:hover:text-black'
   );
 
   const maxVisible = 5;
@@ -80,7 +85,12 @@ const Paginator = ({
             {`Showing ${currentPage} to ${totalPages} of ${totalCount} results`}
           </p>
         </div>
-        <div>
+        <div className='flex justify-between items-center gap-4'>
+          <DropdownList
+            heading={`Show ${limit} results`}
+            labels={['5', '10', '20']}
+            onClick={onLimitChange}
+          />
           <nav
             className='inline-flex -space-x-px rounded-md shadow-xs'
             aria-label='Pagination'

@@ -35,12 +35,7 @@ export const GET = async (request: NextRequest) => {
       {
         $project: {
           _id: 1,
-          date: {
-            $dateToString: {
-              format: '%Y-%m-%d',
-              date: '$updatedAt',
-            },
-          },
+          updatedAt: 1,
           name: 1,
           category: 1,
           numShares: 1,

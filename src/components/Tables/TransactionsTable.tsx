@@ -74,7 +74,8 @@ const TransactionsTable = ({ transactions, showFullData }: IProps) => {
             classes={sort.by === 'updatedAt' ? 'font-bold' : 'font-normal'}
           />
         </div>
-        <div className='col-span-3 flex sm:col-span-4 items-center'>
+
+        <div className='col-span-3 flex sm:col-span-2 items-center'>
           <Button
             text='Amount'
             onClick={() => handleSort('amount')}
@@ -85,7 +86,29 @@ const TransactionsTable = ({ transactions, showFullData }: IProps) => {
             classes={sort.by === 'name' ? 'font-bold' : 'font-normal'}
           />
         </div>
-        <div className='col-span-3 flex justify-end items-center sm:col-span-3'>
+        <div className='col-span-3 flex sm:col-span-2 items-center'>
+          <Button
+            text='Type'
+            onClick={() => handleSort('type')}
+            icon={faSort}
+            iconAlign='right'
+            hasBg={false}
+            iconSize='xs'
+            classes={sort.by === 'name' ? 'font-bold' : 'font-normal'}
+          />
+        </div>
+        <div className='col-span-3 flex justify-end items-center sm:col-span-2'>
+          <Button
+            text='Category'
+            onClick={() => handleSort('assetCategory')}
+            icon={faSort}
+            iconAlign='right'
+            hasBg={false}
+            iconSize='xs'
+            classes={sort.by === 'numShares' ? 'font-bold' : 'font-normal'}
+          />
+        </div>
+        <div className='col-span-3 flex justify-end items-center sm:col-span-2'>
           <Button
             text='Asset Name'
             onClick={() => handleSort('assetName')}
@@ -96,9 +119,9 @@ const TransactionsTable = ({ transactions, showFullData }: IProps) => {
             classes={sort.by === 'category' ? 'font-bold' : 'font-normal'}
           />
         </div>
-        <div className='col-span-3 flex justify-end items-center sm:col-span-3'>
+        <div className='col-span-3 flex justify-end items-center sm:col-span-2'>
           <Button
-            text='Category'
+            text='Asset Total'
             onClick={() => handleSort('assetCategory')}
             icon={faSort}
             iconAlign='right'
@@ -111,7 +134,7 @@ const TransactionsTable = ({ transactions, showFullData }: IProps) => {
 
       {paginatedTransactions.transactions.map(
         (transaction: ITransactionData, i: number) => {
-          const { asset, amount, date } = transaction;
+          const { asset, amount, type, assetTotal, updatedAt } = transaction;
 
           return (
             <div
@@ -119,16 +142,22 @@ const TransactionsTable = ({ transactions, showFullData }: IProps) => {
               key={i}
             >
               <div className='col-span-3 flex flex-wrap items-center sm:col-span-2'>
-                {date}
+                {getEuropeanYear(new Date(updatedAt))}
               </div>
-              <div className='col-span-3 flex flex-wrap items-center sm:col-span-4'>
+              <div className='col-span-3 flex flex-wrap items-center sm:col-span-2'>
                 <TransactionInfo amount={amount} />
               </div>
-              <div className='col-span-3 flex flex-wrap justify-end items-center sm:col-span-3'>
+              <div className='col-span-3 flex flex-wrap items-center sm:col-span-2'>
+                {type}
+              </div>
+              <div className='col-span-3 flex flex-wrap justify-end items-center sm:col-span-2'>
+                {asset.category}
+              </div>
+              <div className='col-span-3 flex flex-wrap justify-end items-center sm:col-span-2'>
                 {asset.name}
               </div>
-              <div className='col-span-3 flex flex-wrap justify-end items-center sm:col-span-3'>
-                {asset.category}
+              <div className='col-span-3 flex flex-wrap justify-end items-center sm:col-span-2'>
+                {assetTotal}
               </div>
             </div>
           );

@@ -14,7 +14,7 @@ declare interface IPaginatedTransactions extends IPaginatedData {
 
 declare interface IAssetData {
   _id: string;
-  date: string;
+  updatedAt: Date;
   name: string;
   category: string;
   numShares: number;
@@ -22,12 +22,19 @@ declare interface IAssetData {
   value: number;
 }
 
+declare interface ITransationAssetData {
+  _id: string;
+  name: string;
+  category: string;
+}
+
 declare interface ITransactionData {
   _id: string;
-  asset: IAsset;
   amount: number;
-  date: string;
+  type: TransactionType;
   updatedAt: Date;
+  asset: ITransationAssetData;
+  assetTotal: number;
 }
 
 declare interface ISort {
@@ -46,5 +53,7 @@ declare type AssetSortBy =
 declare type TransactionSortBy =
   | 'updatedAt'
   | 'amount'
+  | 'type'
   | 'assetName'
-  | 'assetCategory';
+  | 'assetCategory'
+  | 'assetTotal';

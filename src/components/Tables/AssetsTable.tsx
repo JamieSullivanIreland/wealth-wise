@@ -1,5 +1,5 @@
 'use client';
-import { currencyFormat } from '@/utils/string';
+import { currencyFormat, getEuropeanYear } from '@/utils/string';
 import Button from '../Common/Button';
 import { faSort } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from 'react';
@@ -125,14 +125,14 @@ const AssetsTable = ({ assets, showFullData }: IProps) => {
       </div>
 
       {paginatedAssets.assets.map((asset: IAssetData, i: number) => {
-        const { date, name, category, numShares, cost, value } = asset;
+        const { updatedAt, name, category, numShares, cost, value } = asset;
         return (
           <div
             className='grid grid-cols-12 py-4.5 text-xs text-black dark:text-white xsm:text-sm'
             key={i}
           >
             <div className='col-span-3 flex flex-wrap items-center sm:col-span-2'>
-              {date}
+              {getEuropeanYear(new Date(updatedAt))}
             </div>
             <div className='col-span-3 flex flex-wrap items-center sm:col-span-3'>
               {name}
@@ -199,14 +199,6 @@ const AssetsTable = ({ assets, showFullData }: IProps) => {
           </div>
         );
       })}
-      <Paginator
-        totalCount={paginatedAssets.totalCount}
-        totalPages={paginatedAssets.totalPages}
-        currentPage={paginatedAssets.currentPage}
-        limit={limit}
-        onPageChange={handlePageChange}
-        onLimitChange={handleLimitChange}
-      />
     </>
   );
 };

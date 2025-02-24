@@ -13,7 +13,7 @@ const TransactionInfo = ({ amount, assetName }: IProps) => {
 
   return (
     <>
-      <div className='col-span-2 xsm:col-span-1 flex items-center 2lg:col-span-2 2lg:justify-start'>
+      <div className='col-span-2 xsm:col-span-1 flex items-center 2lg:col-span-2 2lg:justify-start mr-4'>
         {
           <div
             className={`h-8 min-w-8 xsm:h-10 xsm:min-w-10 rounded-md flex items-center justify-center text-xl border border-stroke dark:border-0 ${isPositive ? 'bg-gray-1 text-mid-green dark:bg-dark-green dark:text-light-green' : 'bg-gray-1 text-mid-red dark:bg-dark-red dark:text-light-red'} 2lg:h-8 2lg:min-w-8`}

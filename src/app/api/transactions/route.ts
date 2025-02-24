@@ -46,24 +46,39 @@ export const GET = async (request: NextRequest) => {
         $unwind: '$asset',
       },
       {
+        $addFields: {
+          assetTotal: {
+            $round: [
+              {
+                $sum: {
+                  $subtract: [
+                    { $ifNull: ['$asset.value', 0] },
+                    { $ifNull: ['$asset.cost', 0] },
+                  ],
+                },
+              },
+              2,
+            ],
+          },
+        },
+      },
+      {
         $project: {
           _id: 1,
-          date: {
-            $dateToString: {
-              format: '%Y-%m-%d',
-              date: '$updatedAt',
-            },
-          },
+          updatedAt: 1,
           amount: 1,
+          type: 1,
           'asset._id': 1,
           'asset.name': 1,
           'asset.category': 1,
+          assetTotal: 1,
         },
       },
       {
         $sort: {
           ...(sortBy === 'assetName' ? { 'asset.name': order } : {}),
           ...(sortBy === 'assetCategory' ? { 'asset.category': order } : {}),
+          ...(sortBy === 'assetTotal' ? { assetTotal: order } : {}),
           ...(sortBy !== 'assetName' && sortBy !== 'assetCategory'
             ? { [sortBy]: order }
             : {}),

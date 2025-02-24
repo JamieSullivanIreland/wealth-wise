@@ -29,9 +29,6 @@ export const GET = async (request: NextRequest) => {
     const skip = (page - 1) * limit;
 
     const pipeline: PipelineStage[] = [
-      { $sort: { [sortBy]: order, _id: order } },
-      { $skip: skip },
-      { $limit: limit },
       {
         $addFields: {
           asset_id: { $toObjectId: '$asset_id' },
@@ -63,6 +60,18 @@ export const GET = async (request: NextRequest) => {
           'asset.category': 1,
         },
       },
+      {
+        $sort: {
+          ...(sortBy === 'assetName' ? { 'asset.name': order } : {}),
+          ...(sortBy === 'assetCategory' ? { 'asset.category': order } : {}),
+          ...(sortBy !== 'assetName' && sortBy !== 'assetCategory'
+            ? { [sortBy]: order }
+            : {}),
+          _id: order,
+        },
+      },
+      { $skip: skip },
+      { $limit: limit },
     ];
 
     const transactions = await Transaction.aggregate(pipeline).exec();

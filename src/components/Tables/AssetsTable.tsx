@@ -21,7 +21,7 @@ const AssetsTable = ({ assets, showFullData }: IProps) => {
   const [paginatedAssets, setPaginatedAssets] =
     useState<IPaginatedAssets>(assets);
 
-  const handleSort = (sortBy: string) => {
+  const handleSort = (sortBy: AssetSortBy) => {
     let orderBy = 'desc';
     if (sortBy === sort.by && sort.order === 'desc') {
       orderBy = 'asc';

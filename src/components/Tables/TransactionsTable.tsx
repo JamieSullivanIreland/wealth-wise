@@ -1,23 +1,11 @@
 'use client';
-import {
-  faArrowDown,
-  faArrowUp,
-  faSort,
-} from '@fortawesome/free-solid-svg-icons';
-
-import Icon from '../Common/Icon';
-import TableHeader from './TableHeader';
-import {
-  currencyFormat,
-  getEuropeanYear,
-  getMonthDate,
-  getTime,
-} from '@/utils/string';
 import { useEffect, useState } from 'react';
+import { faSort } from '@fortawesome/free-solid-svg-icons';
+
+import { getEuropeanYear, getMonthDate, getTime } from '@/utils/string';
 import { getTransactions } from '@/utils/api';
 import Button from '../Common/Button';
 import Paginator from './Paginator';
-import TransactionIcon from './TransactionInfo';
 import TransactionInfo from './TransactionInfo';
 
 interface IProps {
@@ -35,7 +23,7 @@ const TransactionsTable = ({ transactions, showFullData }: IProps) => {
   const [paginatedTransactions, setPaginatedTransactions] =
     useState<IPaginatedTransactions>(transactions);
 
-  const handleSort = (sortBy: string) => {
+  const handleSort = (sortBy: TransactionSortBy) => {
     let orderBy = 'desc';
     if (sortBy === sort.by && sort.order === 'desc') {
       orderBy = 'asc';
@@ -89,7 +77,7 @@ const TransactionsTable = ({ transactions, showFullData }: IProps) => {
         <div className='col-span-3 flex sm:col-span-4 items-center'>
           <Button
             text='Amount'
-            onClick={() => handleSort('name')}
+            onClick={() => handleSort('amount')}
             icon={faSort}
             iconAlign='right'
             hasBg={false}
@@ -100,7 +88,7 @@ const TransactionsTable = ({ transactions, showFullData }: IProps) => {
         <div className='col-span-3 flex justify-end items-center sm:col-span-3'>
           <Button
             text='Asset Name'
-            onClick={() => handleSort('category')}
+            onClick={() => handleSort('assetName')}
             icon={faSort}
             iconAlign='right'
             hasBg={false}
@@ -111,7 +99,7 @@ const TransactionsTable = ({ transactions, showFullData }: IProps) => {
         <div className='col-span-3 flex justify-end items-center sm:col-span-3'>
           <Button
             text='Category'
-            onClick={() => handleSort('numShares')}
+            onClick={() => handleSort('assetCategory')}
             icon={faSort}
             iconAlign='right'
             hasBg={false}

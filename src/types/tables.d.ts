@@ -31,6 +31,20 @@ declare interface ITransactionData {
 }
 
 declare interface ISort {
-  by: string;
+  by: AssetSortBy | TransactionSortBy;
   order: string;
 }
+
+declare type AssetSortBy =
+  | 'updatedAt'
+  | 'name'
+  | 'category'
+  | 'numShares'
+  | 'cost'
+  | 'value';
+
+declare type TransactionSortBy =
+  | 'updatedAt'
+  | 'amount'
+  | 'assetName'
+  | 'assetCategory';

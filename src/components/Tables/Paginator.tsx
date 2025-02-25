@@ -27,9 +27,7 @@ const Paginator = ({
   const textClasses = clsx(
     'bg-white text-black dark:bg-transparent dark:text-white'
   );
-  const hoverClasses = clsx(
-    'hover:bg-gray-1 dark:hover:bg-white dark:hover:text-black'
-  );
+  const hoverClasses = clsx('hover:bg-gray-1 dark:hover:bg-gray-4');
 
   const maxVisible = 5;
   const jumpAmount = 3;
@@ -62,7 +60,7 @@ const Paginator = ({
   };
 
   return (
-    <div className='flex items-center justify-between pt-4 text-white'>
+    <div className='flex items-center justify-between text-white'>
       {/* mobile */}
       {/* <div className='flex flex-1 justify-between sm:hidden'>
         <a
@@ -98,7 +96,7 @@ const Paginator = ({
             <button
               disabled={currentPage === 1}
               onClick={() => onPageChange(currentPage - 1)}
-              className={`rounded-l-md ${baseClasses} ${currentPage > 1 ? `${textClasses} ${hoverClasses}` : 'text-gray-4 cursor-default'}`}
+              className={`rounded-l-md ${baseClasses} ${currentPage > 1 ? `${textClasses} ${hoverClasses}` : 'text-gray-3 dark:text-gray-4 cursor-default'}`}
             >
               <Icon icon={faAngleLeft} />
             </button>

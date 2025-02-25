@@ -24,7 +24,7 @@ const Button = ({
   text,
   type = 'button',
   onClick,
-  btnSize = 'lg',
+  btnSize = 'md',
   icon,
   iconSize,
   iconAlign,
@@ -32,10 +32,12 @@ const Button = ({
   classes = '',
 }: Props) => {
   const classNames = clsx(
-    'rounded-md font-medium text-md',
+    'rounded-md font-medium',
     hasBg
       ? 'bg-black text-white hover:bg-opacity-50 dark:text-black dark:bg-gray-1 dark:hover:bg-opacity-75 py-2 px-4'
       : 'bg-transparent',
+    btnSize === 'sm' && 'text-sm',
+    btnSize === 'md' && 'text-base',
     btnSize === 'lg' && 'text-lg',
     icon && 'flex gap-2 justify-between items-center',
     classes

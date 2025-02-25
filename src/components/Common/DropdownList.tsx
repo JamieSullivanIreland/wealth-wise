@@ -18,7 +18,7 @@ const DropdownList = ({ heading, labels, onClick }: IProps) => {
       <div>
         <button
           type='button'
-          className='inline-flex w-full items-center justify-center gap-2 rounded-md bg-white px-3 py-2 text-sm text-black ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-1'
+          className='inline-flex w-full items-center justify-center gap-2 rounded-md bg-transparent px-3 py-2 text-sm border border-stroke dark:border-strokedark text-black dark:text-white shadow-xs  hover:bg-gray-1 dark:hover:bg-gray-4'
           onClick={() => setIsActive((prevState: boolean) => !prevState)}
         >
           {heading}

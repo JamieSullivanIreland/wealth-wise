@@ -14,7 +14,7 @@ const TableHeader = ({ title, link }: Props) => {
   return (
     <div className={`flex justify-between items-center ${link ? 'mb-8' : ''}`}>
       {title && (
-        <h4 className='text-sm xsm:text-lg font-medium text-black dark:text-gray-2 mb-2'>
+        <h4 className='text-sm xsm:text-lg font-medium text-black dark:text-gray-2'>
           {title}
         </h4>
       )}

@@ -1,15 +1,27 @@
-export const getTransactions = async (limit: number = 0) => {
+export const getTransactions = async (
+  limit: number = 5,
+  sortBy: string = 'updatedAt',
+  order: string = 'desc',
+  page: number = 1
+) => {
   const res = await fetch(
-    `http://localhost:3000/api/transactions?limit=${limit}`
+    `http://localhost:3000/api/transactions?limit=${limit}&sortBy=${sortBy}&order=${order}&page=${page}`
   );
   const data = await res.json();
-  return data.transactions;
+  return data;
 };
 
-export const getAssets = async (limit: number = 0) => {
-  const res = await fetch(`http://localhost:3000/api/assets?limit=${limit}`);
+export const getAssets = async (
+  limit: number = 5,
+  sortBy: string = 'updatedAt',
+  order: string = 'desc',
+  page: number = 1
+) => {
+  const res = await fetch(
+    `http://localhost:3000/api/assets?limit=${limit}&sortBy=${sortBy}&order=${order}&page=${page}`
+  );
   const data = await res.json();
-  return data.assets;
+  return data;
 };
 
 export const getNetWorth = async (filter: DateFilter) => {

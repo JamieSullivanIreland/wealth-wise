@@ -11,7 +11,7 @@ import {
 import { getTransactions } from '@/utils/api';
 import Button from '../Common/Button';
 import Paginator from './Paginator';
-import TransactionInfo from './TransactionInfo';
+import TransactionInfo from './TransactionAmountInfo';
 import TableHeader from './TableHeader';
 
 interface IProps {
@@ -20,6 +20,11 @@ interface IProps {
 }
 
 const TransactionsTable = ({ transactions, showFullData }: IProps) => {
+  const link: ILink = {
+    href: '/transactions',
+    text: 'View All',
+  };
+
   const [sort, setSort] = useState<ISort>({
     by: 'updatedAt',
     order: 'desc',
@@ -63,8 +68,10 @@ const TransactionsTable = ({ transactions, showFullData }: IProps) => {
       );
       setPaginatedTransactions(transactions);
     };
-    fetchAssets();
-  }, [sort, sort.by, sort.order, page, limit]);
+    if (showFullData) {
+      fetchAssets();
+    }
+  }, [sort, sort.by, sort.order, page, limit, showFullData]);
 
   return showFullData ? (
     <>
@@ -129,7 +136,7 @@ const TransactionsTable = ({ transactions, showFullData }: IProps) => {
           <div className='col-span-3 flex justify-end items-center sm:col-span-2'>
             <Button
               text='Asset Total'
-              onClick={() => handleSort('assetCategory')}
+              onClick={() => handleSort('assetTotal')}
               icon={faSort}
               iconAlign='right'
               hasBg={false}
@@ -152,7 +159,10 @@ const TransactionsTable = ({ transactions, showFullData }: IProps) => {
                   {getEuropeanYear(new Date(updatedAt))}
                 </div>
                 <div className='col-span-3 flex flex-wrap items-center sm:col-span-2'>
-                  <TransactionInfo amount={amount} />
+                  <TransactionInfo
+                    amount={amount}
+                    isFullTable
+                  />
                 </div>
                 <div className='col-span-3 flex flex-wrap justify-center items-center sm:col-span-2'>
                   {type}
@@ -182,43 +192,43 @@ const TransactionsTable = ({ transactions, showFullData }: IProps) => {
     </>
   ) : (
     <>
-      <div className='hidden xsm:grid grid-cols-12 mt-4 py-4.5 text-xs font-medium text-black dark:text-white xsm:text-sm 2lg:hidden'>
-        <div className='col-start-2 col-span-2'>Amount</div>
-        <div className='col-span-3 flex justify-center'>Asset</div>
-        <div className='col-span-3 flex justify-center'>Category</div>
-        <div className='col-span-3 flex justify-end'>Created</div>
-      </div>
-      {paginatedTransactions.transactions.map(
-        (transaction: ITransactionData, i: number) => {
-          const { asset, amount, updatedAt } = transaction;
-          const date = new Date(updatedAt);
+      <TableHeader
+        title='Transactions'
+        link={link}
+      />
+      <div>
+        {paginatedTransactions.transactions.map(
+          (transaction: ITransactionData, i: number) => {
+            const { asset, amount, updatedAt } = transaction;
+            const date = new Date(updatedAt);
 
-          return (
-            <div
-              className='grid grid-cols-12 py-4.5 text-xs text-black dark:text-white xsm:text-sm'
-              key={i}
-            >
-              <TransactionInfo
-                amount={amount}
-                assetName={asset.name}
-              />
-              <div className='hidden col-span-3 justify-center items-center xsm:flex 2lg:hidden'>
-                {asset?.name}
+            return (
+              <div
+                className='grid grid-cols-12 pb-6 text-xs text-black dark:text-white xsm:text-sm'
+                key={i}
+              >
+                <TransactionInfo
+                  amount={amount}
+                  assetName={asset.name}
+                />
+                <div className='hidden col-span-3 justify-center items-center xsm:flex 2lg:hidden'>
+                  {asset?.name}
+                </div>
+                <div className='hidden col-span-3 justify-center items-center xsm:flex 2lg:hidden'>
+                  {asset?.category}
+                </div>
+                <div className='hidden gap-1 col-span-3 justify-end items-center xsm:flex 2lg:hidden'>
+                  {getEuropeanYear(date)}
+                </div>
+                <div className='gap-1 col-span-2 flex flex-col justify-center items-end xsm:hidden 2lg:flex'>
+                  <p>{getMonthDate(date)}</p>
+                  <p>{getTime(date)}</p>
+                </div>
               </div>
-              <div className='hidden col-span-3 justify-center items-center xsm:flex 2lg:hidden'>
-                {asset?.category}
-              </div>
-              <div className='hidden gap-1 col-span-3 justify-end items-center xsm:flex 2lg:hidden'>
-                {getEuropeanYear(date)}
-              </div>
-              <div className='gap-1 col-span-2 flex flex-col justify-center items-end xsm:hidden 2lg:flex'>
-                <p>{getMonthDate(date)}</p>
-                <p>{getTime(date)}</p>
-              </div>
-            </div>
-          );
-        }
-      )}
+            );
+          }
+        )}
+      </div>
     </>
   );
 };

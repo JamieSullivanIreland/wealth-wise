@@ -12,7 +12,7 @@ interface Props {
 
 const TableHeader = ({ title, link }: Props) => {
   return (
-    <div className={`flex justify-between items-center ${link ? 'mb-8' : ''}`}>
+    <div className='flex justify-between items-center'>
       {title && (
         <h4 className='text-sm xsm:text-lg font-medium text-black dark:text-gray-2'>
           {title}
@@ -21,12 +21,12 @@ const TableHeader = ({ title, link }: Props) => {
       {link && (
         <Link
           href={link.href}
-          className={`flex gap-2 justify-between items-center text-md font-medium py-2 px-4 rounded-md bg-black text-white hover:bg-opacity-50 dark:text-black dark:bg-gray-1 dark:hover:bg-opacity-75`}
+          className={`flex gap-2 justify-between items-center text-sm font-medium py-2 px-4 rounded-md bg-black text-white hover:bg-opacity-50 dark:text-black dark:bg-gray-1 dark:hover:bg-opacity-75`}
         >
           {link.text}
           <Icon
             icon={faArrowRight}
-            size='lg'
+            size='sm'
           />
         </Link>
       )}

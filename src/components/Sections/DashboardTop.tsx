@@ -8,12 +8,9 @@ import NetworthSummary from './NetworthSummary';
 import NetworthTable from '../Tables/NetworthTable';
 import DateFilterButtons from './DateFilterButtons';
 import { getNetWorth } from '@/utils/api';
+import TablesContainer from '@/components/Containers/TablesContainer';
 
-interface IProps {
-  tableClasses: string;
-}
-
-const DashboardTopSection = ({ tableClasses }: IProps) => {
+const DashboardTopSection = () => {
   const [networth, setNetworth] = useState<INetworth | null>(null);
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [totalNetworth, setTotalNetworth] = useState<number>(0);
@@ -56,9 +53,7 @@ const DashboardTopSection = ({ tableClasses }: IProps) => {
     <>
       {/* Show above 768px */}
       <div className='hidden md:grid grid-cols-12'>
-        <div
-          className={`flex flex-col col-span-8 rounded-s-xl border-r-0 dark:bg-dark-3 ${tableClasses}`}
-        >
+        <TablesContainer classes='flex flex-col col-span-8 rounded-s-xl border-r-0 dark:bg-dark-3'>
           <NetworthSummary
             diffPercentage={networth.diffPercentage}
             diffTotal={networth.diffTotal}
@@ -76,25 +71,21 @@ const DashboardTopSection = ({ tableClasses }: IProps) => {
               activeFilter={activeFilter}
             />
           </div>
-        </div>
-        <div
-          className={`col-span-4 rounded-e-xl dark:bg-dark-1 ${tableClasses}`}
+        </TablesContainer>
+        <TablesContainer
+          title='Categories'
+          classes='col-span-4 rounded-e-xl dark:bg-dark-1 '
         >
-          <h4 className='text-lg font-medium text-black dark:text-gray-2 mb-8'>
-            Categories
-          </h4>
           <CategoryChart
             totalNetworth={networth.diffTotal}
             categories={categories}
           />
-        </div>
+        </TablesContainer>
       </div>
 
       {/* Show below 768px */}
       <div className='grid grid-cols-12 md:hidden'>
-        <div
-          className={`flex flex-col col-span-12 rounded-xl border-r-1 dark:bg-dark-3 ${tableClasses}`}
-        >
+        <TablesContainer classes='flex flex-col col-span-12 rounded-xl border-r-1 dark:bg-dark-3 '>
           <NetworthSummary
             diffPercentage={networth.diffPercentage}
             diffTotal={networth.diffTotal}
@@ -105,26 +96,29 @@ const DashboardTopSection = ({ tableClasses }: IProps) => {
             tabs={['Chart', 'Categories']}
           />
           {activeTab === 'Chart' && (
-            <div className='min-h-[365px]'>
-              <NetworthTable
-                isLoading={isLoading}
-                data={networth.results}
-                totalNetworth={totalNetworth}
+            <>
+              <div className='min-h-[365px]'>
+                <NetworthTable
+                  isLoading={isLoading}
+                  data={networth.results}
+                  totalNetworth={totalNetworth}
+                  activeFilter={activeFilter}
+                />
+              </div>
+              <DateFilterButtons
                 activeFilter={activeFilter}
+                handleClick={handleFilterClick}
               />
-            </div>
+            </>
           )}
-          <DateFilterButtons
-            activeFilter={activeFilter}
-            handleClick={handleFilterClick}
-          />
+
           {activeTab === 'Categories' && (
             <CategoryChart
               totalNetworth={networth.diffTotal}
               categories={categories}
             />
           )}
-        </div>
+        </TablesContainer>
       </div>
     </>
   );
